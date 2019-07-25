@@ -1,25 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: { main: '#FFB300' },
+    secondary: { main: '#26C6DA' },
+    background: { default: '#ffe032'}
+  },
+
+});
+
 
 function App() {
+  const [mode, setMode] = useState("Dashboard");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}"">
+      { mode === "Dashboard" &&
+        <Dashboard
+          handleChangeMode={() => setMode(mode)}
+        />
+      }
+    </ThemeProvider>
   );
 }
 
