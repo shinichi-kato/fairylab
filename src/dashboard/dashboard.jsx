@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import AvatarSelector from './avatar-selector.jsx';
 import classes from './dashboard.css';
 
 
 
-function Dashboard(props){
+export default function Dashboard(props){
   const [mode, setMode] = useState(0);
 
   useEffect(() => {
@@ -18,7 +19,7 @@ function Dashboard(props){
     <div className={classes.flexContainer}>
       <div className={classes.topMenu}><AccountCircle /></div>
       <div className={classes.inputPanel}>
-        {mode == 'AvatarSelect' && 
+        {mode == 'AvatarSelect' &&
           <AvatarSelector mode={mode} />
         }
       </div>
