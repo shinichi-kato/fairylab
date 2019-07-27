@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -51,7 +51,7 @@ export default function NameInput(props) {
 
         </CardContent>
         <CardActions>
-          <Button size="small">Cancel</Button>
+          <Button size="small" onClick={props.handleCancel}>Cancel</Button>
           <Button size="small" color="primary" onClick={handleEnterName}>OK</Button>
         </CardActions>
       </form>

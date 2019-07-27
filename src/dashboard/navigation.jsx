@@ -1,27 +1,31 @@
-import React, {useEffect, useState } from 'react';
+import React from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
+
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
-    padding: theme.spacing(0)
-  }
-  leftCanvas: {
+    flexGrow: 1,
+
+  },
+  homeButton: {
     width: 200,
     height: 200,
+    margin: 'auto',
     borderRadius: '0% 100% 100% 0% / 100% 100% 0% 0% ',
+    backgroundColor: theme.palette.primary.main
   },
-  rightCanvas: {
+  hubButton: {
     width: 200,
     height: 200,
-    borderRadius: '0% 100% 100% 0% / 100% 100% 0% 0% '
+    margin: 'auto',
+    borderRadius: '100% 0% 0% 100% / 100% 100% 0% 0% ',
+    backgroundColor: theme.palette.primary.main
   },
-  avatar: {
-    width: 40,
-    height: 40
+  buttonImage: {
+    width: 100,
+    height: 100
   }
 }));
 
@@ -30,7 +34,19 @@ export default function Navigation(props){
   const classes = useStyles();
 
   return(
-
-
+    <div className={classes.root}>
+      <Grid container spacing={0}>
+      <Grid item xs={6} style={{textAlign:'left'}}>
+        <Button className={classes.homeButton}>
+          <img className={classes.buttonImage } src="icons/home.svg" alt="HOME"/>
+        </Button>
+      </Grid>
+      <Grid item xs={6} style={{textAlign:'right'}}>
+        <Button className={classes.hubButton}>
+          <img className={classes.buttonImage} src="icons/hub.svg" alt="HUB"/>
+        </Button>
+      </Grid>
+      </Grid>
+    </div>
   )
 }

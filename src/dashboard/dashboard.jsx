@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+
 import ApplicationBar from './application-bar.jsx';
 import StatusView from './status-view.jsx';
 import AvatarSelector from './avatar-selector.jsx';
@@ -18,9 +20,11 @@ export default function Dashboard(props){
   const [botName, setBotName] = useState(localStorage.getItem('botName') || '');
   const [botAvatar, setBotAvatar] = useState(localStorage.getItem('botAvatar') || '');
 
+  // const estate = localStorage.getItem('bot.estate') || ''
+
   useEffect(() => {
     // DidMount / DidUpdate
-    if(userAvatar == ''){ setMode('AvatarSelect'); }
+    if(userAvatar === ''){ setMode('AvatarSelect'); }
 
   });
 
@@ -31,7 +35,7 @@ export default function Dashboard(props){
 
   function handleSetUserAvatar(avatar) {
     localStorage.setItem('userAvatar',avatar);
-    setUerAvatar(avatar);
+    setUserAvatar(avatar);
   }
 
   function handleSetBotId(botId){
@@ -48,6 +52,10 @@ export default function Dashboard(props){
     setBotName(name);
   }
 
+  function handleCancel(){
+    setMode('Ready');
+  }
+
   return(
     <div className={classes.flexContainer}>
       <div className={classes.topMenu}>
@@ -56,37 +64,40 @@ export default function Dashboard(props){
       />
       </div>
       <div className={classes.inputPanel}>
-        { mode == 'Ready' &&
-          <StatusView
+          { mode === 'Ready' &&
+            <StatusView
 
-            />
-        }
-        { mode == 'AvatarSelect' &&
-          <AvatarSelector
-            handleSetUserAvatar={handleSetUserAvatar}
-            handleNext = {() => setMode('UserNameInput')}  />
-        }
-        { mode == 'UserNameInput' &&
-          <NameInput
-            label="Your Name"
-            name={userName}
-            handleChangeName={handleSetUserName}
-            handleNext = {() => setMode('BotDownload')} />
-        }
-        { mode == 'BotDownload' &&
-          <BotDownload
-            botId={botId}
-            handleSetBotId = {handleSetBotId}
-            handleSetBotAvatar = {handleSetBotAvatar}
-            handleNext = {() => setMode('BotNameInput')} />
-        }
-        { mode == 'BotNameInput' &&
-          <NameInput
-            label="Fairy Name"
-            name={botName}
-            handleChangeName={handleSetBotName}
-            handleNext = {() => setMode('Ready')} />
-        }
+              />
+          }
+          { mode === 'AvatarSelect' &&
+            <AvatarSelector
+              handleSetUserAvatar={handleSetUserAvatar}
+              handleCancel={() => setMode('Ready')}
+              handleNext = {() => setMode('UserNameInput')}  />
+          }
+          { mode === 'UserNameInput' &&
+            <NameInput
+              label="Your Name"
+              name={userName}
+              handleChangeName={handleSetUserName}
+              handleCancel={handleCancel}
+              handleNext = {() => setMode('BotDownload')} />
+          }
+          { mode === 'BotDownload' &&
+            <BotDownload
+              botId={botId}
+              handleSetBotId = {handleSetBotId}
+              handleSetBotAvatar = {handleSetBotAvatar}
+              handleNext = {() => setMode('BotNameInput')} />
+          }
+          { mode === 'BotNameInput' &&
+            <NameInput
+              label="Fairy Name"
+              name={botName}
+              handleChangeName={handleSetBotName}
+              handleCancel={handleCancel}
+              handleNext = {() => setMode('Ready')} />
+          }
       </div>
       <div className={classes.iconsPanel}>
         <IconsPanel
@@ -96,9 +107,12 @@ export default function Dashboard(props){
           botAvatar={botAvatar} />
       </div>
       <div className={classes.navigation}>
-        { mode == 'Ready' &&
-          'userAvatar != '' && userName != '' && botId != '' && botName!= '' &&
-          <Navigation />
+        { mode === 'Ready' &&
+          userAvatar !== '' && userName !== '' && botId !== '' && botName!== '' &&
+          <Navigation
+            handleToHome={props.handleToHome}
+            handleToHub={props.handleToHub}
+            />
         }
       </div>
     </div>

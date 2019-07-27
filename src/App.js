@@ -21,7 +21,8 @@ function App() {
     <ThemeProvider theme={theme}>
       { mode === "Dashboard" &&
         <Dashboard
-          handleChangeMode={() => setMode(mode)}
+          handleToHome={() => setMode('Home')}
+          handleToHub={() => setMode('Hub')}
         />
       }
     </ThemeProvider>

@@ -64,7 +64,10 @@ export default function AvatarSelector(props) {
       {avatarItems}
       </CardContent>
       <CardActions>
-        <Button size="small">Cancel</Button>
+        <Button size="small"
+          onClick={props.handleCancel}>
+          Cancel
+        </Button>
       </CardActions>
     </Card>
   );
