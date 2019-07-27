@@ -46,15 +46,14 @@ export default function AvatarSelector(props) {
   const classes = useStyles();
 
 
-  function handleAvatarSelect(event,img){
-    localStorage.setItem('userAvatar',avatarsDir+img);
-    props.handleChangeUserAvatar(avatarsDir+img);
+  function handleSelectAvatar(event,img){
+    props.handleSetUserAvatar(avatarsDir+img);
     props.handleNext();
   }
 
   const avatarItems = avatarPaths.map((img) =>
     <IconButton className={classes.avatarButton} aria-label={img} key={img}
-      onClick={(e) => handleAvatarSelect(e,img)}>
+      onClick={(e) => handleSelectAvatar(e,img)}>
       <Avatar src={avatarsDir+img} className={classes.avatar} />
     </IconButton>
   )

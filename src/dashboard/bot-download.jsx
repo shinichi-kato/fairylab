@@ -57,7 +57,16 @@ const bots_dummy = [
 ];
 
 export default function BotDownload(props){
+
   const classes = useStyles();
+
+  function handleDownload(e,botId,botAvatar){
+    console.log(botId,botAvatar);
+    props.handleSetBotId(botId);
+    props.handleSetBotAvatar(botAvatar);
+    props.handleNext();
+  }
+
 
   const botItems = bots_dummy.map((bot) =>
       <Card className={classes.card}>
@@ -70,7 +79,10 @@ export default function BotDownload(props){
           <Typography>{bot.desc}</Typography>
         </CardContent>
         <CardActions disableSpacing >
-          <Button variant="contained" size="small" >Download</Button>
+          <Button variant="contained" color="primary"
+          onClick={e=>handleDownload(e,bot.id,bot.avatar)} >
+          Download
+          </Button>
         </CardActions>
       </Card>
   );
