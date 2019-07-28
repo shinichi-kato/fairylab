@@ -12,21 +12,18 @@ code {
     monospace;
 }
 
-:root {
-  --root-inner-padding: 10px;
-}
 
 #root {
-  width: calc( 480px - var(--root-inner-padding) * 2);
-  padding: var(--root-inner-padding);
+  width: 480px;
+  padding: 0px;
   margin: 0px;
   background-color: #ededed;
 }
 
 @media screen and (min-width: 481px){
   #root {
-    margin-left: calc((100% - 480px + var(--root-inner-padding)) * 0.7);
-    margin-right: calc((100% - 480px + var(--root-inner-padding)) * 0.3);
+    margin-left: calc((100% - 480px)  * 0.7);
+    margin-right: calc((100% - 480px) * 0.3);
     background-color: #de4dde;
   }
 }

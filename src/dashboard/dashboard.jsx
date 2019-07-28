@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Box from '@material-ui/core/Box';
 
 import ApplicationBar from './application-bar.jsx';
 import StatusView from './status-view.jsx';
@@ -8,7 +8,6 @@ import NameInput from './name-input.jsx';
 import BotDownload from './bot-download.jsx';
 import IconsPanel from './icons-panel.jsx';
 import Navigation from './navigation.jsx';
-import classes from './dashboard.css';
 
 
 
@@ -57,56 +56,62 @@ export default function Dashboard(props){
   }
 
   return(
-    <div className={classes.flexContainer}>
-      <div className={classes.topMenu}>
-      <ApplicationBar
-        handleDoSettings= {()=>setMode('AvatarSelect')}
-      />
-      </div>
-      <div className={classes.inputPanel}>
-          { mode === 'Ready' &&
-            <StatusView
+    <Box display="flex"
+      flexDirection="column"
+      flexWrap="nowrap"
+      justifyContent="flex-start"
+      alignContent="stretch"
+      alignItems="stretch"
+      height="100%">
+      <Box order={0}>
+        <ApplicationBar
+          handleDoSettings= {()=>setMode('AvatarSelect')}
+        />
+      </Box>
+      <Box order={0}>
+        { mode === 'Ready' &&
+          <StatusView
 
-              />
-          }
-          { mode === 'AvatarSelect' &&
-            <AvatarSelector
-              handleSetUserAvatar={handleSetUserAvatar}
-              handleCancel={() => setMode('Ready')}
-              handleNext = {() => setMode('UserNameInput')}  />
-          }
-          { mode === 'UserNameInput' &&
-            <NameInput
-              label="Your Name"
-              name={userName}
-              handleChangeName={handleSetUserName}
-              handleCancel={handleCancel}
-              handleNext = {() => setMode('BotDownload')} />
-          }
-          { mode === 'BotDownload' &&
-            <BotDownload
-              botId={botId}
-              handleSetBotId = {handleSetBotId}
-              handleSetBotAvatar = {handleSetBotAvatar}
-              handleNext = {() => setMode('BotNameInput')} />
-          }
-          { mode === 'BotNameInput' &&
-            <NameInput
-              label="Fairy Name"
-              name={botName}
-              handleChangeName={handleSetBotName}
-              handleCancel={handleCancel}
-              handleNext = {() => setMode('Ready')} />
-          }
-      </div>
-      <div className={classes.iconsPanel}>
+            />
+        }
+        { mode === 'AvatarSelect' &&
+          <AvatarSelector
+            handleSetUserAvatar={handleSetUserAvatar}
+            handleCancel={() => setMode('Ready')}
+            handleNext = {() => setMode('UserNameInput')}  />
+        }
+        { mode === 'UserNameInput' &&
+          <NameInput
+            label="Your Name"
+            name={userName}
+            handleChangeName={handleSetUserName}
+            handleCancel={handleCancel}
+            handleNext = {() => setMode('BotDownload')} />
+        }
+        { mode === 'BotDownload' &&
+          <BotDownload
+            botId={botId}
+            handleSetBotId = {handleSetBotId}
+            handleSetBotAvatar = {handleSetBotAvatar}
+            handleNext = {() => setMode('BotNameInput')} />
+        }
+        { mode === 'BotNameInput' &&
+          <NameInput
+            label="Fairy Name"
+            name={botName}
+            handleChangeName={handleSetBotName}
+            handleCancel={handleCancel}
+            handleNext = {() => setMode('Ready')} />
+        }
+      </Box>
+      <Box order={0} flexGrow={1}>
         <IconsPanel
           userName={userName}
           userAvatar={userAvatar}
           botName={botName}
           botAvatar={botAvatar} />
-      </div>
-      <div className={classes.navigation}>
+      </Box>
+      <Box order={0} >
         { mode === 'Ready' &&
           userAvatar !== '' && userName !== '' && botId !== '' && botName!== '' &&
           <Navigation
@@ -114,7 +119,8 @@ export default function Dashboard(props){
             handleToHub={props.handleToHub}
             />
         }
-      </div>
-    </div>
-  )
+      </Box>
+    </Box>
+    );
+
 }

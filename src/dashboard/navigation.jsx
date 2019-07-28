@@ -37,12 +37,14 @@ export default function Navigation(props){
     <div className={classes.root}>
       <Grid container spacing={0}>
       <Grid item xs={6} style={{textAlign:'left'}}>
-        <Button className={classes.homeButton}>
+        <Button className={classes.homeButton}
+          onClick={props.handleToHome}>
           <img className={classes.buttonImage } src="icons/home.svg" alt="HOME"/>
         </Button>
       </Grid>
       <Grid item xs={6} style={{textAlign:'right'}}>
-        <Button className={classes.hubButton}>
+        <Button className={classes.hubButton}
+          onClick={props.handleToHub}>
           <img className={classes.buttonImage} src="icons/hub.svg" alt="HUB"/>
         </Button>
       </Grid>

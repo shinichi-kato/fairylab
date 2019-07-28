@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => createStyles({
   },
   name: {
     size: 16,
+    textAlign: "center",
   }
 
 }));

@@ -1,0 +1,62 @@
+[debug] [2019-07-28T23:17:26.435Z] ----------------------------------------------------------------------
+[debug] [2019-07-28T23:17:26.439Z] Command:       /home/shinichi/.nvm/versions/node/v12.5.0/bin/node /home/shinichi/.nvm/versions/node/v12.5.0/bin/firebase deploy
+[debug] [2019-07-28T23:17:26.439Z] CLI Version:   7.2.1
+[debug] [2019-07-28T23:17:26.440Z] Platform:      linux
+[debug] [2019-07-28T23:17:26.440Z] Node Version:  v12.5.0
+[debug] [2019-07-28T23:17:26.441Z] Time:          Mon Jul 29 2019 08:17:26 GMT+0900 (GMT+09:00)
+[debug] [2019-07-28T23:17:26.441Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-07-28T23:17:26.455Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-07-28T23:17:26.455Z] > authorizing via signed-in user
+[debug] [2019-07-28T23:17:26.456Z] [iam] checking project fairylab-efb48 for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2019-07-28T23:17:26.459Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-07-28T23:17:26.460Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-07-28T23:17:26.708Z] <<< HTTP RESPONSE 200
+[debug] [2019-07-28T23:17:26.728Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/fairylab-efb48:testIamPermissions  
+
+[debug] [2019-07-28T23:17:27.538Z] <<< HTTP RESPONSE 200
+[debug] [2019-07-28T23:17:27.550Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/fairylab-efb48  
+ 
+[debug] [2019-07-28T23:17:28.269Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'fairylab-efb48'...
+[info] 
+[info] i  deploying storage, firestore, hosting
+[debug] [2019-07-28T23:17:28.293Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/fairylab-efb48  
+ 
+[debug] [2019-07-28T23:17:29.792Z] <<< HTTP RESPONSE 200
+[info] i  storage: checking storage.rules for compilation errors...
+[debug] [2019-07-28T23:17:29.801Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/fairylab-efb48:test  
+
+[debug] [2019-07-28T23:17:30.982Z] <<< HTTP RESPONSE 200
+[info] ✔  storage: rules file storage.rules compiled successfully
+[info] i  firestore: checking firestore.rules for compilation errors...
+[info] i  firestore: reading indexes from firestore.indexes.json...
+[debug] [2019-07-28T23:17:30.996Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/fairylab-efb48:test  
+
+[debug] [2019-07-28T23:17:32.173Z] <<< HTTP RESPONSE 200
+[info] ✔  firestore: rules file firestore.rules compiled successfully
+[debug] [2019-07-28T23:17:32.177Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/fairylab-efb48/versions  
+
+[debug] [2019-07-28T23:17:33.605Z] <<< HTTP RESPONSE 200
+[info] i  storage: uploading rules storage.rules...
+[debug] [2019-07-28T23:17:33.607Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/fairylab-efb48/rulesets  
+
+[debug] [2019-07-28T23:17:34.848Z] <<< HTTP RESPONSE 200
+[debug] [2019-07-28T23:17:34.852Z] [rules] created ruleset projects/fairylab-efb48/rulesets/fa4aaef6-51ff-4854-aa46-348cd8436d89
+[info] i  firestore: uploading rules firestore.rules...
+[debug] [2019-07-28T23:17:34.869Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/fairylab-efb48/rulesets  
+
+[debug] [2019-07-28T23:17:34.872Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1beta2/projects/fairylab-efb48/databases/(default)/collectionGroups/-/indexes  
+ 
+[debug] [2019-07-28T23:17:35.123Z] <<< HTTP RESPONSE 200
+[debug] [2019-07-28T23:17:35.126Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1beta2/projects/fairylab-efb48/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false  
+ 
+[debug] [2019-07-28T23:17:35.321Z] <<< HTTP RESPONSE 200
+[info] ✔  firestore: deployed indexes in firestore.indexes.json successfully
+[debug] [2019-07-28T23:17:36.109Z] <<< HTTP RESPONSE 200
+[debug] [2019-07-28T23:17:36.112Z] [rules] created ruleset projects/fairylab-efb48/rulesets/eefbdfbf-5d58-4fcd-8064-6319480e8ef6
+[info] i  hosting[fairylab-efb48]: beginning deploy...
+[info] i  hosting[fairylab-efb48]: found 36 files in build
+[debug] [2019-07-28T23:17:36.206Z] [hosting] hash cache [YnVpbGQ] load error: lines is not defined

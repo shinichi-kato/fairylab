@@ -24,3 +24,7 @@ yarn-error.log*
 
 #credentials
 /src/credentials
+!/src/credentials/README.md
+
+#firebase cache
+/.firebase
