@@ -10,22 +10,24 @@ const useStyles = makeStyles(theme => createStyles({
 
   },
   homeButton: {
-    width: 200,
-    height: 200,
+    width: 180,
+    height: 180,
     margin: 'auto',
+    padding: 'auto 10',
     borderRadius: '0% 100% 100% 0% / 100% 100% 0% 0% ',
     backgroundColor: theme.palette.primary.main
   },
   hubButton: {
-    width: 200,
-    height: 200,
-    margin: 'auto',
+    width: 180,
+    height: 180,
+    marginTop: 20,
+    padding: 'auto 10',
     borderRadius: '100% 0% 0% 100% / 100% 100% 0% 0% ',
     backgroundColor: theme.palette.primary.main
   },
   buttonImage: {
-    width: 100,
-    height: 100
+    width: 90,
+    height: 90
   }
 }));
 

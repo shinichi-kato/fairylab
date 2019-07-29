@@ -6,6 +6,10 @@ import Dashboard from './dashboard/dashboard.jsx';
 import Home from './home/home.jsx';
 import Hub from './hub/hub.jsx';
 
+import * as firebase from 'firebase/app';
+import firebaseConfig from './credentials/firebase-config.jsx';
+firebase.initializeApp(firebaseConfig);
+
 const theme = createMuiTheme({
   palette: {
     primary: { main: '#FFB300' },

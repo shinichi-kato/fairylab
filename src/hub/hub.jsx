@@ -19,7 +19,8 @@ export default function Dashboard(props){
         flexWrap="nowrap"
         justifyContent="flex-start"
         alignContent="stretch"
-        alignItems="stretch" >
+        alignItems="stretch"
+        height="100%" >
         <Box order={0}>
           <ApplicationBar
             handleExit= {props.handleExit}
