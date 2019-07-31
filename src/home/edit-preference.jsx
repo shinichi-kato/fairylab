@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
+import PartCard from './part-card.jsx';
+
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
@@ -25,7 +27,7 @@ const dummy = {
   avatarId: 'reflamer',
   description: '説明',
   botName: 'テスト',
-  scripts: [
+  parts: [
     {
       path: 'reframing',
       availability: 0.5,
@@ -52,18 +54,22 @@ export default function EditPreference(props){
     avatarId: 'reflamer',
     description: '説明',
     name: 'テスト',
-    scripts: [
+    parts: [
       {
-        path: 'reframing',
+        name: 'reframing',
+        type: 'sensor',
         availability: 0.5,
         triggerLevel: 0.04,
         retention: 0.6,
+        dictionary: {},
       },
       {
-        path: 'greeting',
+        name: 'greeting',
+        type: 'answerer',
         availability: 0.5,
         triggerLevel: 0.04,
         retention: 0.6,
+        dictionary: {},
       }
     ]
   });
@@ -72,12 +78,17 @@ export default function EditPreference(props){
     setBot({ ...bot, [name]: event.target.value });
   };
 
+
+  const partItems = bot.parts.map( (part,index) =>
+      <PartCard id={index} part={part} />
+  );
+
   return (
     <form className={classes.container} noValidate autoComplete="off">
       <TextField
         required
         id="name"
-        label="Name"
+        label="名前"
         className={classes.textField}
         value={bot.name}
         onChange={handleChange('name')}
@@ -105,8 +116,9 @@ export default function EditPreference(props){
         label="説明"
         className={classes.textField}
         value={bot.description}
-        onChange={handleChange('descriptioin')}
+        onChange={handleChange('description')}
         margin="normal" />
+      {partItems}
     </form>
 
 

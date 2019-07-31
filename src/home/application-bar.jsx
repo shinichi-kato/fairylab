@@ -78,10 +78,10 @@ export default function ApplicationBar(props){
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleSetMode('Chat')}>チャット</MenuItem>
-            <MenuItem onClick={handleSetMode('EditPreference')}>基本設定の編集</MenuItem>
-            <MenuItem onClick={handleSetMode('EditDictionary')}>辞書の編集</MenuItem>
-            <MenuItem onClick={handleSetMode('Upload')}>サーバーに保存</MenuItem>
+            <MenuItem onClick={()=>handleSetMode('Chat')}>チャット</MenuItem>
+            <MenuItem onClick={()=>handleSetMode('EditPreference')}>基本設定の編集</MenuItem>
+            <MenuItem onClick={()=>handleSetMode('EditDictionary')}>辞書の編集</MenuItem>
+            <MenuItem onClick={()=>handleSetMode('Upload')}>サーバーに保存</MenuItem>
 
           </Menu>
         </Toolbar>
