@@ -12,7 +12,8 @@ import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles(theme => ({
   card: {
-    width: '100%',
+    width: '90%',
+    margin: '4px auto',
   },
   sensor: {
     backgroundColor: '#f44336', //red[500]
@@ -46,24 +47,31 @@ export default function PartCard(props){
   // props.part.name
   // props.part.type
 
-
   const classes = useStyles();
+
+  const part = props.part;
+  const subheader="A:"+part.availability.toFixed(2)+" T:"+
+    part.triggerLevel+" R:"+part.retention;
+
+  
 
 
   return(
     <Card key={props.id} className={classes.card}>
     <CardHeader
       avatar={
-        <Avatar aria-label="part" className={classes[props.part.type]}>
-        {props.part.type[0].toUpperCase()}
+        <Avatar aria-label="part" className={classes[part.type]}>
+        {part.type[0].toUpperCase()}
         </Avatar>
       }
-      title={props.part.name}
+      title={part.name}
       action={
         <IconButton aria-label="edit">
         <Create />
         </IconButton>
-      } />
+      }
+      subheader={subheader}/>
+
       <CardActions disablespacing>
       <IconButton aria-label="delete">
         <DeleteIcon />

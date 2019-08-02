@@ -20,67 +20,45 @@ const useStyles = makeStyles(theme => ({
   menu: {
     width: 200,
   },
+  partCard: {
+    margin: '2%',
+  }
 }));
 
-const dummy = {
-  id: 'reframer@flab',
-  avatarId: 'reflamer',
-  description: '説明',
-  botName: 'テスト',
-  parts: [
-    {
-      path: 'reframing',
-      availability: 0.5,
-      triggerLevel: 0.04,
-      retention: 0.6,
 
-    },
-    {
-      path: 'greeting',
-      availability: 0.5,
-      triggerLevel: 0.04,
-      retention: 0.6,
-    }
-  ]
-}
-
-
-
-
-export default function EditPreference(props){
-  const classes = useStyles();
-  const [bot,setBot] = useState({
-    id: 'reframer@flab',
-    avatarId: 'reflamer',
-    description: '説明',
-    name: 'テスト',
-    parts: [
+if (!localStorage.getItem('botParts')){
+  localStorage.setItem('botParts',JSON.stringify(
+    [
       {
-        name: 'reframing',
-        type: 'sensor',
+        path: 'reframing',
         availability: 0.5,
         triggerLevel: 0.04,
         retention: 0.6,
-        dictionary: {},
+        dictionary: {}
       },
       {
-        name: 'greeting',
-        type: 'answerer',
+        path: 'greeting',
         availability: 0.5,
         triggerLevel: 0.04,
         retention: 0.6,
-        dictionary: {},
+        dictionry: {}
       }
-    ]
-  });
+    ]));
+  }
+
+
+
+export default function ScriptEditor(props){
+  const classes = useStyles();
+  const settings = localStorage.getItem('botSettings');
+  const parts = localStorage.getItem('botParts');
 
   const handleChange = name => event => {
-    setBot({ ...bot, [name]: event.target.value });
+    localStorage.setItem('botSettings',{ ...settings, [name]: event.target.value });
   };
 
-
-  const partItems = bot.parts.map( (part,index) =>
-      <PartCard id={index} part={part} />
+  const partItems = parts.map( (part,index) =>
+      <PartCard id={index} part={part} className={classes.partCard}/>
   );
 
   return (
@@ -90,7 +68,7 @@ export default function EditPreference(props){
         id="name"
         label="名前"
         className={classes.textField}
-        value={bot.name}
+        value={settings.name}
         onChange={handleChange('name')}
         margin="normal" />
       <TextField
@@ -98,7 +76,7 @@ export default function EditPreference(props){
         id="botId"
         label="Bot Id"
         className={classes.textField}
-        value={bot.id}
+        value={settings.id}
         onChange={handleChange('id')}
         margin="normal" />
       <TextField
@@ -106,7 +84,7 @@ export default function EditPreference(props){
         id="botAvatarId"
         label="Avatar Id"
         className={classes.textField}
-        value={bot.avatarId}
+        value={settings.avatarId}
         onChange={handleChange('avatarId')}
         margin="normal" />
       <TextField
@@ -115,7 +93,7 @@ export default function EditPreference(props){
         id="description"
         label="説明"
         className={classes.textField}
-        value={bot.description}
+        value={settings.description}
         onChange={handleChange('description')}
         margin="normal" />
       {partItems}

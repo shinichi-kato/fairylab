@@ -34,11 +34,6 @@ export default function ApplicationBar(props){
     setAnchorEl(null);
   }
 
-  function handleSetMode(mode){
-    props.handleSetMode(mode);
-    setAnchorEl(null);
-  }
-
   return(
     <div className={classes.root}>
       <AppBar position="static">
@@ -78,10 +73,9 @@ export default function ApplicationBar(props){
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={()=>handleSetMode('Chat')}>チャット</MenuItem>
-            <MenuItem onClick={()=>handleSetMode('EditPreference')}>基本設定の編集</MenuItem>
-            <MenuItem onClick={()=>handleSetMode('EditDictionary')}>辞書の編集</MenuItem>
-            <MenuItem onClick={()=>handleSetMode('Upload')}>サーバーに保存</MenuItem>
+            <MenuItem onClick={props.handleChat}>チャット</MenuItem>
+            <MenuItem onClick={props.handleEdit}>基本設定の編集</MenuItem>
+            <MenuItem onClick={props.handleUpload}>サーバーに保存</MenuItem>
 
           </Menu>
         </Toolbar>

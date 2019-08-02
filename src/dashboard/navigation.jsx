@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-
+import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => createStyles({
@@ -48,13 +48,15 @@ export default function Navigation(props){
           <img className={classes.buttonImage } src="icons/home.svg" alt="HOME"/>
         </Button>
       </Grid>
-      <Grid item xs={6} style={{textAlign:'right'}} position="relative">
+      <Grid item xs={6} style={{textAlign:'right', position:"relative"}}>
         <Button className={classes.hubButton}
           onClick={props.handleToHub}>
           <img className={classes.buttonImage} src="icons/hub.svg" alt="HUB"/>
         </Button>
         <Box position="absolute" top={0} left={0}>
-          <Button className={classes.takeMeButton}>つれていく</Button>
+          <Button className={classes.takeMeButton}>
+            <Avatar src={props.botAvatar} />つれていく</Button>
+
         </Box>
       </Grid>
       </Grid>

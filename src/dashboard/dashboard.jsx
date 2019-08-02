@@ -9,15 +9,22 @@ import BotDownload from './bot-download.jsx';
 import IconsPanel from './icons-panel.jsx';
 import Navigation from './navigation.jsx';
 
-
+if (!localStorage.getItem('botSettings')){
+    localStorage.setItem('botSettings',JSON.stringify(
+      {
+          id: 'noname@flab',
+          avatarId: 'blank',
+          description: '',
+          name: '',
+      }
+    ))
+}
 
 export default function Dashboard(props){
   const [mode, setMode] = useState('Ready');
   const [userAvatar, setUserAvatar] = useState(localStorage.getItem('userAvatar') || '');
   const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
-  const [botId, setBotId] = useState(localStorage.getItem('botId') || '');
-  const [botName, setBotName] = useState(localStorage.getItem('botName') || '');
-  const [botAvatar, setBotAvatar] = useState(localStorage.getItem('botAvatar') || '');
+  const [botSettings, setBotSettings] = useState(JSON.parse(localStorage.getItem('botSettings')));
 
   // const estate = localStorage.getItem('bot.estate') || ''
 
@@ -37,18 +44,16 @@ export default function Dashboard(props){
     setUserAvatar(avatar);
   }
 
-  function handleSetBotId(botId){
-    localStorage.setItem('botId',botId);
-    setBotId(botId);
+  function handleSetBotSettings(settings){
+    localStorage.setItem('botSettings',JSON.stringify(settings));
+    setBotSettings(settings);
   }
 
-  function handleSetBotAvatar(avatar){
-    localStorage.setItem('botAvatar',avatar);
-    setBotAvatar(avatar);
-  }
   function handleSetBotName(name){
-    localStorage.setItem('botName',name);
-    setBotName(name);
+    const newSettings = {...botSettings,name:name};
+    console.log(newSettings)
+    localStorage.setItem('botSettings',JSON.stringify(newSettings));
+    setBotSettings(newSettings);
   }
 
   function handleCancel(){
@@ -90,15 +95,14 @@ export default function Dashboard(props){
         }
         { mode === 'BotDownload' &&
           <BotDownload
-            botId={botId}
-            handleSetBotId = {handleSetBotId}
-            handleSetBotAvatar = {handleSetBotAvatar}
+            settings={botSettings}
+            handleSetBotSettings = {handleSetBotSettings}
             handleNext = {() => setMode('BotNameInput')} />
         }
         { mode === 'BotNameInput' &&
           <NameInput
             label="Fairy Name"
-            name={botName}
+            name={botSettings.name}
             handleChangeName={handleSetBotName}
             handleCancel={handleCancel}
             handleNext = {() => setMode('Ready')} />
@@ -108,13 +112,14 @@ export default function Dashboard(props){
         <IconsPanel
           userName={userName}
           userAvatar={userAvatar}
-          botName={botName}
-          botAvatar={botAvatar} />
+          botName={botSettings.name}
+          botAvatar={botSettings.avatarId} />
       </Box>
       <Box order={0} >
         { mode === 'Ready' &&
-          userAvatar !== '' && userName !== '' && botId !== '' && botName!== '' &&
+          userAvatar !== '' && userName !== '' && botSettings.id !== '' && botSettings.name!== '' &&
           <Navigation
+            botAvatar={botSettings.avatarId}
             handleToHome={props.handleToHome}
             handleToHub={props.handleToHub}
             />

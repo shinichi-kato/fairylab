@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Box from '@material-ui/core/Box';
 
 import ApplicationBar from './application-bar.jsx';
-import EditPreference from './edit-preference.jsx';
+import ScriptEditor from './script-editor.jsx';
 import ChatViewer from './chat-viewer.jsx';
 
 
@@ -10,9 +10,7 @@ export default function Dashboard(props){
   const [mode, setMode] = useState('Chat');
   const userAvatar = localStorage.getItem('userAvatar');
   const userName  = localStorage.getItem('userName');
-  const botId = localStorage.getItem('botId');
-  const botName = localStorage.getItem('botName');
-  const botAvatar  = localStorage.getItem('botAvatar');
+  const botSettings = JSON.parse(localStorage.getItem('botSettings'));
 
 
   return(
@@ -26,7 +24,9 @@ export default function Dashboard(props){
         <Box order={0}>
           <ApplicationBar
             handleExit= {props.handleExit}
-            handleSetMode = {(m) => setMode(m) }
+            handleChat = {()=>setMode('Chat') }
+            handleEdit = {()=>setMode('ScriptEditor')}
+            handleUpload = {()=>setMode('Uploader')}
           />
         </Box>
 
@@ -34,8 +34,8 @@ export default function Dashboard(props){
           { mode === "Chat" &&
             <ChatViewer />
           }
-          { mode === "EditPreference" &&
-            <EditPreference />
+          { mode === "ScriptEditor" &&
+            <ScriptEditor />
           }
         </Box>
 

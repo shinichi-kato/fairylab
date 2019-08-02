@@ -12,7 +12,8 @@ import SwipeableViews from 'react-swipeable-views';
 const useStyles = makeStyles(theme => createStyles({
   card: {
     borderRadius: 10,
-    height: 400
+    margin: 0,
+    height: 300,
   },
   textField: {
     size: 20,
@@ -60,16 +61,22 @@ export default function BotDownload(props){
 
   const classes = useStyles();
 
-  function handleDownload(e,botId,botAvatar){
-    console.log(botId,botAvatar);
-    props.handleSetBotId(botId);
-    props.handleSetBotAvatar(botAvatar);
+  function handleDownload(e,id,avatar,description){
+    props.handleSetBotSettings(
+      {
+          id: id,
+          avatarId: avatar,
+          description: description,
+          name: ''
+      }
+    );
     props.handleNext();
   }
 
 
   const botItems = bots_dummy.map((bot) =>
-      <Card className={classes.card}>
+      <div style={swipeableStyles.slide}>
+      <Card className={classes.card} >
         <CardHeader avatar={
           <Avatar src={bot.avatar} className={classes.avatar} />
         }
@@ -80,11 +87,12 @@ export default function BotDownload(props){
         </CardContent>
         <CardActions disableSpacing >
           <Button variant="contained" color="primary"
-          onClick={e=>handleDownload(e,bot.id,bot.avatar)} >
+          onClick={e=>handleDownload(e,bot.id,bot.avatar,bot.description)} >
           Download
           </Button>
         </CardActions>
       </Card>
+      </div>
   );
 
   return(
