@@ -34,6 +34,21 @@ export default function ApplicationBar(props){
     setAnchorEl(null);
   }
 
+  function handleEdit(){
+    handleClose();
+    props.handleEdit();
+  }
+
+  function handleChat(){
+    handleClose();
+    props.handleChat();
+  }
+
+  function handleUpload(){
+    handleClose();
+    props.handleUpload();
+  }
+
   return(
     <div className={classes.root}>
       <AppBar position="static">
@@ -73,9 +88,9 @@ export default function ApplicationBar(props){
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={props.handleChat}>チャット</MenuItem>
-            <MenuItem onClick={props.handleEdit}>基本設定の編集</MenuItem>
-            <MenuItem onClick={props.handleUpload}>サーバーに保存</MenuItem>
+            <MenuItem onClick={handleChat}>チャット</MenuItem>
+            <MenuItem onClick={handleEdit}>基本設定の編集</MenuItem>
+            <MenuItem onClick={handleUpload}>サーバーに保存</MenuItem>
 
           </Menu>
         </Toolbar>

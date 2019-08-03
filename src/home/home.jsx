@@ -32,10 +32,15 @@ export default function Dashboard(props){
 
         <Box order={0} flexGrow={1}>
           { mode === "Chat" &&
+            <div style={{height:'calc( 100vh-64px)',overflowY:'scroll'}}>
             <ChatViewer />
+            </div>
           }
+
           { mode === "ScriptEditor" &&
+            <div style={{height:'calc(100vh - 64px)',overflowY:'scroll'}}>
             <ScriptEditor />
+            </div>
           }
         </Box>
 

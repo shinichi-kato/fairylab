@@ -8,6 +8,7 @@ const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+    padding: '0 8px',
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -22,6 +23,9 @@ const useStyles = makeStyles(theme => ({
   },
   partCard: {
     margin: '2%',
+  },
+  button: {
+    margin: theme.spacing(1),
   }
 }));
 
@@ -149,7 +153,7 @@ export default function ScriptEditor(props){
         margin="normal" />
       {partItems}
       <AddCard handleAdd={handleAdd}/>
-      <Button variant="contained" color="primary">
+      <Button variant="contained" color="primary" className={classes.button}>
       Save
       </Button>
     </form>
