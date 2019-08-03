@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-
-import PartCard from './part-card.jsx';
+import Button from '@material-ui/core/Button';
+import PartCard ,{AddCard} from './part-card.jsx';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -30,14 +30,16 @@ if (!localStorage.getItem('botParts')){
   localStorage.setItem('botParts',JSON.stringify(
     [
       {
-        path: 'reframing',
+        name: 'reframing',
+        type: 'sensor',
         availability: 0.5,
         triggerLevel: 0.04,
         retention: 0.6,
         dictionary: {}
       },
       {
-        path: 'greeting',
+        name: 'greeting',
+        type: 'answerer',
         availability: 0.5,
         triggerLevel: 0.04,
         retention: 0.6,
@@ -46,19 +48,68 @@ if (!localStorage.getItem('botParts')){
     ]));
   }
 
-
-
 export default function ScriptEditor(props){
   const classes = useStyles();
-  const settings = localStorage.getItem('botSettings');
-  const parts = localStorage.getItem('botParts');
+  const [settings,setSettings] = useState(JSON.parse(localStorage.getItem('botSettings')));
+  const [parts,setParts] = useState(JSON.parse(localStorage.getItem('botParts')));
+  const [openDialog,setOpenDialog] = useState(false);
 
   const handleChange = name => event => {
-    localStorage.setItem('botSettings',{ ...settings, [name]: event.target.value });
+    setSettings({ ...settings, [name]: event.target.value });
   };
 
-  const partItems = parts.map( (part,index) =>
-      <PartCard id={index} part={part} className={classes.partCard}/>
+  function handleUp(index){
+    if(index==0){ return };
+
+    const cell = parts[index];
+    const newParts=parts
+    newParts.splice(index,1);
+    newParts.splice(index-1,0,cell);
+    setParts([...newParts]);
+  }
+
+  function handleDown(index){
+    const newParts=parts;
+    const cell = parts[index];
+    newParts.splice(index,1);
+    newParts.splice(index+1,0,cell);
+    setParts([...newParts]);
+  }
+
+  function handleAdd(){
+    const newPart= {
+      name: 'part'+parts.length,
+      type: 'sensor',
+      availability: 1,
+      triggerLevel: 0,
+      retention: 1,
+      dictionary: {}
+    };
+    setParts([...parts,newPart]);
+  }
+
+  function handleExecuteDelete(index){
+    const newParts=parts;
+    newParts.splice(index,1);
+    setParts([...newParts]);
+    setOpenDialog(false);
+  }
+
+  const partItems = parts.map( (part,index,parts) =>
+      <PartCard
+        len={parts.length}
+        id={index}
+        part={part}
+        handleDelete={()=>setOpenDialog(true)}
+        handleUp={()=>handleUp(index)}
+        handleDown={()=>handleDown(index)}
+
+        openDialog={openDialog}
+        handleOpenDialog={()=>setOpenDialog(true)}
+        handleCloseDialog={()=>setOpenDialog(false)}
+        handleExecuteDelete={handleExecuteDelete}
+
+      />
   );
 
   return (
@@ -97,6 +148,10 @@ export default function ScriptEditor(props){
         onChange={handleChange('description')}
         margin="normal" />
       {partItems}
+      <AddCard handleAdd={handleAdd}/>
+      <Button variant="contained" color="primary">
+      Save
+      </Button>
     </form>
 
 

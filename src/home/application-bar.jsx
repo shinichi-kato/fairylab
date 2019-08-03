@@ -63,12 +63,12 @@ export default function ApplicationBar(props){
             anchorEl={anchorEl}
             anchorOrigin={{
                 vertical: 'top',
-                horizontai: 'right',
+                horizontal: 'right',
             }}
             keepMounted
             transformOrigin={{
               vertical: 'top',
-              horizontai: 'right',
+              horizontal: 'right',
             }}
             open={open}
             onClose={handleClose}
