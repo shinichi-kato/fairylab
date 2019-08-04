@@ -2,18 +2,21 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import PartCard ,{AddCard} from './part-card.jsx';
+import PartEditor from './part-editor.jsx';
 
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
-    padding: '0 8px',
+    flexGrow: 1,
+    margin: 4,
   },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: 200,
+    width: '100%',
   },
   dense: {
     marginTop: 19,
@@ -39,7 +42,7 @@ if (!localStorage.getItem('botParts')){
         availability: 0.5,
         triggerLevel: 0.04,
         retention: 0.6,
-        dictionary: {}
+        dictionary: ""
       },
       {
         name: 'greeting',
@@ -47,7 +50,7 @@ if (!localStorage.getItem('botParts')){
         availability: 0.5,
         triggerLevel: 0.04,
         retention: 0.6,
-        dictionry: {}
+        dictionry: ""
       }
     ]));
   }
@@ -57,6 +60,8 @@ export default function ScriptEditor(props){
   const [settings,setSettings] = useState(JSON.parse(localStorage.getItem('botSettings')));
   const [parts,setParts] = useState(JSON.parse(localStorage.getItem('botParts')));
   const [openDialog,setOpenDialog] = useState(false);
+  const [currentPart,setCurrentPart] = useState(0);
+  const [mode,setMode] = useState('ScriptEditor');
 
   const handleChange = name => event => {
     setSettings({ ...settings, [name]: event.target.value });
@@ -87,9 +92,15 @@ export default function ScriptEditor(props){
       availability: 1,
       triggerLevel: 0,
       retention: 1,
-      dictionary: {}
+      dictionary: ""
     };
     setParts([...parts,newPart]);
+  }
+  function handleOpenDialog(){
+    setOpenDialog(true);
+  }
+  function handleCloseDialog(){
+    setOpenDialog(false);
   }
 
   function handleExecuteDelete(index){
@@ -99,63 +110,113 @@ export default function ScriptEditor(props){
     setOpenDialog(false);
   }
 
+
+  function handleChangePart(cell,index){
+    const newParts=parts;
+    newParts.splice(index,1,cell);
+    setParts([...newParts])
+    setMode('ScriptEditor');
+  }
+
+  function handleOpenPartEditor(index){
+    setCurrentPart(index);
+    setMode('PartEditor');
+  }
+
+  function handleClosePartEditor(){
+    setMode('ScriptEditor');
+    console.log("handleClosePartEditor")
+  }
+
   const partItems = parts.map( (part,index,parts) =>
       <PartCard
         len={parts.length}
         id={index}
         part={part}
-        handleDelete={()=>setOpenDialog(true)}
+        handleDelete={handleOpenDialog}
         handleUp={()=>handleUp(index)}
         handleDown={()=>handleDown(index)}
 
         openDialog={openDialog}
-        handleOpenDialog={()=>setOpenDialog(true)}
-        handleCloseDialog={()=>setOpenDialog(false)}
+        handleOpenDialog={handleOpenDialog}
+        handleCloseDialog={handleCloseDialog}
         handleExecuteDelete={handleExecuteDelete}
 
+        handleEditPart={()=>handleOpenPartEditor(index)}
+        handleChangePart={part=>handleChangePart(part,index)}
       />
   );
 
   return (
     <form className={classes.container} noValidate autoComplete="off">
-      <TextField
-        required
-        id="name"
-        label="名前"
-        className={classes.textField}
-        value={settings.name}
-        onChange={handleChange('name')}
-        margin="normal" />
-      <TextField
-        required
-        id="botId"
-        label="Bot Id"
-        className={classes.textField}
-        value={settings.id}
-        onChange={handleChange('id')}
-        margin="normal" />
-      <TextField
-        required
-        id="botAvatarId"
-        label="Avatar Id"
-        className={classes.textField}
-        value={settings.avatarId}
-        onChange={handleChange('avatarId')}
-        margin="normal" />
-      <TextField
-        required
-        fullWidth
-        id="description"
-        label="説明"
-        className={classes.textField}
-        value={settings.description}
-        onChange={handleChange('description')}
-        margin="normal" />
-      {partItems}
-      <AddCard handleAdd={handleAdd}/>
-      <Button variant="contained" color="primary" className={classes.button}>
-      Save
-      </Button>
+    { mode === 'ScriptEditor' &&
+      <Grid container spacing={1}>
+      <Grid item xs={6}>
+        <TextField
+          required
+          id="name"
+          label="名前"
+          className={classes.textField}
+          value={settings.name}
+          onChange={handleChange('name')}
+          margin="normal" />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          required
+          id="botId"
+          label="Bot Id"
+          className={classes.textField}
+          value={settings.id}
+          onChange={handleChange('id')}
+          margin="normal" />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          required
+          id="botAvatarId"
+          label="Avatar Id"
+          className={classes.textField}
+          value={settings.avatarId}
+          onChange={handleChange('avatarId')}
+          margin="normal" />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          required
+          fullWidth
+          id="description"
+          label="説明"
+          className={classes.textField}
+          value={settings.description}
+          onChange={handleChange('description')}
+          margin="normal" />
+      </Grid>
+      <Grid item xs={12}>
+        パート
+      </Grid>
+      <Grid item xs={12}>
+        {partItems}
+
+        <AddCard handleAdd={handleAdd}/>
+      </Grid>
+      <Grid item xs={12}>
+        <Button variant="contained" color="primary"
+          className={classes.button}>
+        Save
+        </Button>
+      </Grid>
+
+    </Grid>
+    }
+    { mode === 'PartEditor' &&
+      <PartEditor
+        index={currentPart}
+        parts={parts}
+        handleChangePart={handleChangePart}
+        handleClosePartEditor={handleClosePartEditor}
+      />
+    }
     </form>
 
 

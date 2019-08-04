@@ -79,7 +79,8 @@ export default function PartCard(props){
       }
       title={part.name}
       action={
-        <IconButton aria-label="edit">
+        <IconButton aria-label="edit"
+          onClick={props.handleEditPart}>
         <Create />
         </IconButton>
       }
