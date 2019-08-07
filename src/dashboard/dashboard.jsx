@@ -24,6 +24,7 @@ export default function Dashboard(props){
   const [mode, setMode] = useState('Ready');
   const [userAvatar, setUserAvatar] = useState(localStorage.getItem('userAvatar') || '');
   const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
+  const [botName, setBotName] = useState(localStorage.getItem('botName') || '');
   const [botSettings, setBotSettings] = useState(JSON.parse(localStorage.getItem('botSettings')));
 
   // const estate = localStorage.getItem('bot.estate') || ''
@@ -32,7 +33,7 @@ export default function Dashboard(props){
     // DidMount / DidUpdate
     if(userAvatar === ''){ setMode('AvatarSelect'); }
 
-  });
+  },[userAvatar]);
 
   function handleSetUserName(name){
     localStorage.setItem('userName',name);
@@ -50,10 +51,8 @@ export default function Dashboard(props){
   }
 
   function handleSetBotName(name){
-    const newSettings = {...botSettings,name:name};
-    console.log(newSettings)
-    localStorage.setItem('botSettings',JSON.stringify(newSettings));
-    setBotSettings(newSettings);
+    localStorage.setItem('botName',botName);
+    setUserAvatar(botName);
   }
 
   function handleCancel(){

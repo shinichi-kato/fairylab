@@ -68,7 +68,7 @@ export default function ScriptEditor(props){
   };
 
   function handleUp(index){
-    if(index==0){ return };
+    if(index===0){ return };
 
     const cell = parts[index];
     const newParts=parts
@@ -125,7 +125,11 @@ export default function ScriptEditor(props){
 
   function handleClosePartEditor(){
     setMode('ScriptEditor');
-    console.log("handleClosePartEditor")
+  }
+
+  const handleSaveScript = e => {
+    localStorage.setItem('botSettings',JSON.stringify(settings))
+    localStorage.setItem('botParts',JSON.stringify(parts))
   }
 
   const partItems = parts.map( (part,index,parts) =>
@@ -155,7 +159,7 @@ export default function ScriptEditor(props){
         <TextField
           required
           id="name"
-          label="名前"
+          label="スクリプトの名前"
           className={classes.textField}
           value={settings.name}
           onChange={handleChange('name')}
@@ -202,7 +206,8 @@ export default function ScriptEditor(props){
       </Grid>
       <Grid item xs={12}>
         <Button variant="contained" color="primary"
-          className={classes.button}>
+          className={classes.button}
+          onClick=handleSaveScript>
         Save
         </Button>
       </Grid>

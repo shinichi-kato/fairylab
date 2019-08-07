@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
+const TAB_STRING="    ";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -19,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: '90%',
+    width: '100%',
   },
   dense: {
     marginTop: 19,
@@ -37,7 +38,8 @@ const useStyles = makeStyles(theme => ({
     marginTop: 19,
     width: '90%',
 
-  }
+  },
+
 }));
 
 
@@ -61,8 +63,9 @@ export default function PartEditor(props){
   };
 
   function handleSave(event){
+    const d = dictionary.split('\n').filter(l=>!l.startsWith('#'));
     try {
-      JSON.parse(dictionary);
+      JSON.parse(d.join(''));
     }
     catch(e){
       if (e instanceof SyntaxError){
@@ -70,14 +73,26 @@ export default function PartEditor(props){
       }
     }
     setDictSyntaxError(false);
-    props.handleChangePart(
-      {...param,...dictionary}
-    );
+    props.handleChangePart({...param,dictionary:dictionary},props.index);
     props.handleClosePartEditor();
   }
 
   const handleChangeDictionary = event =>{
     setDictionary(event.target.value)
+  }
+
+  const handleKeyDown = e => {
+    console.log(e.target.selectionStart,e.target.selectionEnd)
+    if(e.key==='Tab'){
+      e.preventDefault(); // preventはevent変更前に記述しないと動作しない
+      e.stopPropagation();
+      const start = e.target.selectionStart;
+      const end = e.target.selectionEnd;
+      setDictionary(dictionary.substring(0,start)+TAB_STRING+dictionary.substring(end));
+      e.target.selectionEnd = start+TAB_STRING.length;
+      return false;
+    }
+    return
   }
 
   return(
@@ -148,14 +163,16 @@ export default function PartEditor(props){
         <TextField
           error={dictSyntaxError}
           id="dictionary-input"
-          label="辞書(JSON形式)"
+          label="辞書(JSON形式,#はコメント行)"
           className={classes.dictionaryInput}
           margin="dense"
           variant="outlined"
           value={dictionary}
           multiline
           onChange={handleChangeDictionary}
-        />
+          onKeyDown={handleKeyDown}
+          rows={20}
+         />
         { dictSyntaxError &&
           <Typography color='error'>
           文法がJSON形式になっていません。

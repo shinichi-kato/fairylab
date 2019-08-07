@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Box from '@material-ui/core/Box';
 
 import ApplicationBar from './application-bar.jsx';
@@ -11,7 +11,7 @@ export default function Dashboard(props){
   const userAvatar = localStorage.getItem('userAvatar');
   const userName  = localStorage.getItem('userName');
   const botSettings = JSON.parse(localStorage.getItem('botSettings'));
-
+  const [chatLog, setChatLog] = useState(localStorage.getItem('chatLog') || []);
 
   return(
       <Box display="flex"
@@ -33,7 +33,8 @@ export default function Dashboard(props){
         <Box order={0} flexGrow={1}>
           { mode === "Chat" &&
             <div style={{height:'calc( 100vh-64px)',overflowY:'scroll'}}>
-            <ChatViewer />
+            <ChatViewer
+              chatLog={chatLog}/>
             </div>
           }
 
