@@ -4,6 +4,7 @@ import Box from '@material-ui/core/Box';
 import ApplicationBar from './application-bar.jsx';
 import ScriptEditor from './script-editor.jsx';
 import ChatViewer from './chat-viewer.jsx';
+import Console from './console.jsx';
 
 
 export default function Dashboard(props){
@@ -47,7 +48,7 @@ export default function Dashboard(props){
 
         { mode === "Chat" &&
           <Box order={0}>
-          input
+          <Console />
           </Box>
         }
 

@@ -73,7 +73,16 @@ export default function PartEditor(props){
       }
     }
     setDictSyntaxError(false);
-    props.handleChangePart({...param,dictionary:dictionary},props.index);
+    const a = parseFloat(param.availability);
+    const t = parseFloat(param.triggerLevel);
+    const r = parseFloat(param.retention);
+
+    props.handleChangePart({
+        ...param,
+        availability: (0 < a && a <= 1 ? a.toFixed(2) : "0"),
+        triggerLevel: (0 < t && t <= 1 ? t.toFixed(2) : "0"),
+        retention: (0 < r && r <= 1 ? r.toFixed(2) : "0"),
+        dictionary:dictionary},props.index);
     props.handleClosePartEditor();
   }
 
@@ -131,29 +140,32 @@ export default function PartEditor(props){
         <TextField
           required
           id="availability"
-          label="稼働率"
+          label="稼働率 0~1"
           className={classes.textField}
           value={param.availability}
           onChange={handleChange('availability')}
+          placeHolder="0.00〜1.00"
           margin="normal" />
       </Grid>
       <Grid item xs={4}>
         <TextField
           required
           id="triggerLevel"
-          label="トリガーレベル"
+          label="トリガーレベル 0~1"
           className={classes.textField}
           value={param.triggerLevel}
           onChange={handleChange('triggerLevel')}
+          placeHolder="0.00〜1.00"
           margin="normal" />
       </Grid>
       <Grid item xs={4}>
         <TextField
           required
           id="retention"
-          label="維持率"
+          label="維持率 0~1"
           className={classes.textField}
           value={param.retention}
+          placeHolder="0.00〜1.00"
           onChange={handleChange('retention')}
           margin="normal" />
       </Grid>

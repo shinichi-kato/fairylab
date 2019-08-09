@@ -66,7 +66,7 @@ export default function PartCard(props){
   const classes = useStyles();
 
   const part = props.part;
-  const subheader="A:"+part.availability.toFixed(2)+" T:"+
+  const subheader="A:"+part.availability+" T:"+
     part.triggerLevel+" R:"+part.retention;
 
   return(

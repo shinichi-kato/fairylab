@@ -23,3 +23,8 @@ serve -s build
 ```
 firebase deploy
 ```
+
+## TODO
+
+稼働率を変更したら文字列型に変わりtoFixが実行できない
+scriptEditorのパート追加ボタンの位置がずれる

@@ -207,7 +207,7 @@ export default function ScriptEditor(props){
       <Grid item xs={12}>
         <Button variant="contained" color="primary"
           className={classes.button}
-          onClick=handleSaveScript>
+          onClick={handleSaveScript}>
         Save
         </Button>
       </Grid>
