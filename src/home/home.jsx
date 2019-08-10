@@ -35,7 +35,7 @@ export default function Home(props){
   const userName  = localStorage.getItem('userName');
   const userId = localStorage.getItem('userId');
   const botSettings = JSON.parse(localStorage.getItem('botSettings'));
-  const [homeLog, setHomeLog] = useState(localStorage.getItem('homeLog'));
+  const [homeLog, setHomeLog] = useState(JSON.parse(localStorage.getItem('homeLog')));
 
 
   return(
@@ -55,7 +55,8 @@ export default function Home(props){
           />
         </Box>
 
-        <Box order={0}>
+        <Box flexGrow={1} order={0}>
+          { mode === "Chat" &&
             <div style={{height:'calc( 100vh-64px)',overflowY:'scroll'}}>
             <ChatViewer
               userId={0}
@@ -72,7 +73,7 @@ export default function Home(props){
         </Box>
 
         { mode === "Chat" &&
-          <Box order={0} flexGrow={1}>
+          <Box order={0}>
           <Console />
           </Box>
         }

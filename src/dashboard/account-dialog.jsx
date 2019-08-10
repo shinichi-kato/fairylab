@@ -26,6 +26,7 @@ export default function AccountDialog(props){
   const [password,setPassword] = useState("");
   const [mode,setMode] = useState("SignIn");
   const [anchorEl, setAnchorEl] = useState(null);
+  const [message, setMessage] = useState("");
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
@@ -33,6 +34,32 @@ export default function AccountDialog(props){
 
   function handleClose() {
     setAnchorEl(null);
+  }
+
+  function handleSignIn() {
+      props.firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ...
+    });
+  }
+
+  function handleNewAccount(){
+    props.firebase.auth()
+      .createUserWithEmailAndPassword(email, password)
+      .catch(function(error) {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ...
+      if(errorCode === 'auth/wrong-password') {
+        setMessage("パスワードが違います");
+      }
+      else{
+        setMessage(errorMessage)
+      };
+    });
   }
 
   const open = Boolean(anchorEl);
@@ -89,10 +116,11 @@ export default function AccountDialog(props){
             onChange={e=>setPassword(e.target.value)} />
           </Box>
           <Box display="inline-box">
-            <Button color="primary" variant="contained">
+            <Button color="primary" variant="contained"
+            onClick={handleSignIn}>
             サインイン
             </Button>
-            <Button color="default">
+            <Button color="default" onClick={handleClose}>
             Cancel
             </Button>
             <Button color="primary">

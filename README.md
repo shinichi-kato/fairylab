@@ -12,10 +12,18 @@ FairyLab
 
 ## test
 
+javascript部分のみのテスト
 ```
 npm run test
 npm run build
 serve -s build
+```
+
+firebase込のテスト
+```
+npm run test
+npm run build
+firebase serve
 ```
 
 ## deployment

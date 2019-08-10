@@ -24,7 +24,6 @@ export default function Dashboard(props){
   const [mode, setMode] = useState('Ready');
   const [userAvatar, setUserAvatar] = useState(localStorage.getItem('userAvatar') || '');
   const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
-  const [botName, setBotName] = useState(localStorage.getItem('botName') || '');
   const [botSettings, setBotSettings] = useState(JSON.parse(localStorage.getItem('botSettings')));
 
   // const estate = localStorage.getItem('bot.estate') || ''
@@ -51,8 +50,9 @@ export default function Dashboard(props){
   }
 
   function handleSetBotName(name){
-    localStorage.setItem('botName',botName);
-    setUserAvatar(botName);
+    const newSettings={...botSettings,name:name};
+    localStorage.setItem('botSettings',JSON.stringify(newSettings));
+    setBotSettings(newSettings);
   }
 
   function handleCancel(){
