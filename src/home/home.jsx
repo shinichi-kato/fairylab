@@ -13,6 +13,7 @@ export default function Dashboard(props){
   const userName  = localStorage.getItem('userName');
   const botSettings = JSON.parse(localStorage.getItem('botSettings'));
   const [chatLog, setChatLog] = useState(localStorage.getItem('chatLog') || []);
+  
 
   return(
       <Box display="flex"
