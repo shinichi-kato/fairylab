@@ -7,13 +7,36 @@ import ChatViewer from './chat-viewer.jsx';
 import Console from './console.jsx';
 
 
-export default function Dashboard(props){
+if (!localStorage.getItem('homeLog')){
+  localStorage.setItem('homeLog',JSON.stringify(
+    [
+      {
+        id:0,
+        name:'user',
+        speakerId: 'mailaddress',
+        avatar:'avatar/user/1boy.svg',
+        text:'こんにちは！',
+        timestamp:[2019,7,9,12,12,22]
+      },
+      {
+        id: 1,
+        name:'bot',
+        speakerId:'bot@mailadress',
+        avatar:'avatar/user/8dino.svg',
+        text:'やあ！',
+        timestamp:[2019,7,9,12,12,22]
+      }
+    ]));
+}
+
+export default function Home(props){
   const [mode, setMode] = useState('Chat');
   const userAvatar = localStorage.getItem('userAvatar');
   const userName  = localStorage.getItem('userName');
+  const userId = localStorage.getItem('userId');
   const botSettings = JSON.parse(localStorage.getItem('botSettings'));
-  const [chatLog, setChatLog] = useState(localStorage.getItem('chatLog') || []);
-  
+  const [homeLog, setHomeLog] = useState(localStorage.getItem('homeLog'));
+
 
   return(
       <Box display="flex"
@@ -32,11 +55,12 @@ export default function Dashboard(props){
           />
         </Box>
 
-        <Box order={0} flexGrow={1}>
-          { mode === "Chat" &&
+        <Box order={0}>
             <div style={{height:'calc( 100vh-64px)',overflowY:'scroll'}}>
             <ChatViewer
-              chatLog={chatLog}/>
+              userId={0}
+              buddyId={0}
+              log={homeLog}/>
             </div>
           }
 
@@ -48,7 +72,7 @@ export default function Dashboard(props){
         </Box>
 
         { mode === "Chat" &&
-          <Box order={0}>
+          <Box order={0} flexGrow={1}>
           <Console />
           </Box>
         }

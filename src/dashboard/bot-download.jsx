@@ -43,17 +43,20 @@ const bots_dummy = [
   {
     avatar:'avatar/user/12panther.svg',
     desc:'リフレーミングの実験用チャットボット',
-    id:'reflamer-test'
+    ownerId:'',
+    id:'reflamer-test',
   },
   {
     avatar:'avatar/user/13lion.svg',
     desc:'ライオン（Panthera leo） は、食肉目ネコ科ヒョウ属に分類される食肉類の哺乳類。別名はシシ（獅子）。オスは体重は250キログラムを超えることもあり、ネコ科ではトラに次いで2番目に大きな種である',
-    id:'test1'
+    ownerId:'',
+    id:'test1',
   },
   {
     avatar:'avatar/user/14panda.svg',
     desc:'単にパンダといった場合、現在ではジャイアントパンダのことを指すことが多い。しかし、当初は先に発見されたレッサーパンダに対して「パンダ」と命名され、後に類縁関係にあると見做されたジャイアントパンダが',
-    id:'test2'
+    ownerId:'',
+    id:'test2',
   },
 ];
 
@@ -68,6 +71,7 @@ export default function BotDownload(props){
           avatarId: avatar,
           description: description,
           name: ''
+
       }
     );
     props.handleNext();

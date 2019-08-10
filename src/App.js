@@ -7,6 +7,8 @@ import Home from './home/home.jsx';
 import Hub from './hub/hub.jsx';
 
 import * as firebase from 'firebase/app';
+import "firebase/auth";
+
 import firebaseConfig from './credentials/firebase-config.jsx';
 firebase.initializeApp(firebaseConfig);
 
@@ -27,6 +29,7 @@ function App() {
     <ThemeProvider theme={theme}>
       { mode === "Dashboard" &&
         <Dashboard
+          firebase={firebase}
           handleToHome={() => setMode('Home')}
           handleToHub={() => setMode('Hub')}
         />

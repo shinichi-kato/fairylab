@@ -91,7 +91,6 @@ export default function PartEditor(props){
   }
 
   const handleKeyDown = e => {
-    console.log(e.target.selectionStart,e.target.selectionEnd)
     if(e.key==='Tab'){
       e.preventDefault(); // preventはevent変更前に記述しないと動作しない
       e.stopPropagation();

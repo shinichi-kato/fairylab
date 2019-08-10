@@ -69,6 +69,7 @@ export default function Dashboard(props){
       height="100%">
       <Box order={0}>
         <ApplicationBar
+          firebase={props.firebase}
           handleDoSettings= {()=>setMode('AvatarSelect')}
         />
       </Box>
