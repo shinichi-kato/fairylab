@@ -36,7 +36,7 @@ export default function AccountDialog(props){
   }
 
   function handleClose() {
-      props.handleChangeAccount({...props.account,state:'yet'});
+    props.handleChangeAccount({...props.account,state:'yet'});
     setAnchorEl(null);
 
   }

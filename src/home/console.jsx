@@ -35,16 +35,32 @@ export default function Console(props) {
     setText(e.target.value)
   }
 
+  const handleKeyPress = e => {
+      if(e.key == 'Enter'){
+          e.preventDefault();
+          handleWriteMessage();
+      }
+  }
+
+  function handleWriteMessage(){
+    const t = String(text);
+    setText("");
+    props.handleWriteMessage(t);
+  }
+
   return (
     <Paper className={classes.root}>
       <InputBase
         className={classes.input}
         value={text}
         onChange={handleChangeText}
+        onKeyPress={handleKeyPress}
         inputProps={{ 'aria-label': 'search google maps' }}
       />
       <Divider className={classes.divider} />
-      <IconButton color="primary" className={classes.iconButton} aria-label="send">
+      <IconButton
+        onClick={e=>handleWriteMessage()}
+        color="primary" className={classes.iconButton} aria-label="send">
         <Send />
       </IconButton>
     </Paper>

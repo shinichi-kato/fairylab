@@ -6,6 +6,7 @@ import ScriptEditor from './script-editor.jsx';
 import ChatViewer from './chat-viewer.jsx';
 import Console from './console.jsx';
 
+const CHAT_WINDOW = 10;
 
 if (!localStorage.getItem('homeLog')){
   localStorage.setItem('homeLog',JSON.stringify(
@@ -35,8 +36,25 @@ export default function Home(props){
   const userName  = localStorage.getItem('userName');
   const userId = localStorage.getItem('userId');
   const botSettings = JSON.parse(localStorage.getItem('botSettings'));
-  const [homeLog, setHomeLog] = useState(JSON.parse(localStorage.getItem('homeLog')));
+  const [homeLog,setHomeLog]= useState(JSON.parse(localStorage.getItem('homeLog')));
 
+
+  function handleWriteMessage(text){
+    console.log(text)
+    const ts = new Date()
+    const message={
+      name:userName,
+      speakerId: userName,
+      avatar:userAvatar,
+      text:text,
+      timestamp:[
+        ts.getFullYear(),ts.getMonth()+1,ts.getDate(),
+        ts.getHours(),ts.getMinutes(),ts.getSeconds()]
+    };
+    const newHomeLog=[...homeLog,message];
+    setHomeLog(newHomeLog);
+    localStorage.setItem('homeLog',JSON.stringify(newHomeLog));
+  }
 
   return(
       <Box display="flex"
@@ -55,26 +73,26 @@ export default function Home(props){
           />
         </Box>
 
-        <Box flexGrow={1} order={0}>
-          { mode === "Chat" &&
-            <div style={{height:'calc( 100vh-64px)',overflowY:'scroll'}}>
-            <ChatViewer
-              userId={0}
-              buddyId={0}
-              log={homeLog}/>
-            </div>
-          }
-
-          { mode === "ScriptEditor" &&
+        { mode === "Chat" &&
+          <>
+            <Box flexGrow={1} order={0}>
+              <div style={{height:'calc( 100vh-64px)',overflowY:'scroll'}}>
+              <ChatViewer
+                  userId={0}
+                  buddyId={0}
+                  log={homeLog.slice(-CHAT_WINDOW)}/>
+              </div>
+            </Box>
+            <Box order={0}>
+              <Console handleWriteMessage={handleWriteMessage}/>
+            </Box>
+          </>
+        }
+        { mode === "ScriptEditor" &&
+          <Box>
             <div style={{height:'calc(100vh - 64px)',overflowY:'scroll'}}>
             <ScriptEditor />
             </div>
-          }
-        </Box>
-
-        { mode === "Chat" &&
-          <Box order={0}>
-          <Console />
           </Box>
         }
 
