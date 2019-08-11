@@ -38,6 +38,8 @@ export default function ApplicationBar(props){
 
           </Typography>
           <AccountDialog
+            account={props.account}
+            handleChangeAccount={props.handleChangeAccount}
             firebase={props.firebase}
             />
         </Toolbar>

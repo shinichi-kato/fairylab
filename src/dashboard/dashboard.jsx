@@ -23,7 +23,7 @@ if (!localStorage.getItem('botSettings')){
 export default function Dashboard(props){
   const [mode, setMode] = useState('Ready');
   const [userAvatar, setUserAvatar] = useState(localStorage.getItem('userAvatar') || '');
-  const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
+  const [userName, setUserName] = useState(localStorage.getItem('userName') || props.account.displayName || '');
   const [botSettings, setBotSettings] = useState(JSON.parse(localStorage.getItem('botSettings')));
 
   // const estate = localStorage.getItem('bot.estate') || ''
@@ -70,6 +70,8 @@ export default function Dashboard(props){
       <Box order={0}>
         <ApplicationBar
           firebase={props.firebase}
+          account={props.account}
+          handleChangeAccount={props.handleChangeAccount}
           handleDoSettings= {()=>setMode('AvatarSelect')}
         />
       </Box>

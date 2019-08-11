@@ -17,35 +17,65 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
   },
-
+  button: {
+    margin: theme.spacing(1),
+  }
 }));
 
 export default function AccountDialog(props){
   const classes = useStyles();
-  const [email,setEmail] = useState("");
+  const [email,setEmail] = useState(props.account.email || "");
   const [password,setPassword] = useState("");
-  const [mode,setMode] = useState("SignIn");
   const [anchorEl, setAnchorEl] = useState(null);
   const [message, setMessage] = useState("");
+
+
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
   }
 
   function handleClose() {
+      props.handleChangeAccount({...props.account,state:'yet'});
     setAnchorEl(null);
+
   }
+  const authState = props.account.state;
 
   function handleSignIn() {
-      props.firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // ...
-    });
+
+    if (authState !== "run"){
+      props.handleChangeAccount({...props.account,state:'run'});
+
+      props.firebase.auth()
+        .signInWithEmailAndPassword(email, password)
+        .catch(function(error) {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // ...
+          props.handleChangeAccount({...props.account,state:'error'})
+
+          if(errorCode === 'auth/user-not-found') {
+            setMessage("ユーザが登録されていません");
+          }
+          else if(errorCode === 'auth/wrong-password') {
+            setMessage("パスワードが違います");
+          }
+          else if(errorCode === 'auth/invalid-email') {
+            setMessage("不正なemailアドレスです");
+          }
+          else{
+            setMessage(errorMessage)
+          };
+    });}
+
+    else if (authState === 'ok'){
+        handleClose();
+    }
   }
 
-  function handleNewAccount(){
+  function handleNewAccount(e){
     props.firebase.auth()
       .createUserWithEmailAndPassword(email, password)
       .catch(function(error) {
@@ -62,12 +92,20 @@ export default function AccountDialog(props){
     });
   }
 
+  function handleClearLocalStorage(e){
+    localStorage.clear();
+  }
+
+
+
+
   const open = Boolean(anchorEl);
   const id = open ? 'account-popover' : undefined;
 
+
   return(
     <div>
-      サインインしてください
+      {props.account.displayName || props.account.email}
       <IconButton
         aria-describedby={id} variant="contained" onClick={handleClick}>
       <AccountCircle />
@@ -116,15 +154,30 @@ export default function AccountDialog(props){
             onChange={e=>setPassword(e.target.value)} />
           </Box>
           <Box display="inline-box">
-            <Button color="primary" variant="contained"
+
+            <Button className={classes.button}
+              color="primary"
+              disabled ={authState === "run"}
+              variant="contained"
             onClick={handleSignIn}>
-            サインイン
+            {authState === 'ok' && 'OK'}
+            {(authState === 'yet' || authState === 'error')
+              && 'サインイン'}
+            {authState === 'run' && '確認中'}
             </Button>
-            <Button color="default" onClick={handleClose}>
+            <Button className={classes.button}
+              color="default" onClick={handleClose}>
             Cancel
             </Button>
-            <Button color="primary">
+            <Button className={classes.button}
+              color="primary" onClick={handleNewAccount}>
             新規登録
+            </Button>
+          </Box>
+          {message && <Box>{message}</Box>}
+          <Box>
+            <Button variant="contained" onClick={handleClearLocalStorage}>
+            LocalStorageを削除(開発用)
             </Button>
           </Box>
         </Box>
@@ -133,36 +186,3 @@ export default function AccountDialog(props){
    </div>
  );
 }
-
-// <TextField
-//   required
-//   id="email"
-//   label="Your E-Mail"
-//   className={classes.textField}
-//   margin="normal"
-//   variant="email"
-//   value={email}
-//   onChange={e=>setEmail(e.target.value)}
-//   />
-// <TextField
-//   required
-//   id="password"
-//   id="password"
-//   label="Password"
-//   className={classes.textField}
-//   margin="normal"
-//   variant="password"
-//   value={password}
-//   onChange={e=>setPassword(e.target.value)} />
-//
-//  <Box display="inline-box">
-//    <Button color="primary">
-//    サインイン
-//    </Button>
-//    <Button>
-//    Cancel
-//    </Button>
-//    <Button>
-//    新規登録
-//    </Button>
-//  </Box>

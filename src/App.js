@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 
@@ -9,7 +9,7 @@ import Hub from './hub/hub.jsx';
 import * as firebase from 'firebase/app';
 import "firebase/auth";
 
-import firebaseConfig from './credentials/firebase-config.jsx';
+import {firebaseConfig} from './credentials/firebase-config.jsx';
 firebase.initializeApp(firebaseConfig);
 
 const theme = createMuiTheme({
@@ -21,14 +21,39 @@ const theme = createMuiTheme({
 
 });
 
+const accountDisconnected={
+  displayName:null,
+  email:null,
+  photoURL:null,
+  isAnonymous:null,
+  uid:null,
+  emailVerified:null,
+  providerData:null,
+  state:'yet',  //　追加のプロパティ：確認中の間true。account-dialog.jsxで利用
+};
 
 function App() {
   const [mode, setMode] = useState("Dashboard");
+  const [account,setAccount] = useState({...accountDisconnected  });
+
+  useEffect(()=>{
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        setAccount({...user,state:'ok'});
+      } else {
+        setAccount({...accountDisconnected,state:'yet'})// User is signed out.
+        // ...
+      }
+    });
+  },[]);
+
 
   return (
     <ThemeProvider theme={theme}>
       { mode === "Dashboard" &&
         <Dashboard
+          account={account}
+          handleChangeAccount={a=>setAccount(a)}
           firebase={firebase}
           handleToHome={() => setMode('Home')}
           handleToHub={() => setMode('Hub')}
