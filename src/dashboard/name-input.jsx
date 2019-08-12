@@ -33,8 +33,16 @@ export default function NameInput(props) {
     props.handleNext();
   }
 
+
   const handleChangeName = event => {
       setName(event.target.value);
+  }
+
+  const handleKeyPress = e => {
+      if(e.key == 'Enter'){
+          e.preventDefault();
+          handleChangeName(e);
+      }
   }
 
   return (
@@ -46,6 +54,7 @@ export default function NameInput(props) {
           className={classes.textField}
           value={name}
           onChange={handleChangeName}
+          onKeyPress={handleKeyPress}
           margin="normal"
         />
 

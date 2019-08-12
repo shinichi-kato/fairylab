@@ -176,7 +176,8 @@ export default function AccountDialog(props){
           </Box>
           {message && <Box>{message}</Box>}
           <Box>
-            <Button variant="contained" onClick={handleClearLocalStorage}>
+            <Button variant="contained" onClick={handleClearLocalStorage}
+              className={classes.button}>
             LocalStorageを削除(開発用)
             </Button>
           </Box>

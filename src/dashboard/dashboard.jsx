@@ -16,6 +16,7 @@ if (!localStorage.getItem('botSettings')){
           avatarId: 'blank',
           description: '',
           name: '',
+          published: false,
       }
     ))
 }

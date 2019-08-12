@@ -5,6 +5,8 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import PartCard ,{AddCard} from './part-card.jsx';
 import PartEditor from './part-editor.jsx';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -184,6 +186,15 @@ export default function ScriptEditor(props){
           value={settings.avatarId}
           onChange={handleChange('avatarId')}
           margin="normal" />
+      </Grid>
+      <Grid item xs={6}>
+        <FormControlLabel
+          control={<Switch
+            value="published"
+            checked={settings.published}
+            onChange={()=>handleChange('published')} />}
+          label="公開" />
+
       </Grid>
       <Grid item xs={12}>
         <TextField

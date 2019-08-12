@@ -56,6 +56,14 @@ export default function Home(props){
     localStorage.setItem('homeLog',JSON.stringify(newHomeLog));
   }
 
+  function handleExit(){
+    if(mode !== 'Chat'){
+      setMode('Chat');
+      return;
+    }
+    props.handleExit()
+  }
+
   return(
       <Box display="flex"
         flexDirection="column"
@@ -66,7 +74,7 @@ export default function Home(props){
         height="100%">
         <Box order={0}>
           <ApplicationBar
-            handleExit= {props.handleExit}
+            handleExit= {handleExit}
             handleChat = {()=>setMode('Chat') }
             handleEdit = {()=>setMode('ScriptEditor')}
             handleUpload = {()=>setMode('Uploader')}
@@ -75,13 +83,13 @@ export default function Home(props){
 
         { mode === "Chat" &&
           <>
-            <Box flexGrow={1} order={0}>
-              <div style={{height:'calc( 100vh-64px)',overflowY:'scroll'}}>
+            <Box flexGrow={1} order={0}
+               style={{height:'calc( 100vh-64px)',overflowY:'scroll'}}>
               <ChatViewer
                   userId={0}
                   buddyId={0}
                   log={homeLog.slice(-CHAT_WINDOW)}/>
-              </div>
+
             </Box>
             <Box order={0}>
               <Console handleWriteMessage={handleWriteMessage}/>

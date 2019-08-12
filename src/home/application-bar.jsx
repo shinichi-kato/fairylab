@@ -49,6 +49,10 @@ export default function ApplicationBar(props){
     props.handleUpload();
   }
 
+  function handleDeleteHomeLog(){
+    localStorage.removeItem('homeLog');
+  }
+
   return(
     <div className={classes.root}>
       <AppBar position="static">
@@ -88,10 +92,9 @@ export default function ApplicationBar(props){
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleChat}>チャット</MenuItem>
-            <MenuItem onClick={handleEdit}>基本設定の編集</MenuItem>
-            <MenuItem onClick={handleUpload}>サーバーに保存</MenuItem>
-
+            <MenuItem onClick={handleEdit}>チャットボット辞書の編集</MenuItem>
+            <MenuItem onClick={handleUpload}>チャットボットをサーバに保存</MenuItem>
+            <MenuItem onClick={handleDeleteHomeLog}>ログの削除</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
