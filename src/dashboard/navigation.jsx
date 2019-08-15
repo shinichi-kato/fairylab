@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
@@ -38,6 +39,7 @@ const useStyles = makeStyles(theme => createStyles({
 
 export default function Navigation(props){
   const classes = useStyles();
+  const signedIn = Boolean(props.account.uid);
 
   return(
     <div className={classes.root}>
@@ -49,16 +51,29 @@ export default function Navigation(props){
         </Button>
       </Grid>
       <Grid item xs={6} style={{textAlign:'right', position:"relative"}}>
-        <Button className={classes.hubButton}
-          onClick={props.handleToHub}>
-          <img className={classes.buttonImage} src="icons/hub.svg" alt="HUB"/>
-        </Button>
-        <Box position="absolute" top={0} left={0}>
-          <Button className={classes.takeMeButton}>
-            <Avatar src={props.botAvatar} />つれていく</Button>
+        {signedIn ?
+            <>
+            <Button className={classes.hubButton}
+              onClick={props.handleToHub}>
+              <img className={classes.buttonImage} src="icons/hub.svg" alt="HUB"/>
+            </Button>
+            <Box position="absolute" top={0} left={0}>
+              <Button className={classes.takeMeButton}>
+                <Avatar src={props.botAvatar} />つれていく</Button>
+            </Box>
+            </>
+            :
+            <Tooltip open={true} title={"サインインしてください"} placement="top">
+              <Button className={classes.hubButton}
+                disabled
+                onClick={props.handleToHub}>
+                <img className={classes.buttonImage} src="icons/hub.svg" alt="HUB"/>
+              </Button>
+            </Tooltip>
+        }
 
-        </Box>
-      </Grid>
+
+        </Grid>
       </Grid>
 
 

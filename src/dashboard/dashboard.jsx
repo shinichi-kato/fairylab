@@ -115,13 +115,14 @@ export default function Dashboard(props){
         <IconsPanel
           userName={userName}
           userAvatar={userAvatar}
-          botName={botSettings.name}
-          botAvatar={botSettings.avatarId} />
+          botSettings={botSettings}
+          />
       </Box>
       <Box order={0} >
         { mode === 'Ready' &&
           userAvatar !== '' && userName !== '' && botSettings.id !== '' && botSettings.name!== '' &&
           <Navigation
+            account={props.account}
             botAvatar={botSettings.avatarId}
             handleToHome={props.handleToHome}
             handleToHub={props.handleToHub}

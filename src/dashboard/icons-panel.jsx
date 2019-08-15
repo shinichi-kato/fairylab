@@ -1,9 +1,13 @@
-import React from 'react';
+import React ,{useState} from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Dialog from '@material-ui/core/Dialog';
+import BotStatusDialog from './bot-status-dialog.jsx';
+
+
 
 const blankUserAvatar = 'avatar/user/blank.svg';
 const blankBotAvatar = 'avatar/bot/blank.svg';
@@ -30,7 +34,11 @@ const useStyles = makeStyles(theme => createStyles({
 
 export default function IconsPanel(props){
   const classes = useStyles();
+  const botSettings = props.botSettings;
+  const [open,setOpen] = useState(false);
 
+  function handleClickOpen() { setOpen(true); }
+  function handleClose() { setOpen(false); }
 
   return(
     <Grid
@@ -54,17 +62,31 @@ export default function IconsPanel(props){
       </Grid>
       <Grid container item xs={6}>
         <Grid item xs={12} className={classes.char}>
+          <Button onClick={handleClickOpen}>
           <Avatar
             className={classes.avatar}
-            src={props.botAvatar || blankBotAvatar} />
+            src={botSettings.avatarId || blankBotAvatar} />
+          </Button>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="bot-status-title"
+              aria-describedby="bot-status-description"
+            >
+              <BotStatusDialog
+                botSettings={props.botSettings}
+                handleClose={handleClose}/>
+
+            </Dialog>
         </Grid>
         <Grid item xs={12} className={classes.char}>
           <Typography
             className={classes.name}>
-            {props.botName}
+            {botSettings.name}
           </Typography>
         </Grid>
       </Grid>
+
 
     </Grid>
 

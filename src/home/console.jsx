@@ -11,7 +11,9 @@ const useStyles = makeStyles({
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: '90%',
+    width: '95%',
+    borderRadius: '0.5em',
+    margin:'auto'
   },
   input: {
     marginLeft: 8,

@@ -53,6 +53,8 @@ export default function ApplicationBar(props){
     localStorage.removeItem('homeLog');
   }
 
+  const signedIn = Boolean(props.account.uid);
+
   return(
     <div className={classes.root}>
       <AppBar position="static">
@@ -82,6 +84,7 @@ export default function ApplicationBar(props){
             anchorEl={anchorEl}
             anchorOrigin={{
                 vertical: 'top',
+                
                 horizontal: 'right',
             }}
             keepMounted
@@ -93,7 +96,9 @@ export default function ApplicationBar(props){
             onClose={handleClose}
           >
             <MenuItem onClick={handleEdit}>チャットボット辞書の編集</MenuItem>
-            <MenuItem onClick={handleUpload}>チャットボットをサーバに保存</MenuItem>
+            <MenuItem onClick={handleUpload}
+              disabled = {!signedIn}>
+              { signedIn ? "アップロード" : "アップロード(要サインイン)"} </MenuItem>
             <MenuItem onClick={handleDeleteHomeLog}>ログの削除</MenuItem>
           </Menu>
         </Toolbar>

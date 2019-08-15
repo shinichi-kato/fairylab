@@ -106,6 +106,7 @@ export default function Home(props){
         height="100%">
         <Box order={0}>
           <ApplicationBar
+            account={props.account}
             handleExit= {handleExit}
             handleChat = {handleChat}
             handleEdit = {handleEdit}
@@ -123,7 +124,7 @@ export default function Home(props){
                   buddyId={0}
                   log={homeLog.slice(-CHAT_WINDOW)}/>
             </Box>
-            <Box order={0}>
+            <Box order={0} justifyContent="center">
               <Console
                 position={position}
                 handleWriteMessage={handleWriteMessage}/>

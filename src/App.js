@@ -80,6 +80,7 @@ function App() {
       }
       { mode === "Home" &&
         <Home
+          account={account}
           handleExit={() => setMode('Dashboard')}
         />
       }
