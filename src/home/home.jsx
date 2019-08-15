@@ -6,6 +6,7 @@ import ApplicationBar from './application-bar.jsx';
 import ScriptEditor from './script-editor.jsx';
 import ChatViewer from './chat-viewer.jsx';
 import Console from './console.jsx';
+import ScriptUploader from './script-uploader.jsx';
 
 const CHAT_WINDOW = 10;
 
@@ -137,6 +138,16 @@ export default function Home(props){
             <ScriptEditor />
             </div>
           </Box>
+        }
+        { mode === "Uploader" &&
+          <Box>
+          <div style={{height:'calc( 100vh - 64px )',overflowY:'scroll'}}>
+            <ScriptUploader
+              handleClose={handleChat}
+              botSettings={botSettings}
+            />
+          </div>
+        </Box>
         }
 
       </Box>

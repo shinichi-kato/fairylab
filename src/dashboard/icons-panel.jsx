@@ -48,9 +48,11 @@ export default function IconsPanel(props){
       <Grid container item xs={6} >
         <Grid item xs={12}
           className={classes.char}>
+          <Button>
           <Avatar
             className={classes.avatar}
             src={props.userAvatar || blankUserAvatar} />
+          </Button>
         </Grid>
         <Grid item xs={12}
           className={classes.char}>

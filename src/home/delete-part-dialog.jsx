@@ -6,16 +6,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-export default function DeletePartDialog(props) {
-
-
-  return(
-    <Dialog
-      open={props.open}
-      onClose={props.handleClose}
-      aria-labelledby="dialog-title"
-      aria-describedby="dialog-description"
-      >
+function DeletePartDialogBody(props){
+    return(
+      <>
       <DialogTitle id="dialog-title">{props.part.name}を削除します</DialogTitle>
       <DialogContent>
         <DialogContentText id="dialog-description">
@@ -30,6 +23,25 @@ export default function DeletePartDialog(props) {
           OK
         </Button>
       </DialogActions>
+      </>
+    )
+}
+
+export default function DeletePartDialog(props) {
+
+
+  return(
+    <Dialog
+      open={props.open}
+      onClose={props.handleClose}
+      aria-labelledby="dialog-title"
+      aria-describedby="dialog-description"
+      >
+        <DeletePartDialogBody
+          part={props.part}
+          handleClose={props.handleClose}
+          handleExecuteDelete={props.handleExecuteDelete} />
+
     </Dialog>
 
   )

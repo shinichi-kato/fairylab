@@ -1,25 +1,29 @@
-[debug] [2019-08-15T13:14:38.452Z] ----------------------------------------------------------------------
-[debug] [2019-08-15T13:14:38.457Z] Command:       /home/shinichi/.nvm/versions/node/v12.5.0/bin/node /home/shinichi/.nvm/versions/node/v12.5.0/bin/firebase serve
-[debug] [2019-08-15T13:14:38.457Z] CLI Version:   7.2.2
-[debug] [2019-08-15T13:14:38.457Z] Platform:      linux
-[debug] [2019-08-15T13:14:38.457Z] Node Version:  v12.5.0
-[debug] [2019-08-15T13:14:38.458Z] Time:          Thu Aug 15 2019 22:14:38 GMT+0900 (GMT+09:00)
-[debug] [2019-08-15T13:14:38.458Z] ----------------------------------------------------------------------
+[debug] [2019-08-15T14:21:03.454Z] ----------------------------------------------------------------------
+[debug] [2019-08-15T14:21:03.459Z] Command:       /home/shinichi/.nvm/versions/node/v12.5.0/bin/node /home/shinichi/.nvm/versions/node/v12.5.0/bin/firebase serve
+[debug] [2019-08-15T14:21:03.459Z] CLI Version:   7.2.2
+[debug] [2019-08-15T14:21:03.459Z] Platform:      linux
+[debug] [2019-08-15T14:21:03.459Z] Node Version:  v12.5.0
+[debug] [2019-08-15T14:21:03.460Z] Time:          Thu Aug 15 2019 23:21:03 GMT+0900 (GMT+09:00)
+[debug] [2019-08-15T14:21:03.460Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2019-08-15T13:14:38.470Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2019-08-15T13:14:38.470Z] > authorizing via signed-in user
-[debug] [2019-08-15T13:14:38.470Z] [iam] checking project fairylab-efb48 for permissions ["firebase.projects.get"]
-[debug] [2019-08-15T13:14:38.474Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/fairylab-efb48:testIamPermissions  
+[debug] [2019-08-15T14:21:03.472Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-08-15T14:21:03.472Z] > authorizing via signed-in user
+[debug] [2019-08-15T14:21:03.473Z] [iam] checking project fairylab-efb48 for permissions ["firebase.projects.get"]
+[debug] [2019-08-15T14:21:03.476Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-08-15T14:21:03.477Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-08-15T14:21:03.723Z] <<< HTTP RESPONSE 200
+[debug] [2019-08-15T14:21:03.734Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/fairylab-efb48:testIamPermissions  
 
-[debug] [2019-08-15T13:14:39.364Z] <<< HTTP RESPONSE 200
-[debug] [2019-08-15T13:14:39.380Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/fairylab-efb48  
+[debug] [2019-08-15T14:21:04.662Z] <<< HTTP RESPONSE 200
+[debug] [2019-08-15T14:21:04.665Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/fairylab-efb48  
  
-[debug] [2019-08-15T13:14:40.109Z] <<< HTTP RESPONSE 200
+[debug] [2019-08-15T14:21:05.408Z] <<< HTTP RESPONSE 200
 [info] 
 [info] === Serving from '/home/shinichi/fairylab'...
 [info] 
-[debug] [2019-08-15T13:14:40.130Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/fairylab-efb48/webApps/-/config  
+[debug] [2019-08-15T14:21:05.412Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/fairylab-efb48/webApps/-/config  
  
-[debug] [2019-08-15T13:14:40.850Z] <<< HTTP RESPONSE 200
+[debug] [2019-08-15T14:21:05.900Z] <<< HTTP RESPONSE 200
 [info] i  hosting: Serving hosting files from: build
 [info] ✔  hosting: Local server: http://localhost:5000
