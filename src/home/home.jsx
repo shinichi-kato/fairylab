@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 
 import ApplicationBar from './application-bar.jsx';
@@ -7,6 +8,15 @@ import ChatViewer from './chat-viewer.jsx';
 import Console from './console.jsx';
 
 const CHAT_WINDOW = 10;
+
+const useStyles = makeStyles(theme => ({
+  container: {
+   height:'calc( 100vh - 64px )',
+   overflowY:'scroll',
+   overscrollBehavior:'auto',
+   WebkitOverflowScrolling:'touch'
+ }
+}));
 
 if (!localStorage.getItem('homeLog')){
   localStorage.setItem('homeLog',JSON.stringify(
@@ -31,6 +41,7 @@ if (!localStorage.getItem('homeLog')){
 }
 
 export default function Home(props){
+  const classes = useStyles();
   const [mode, setMode] = useState('Chat');
   const userAvatar = localStorage.getItem('userAvatar');
   const userName  = localStorage.getItem('userName');
@@ -38,9 +49,25 @@ export default function Home(props){
   const botSettings = JSON.parse(localStorage.getItem('botSettings'));
   const [homeLog,setHomeLog]= useState(JSON.parse(localStorage.getItem('homeLog')));
 
+  const [position,setPosition] = useState(0);
+
+  useEffect(() => {
+    // body要素はfixedであるが、にもかかわらずスクロールを検出した場合は
+    // スマホ端末でソフトキーボードが出現したときと消えたとき。
+    // これらに対応してチャットログを表示する<Box>のりサイズを行う
+    const handler = (event) => {
+
+      setPosition(window.scrollY);
+
+    }
+    window.addEventListener("scroll",handler);
+
+    return () => {
+      window.removeEventListener("scroll",handler);
+    }
+  });
 
   function handleWriteMessage(text){
-    console.log(text)
     const ts = new Date()
     const message={
       name:userName,
@@ -51,6 +78,7 @@ export default function Home(props){
         ts.getFullYear(),ts.getMonth()+1,ts.getDate(),
         ts.getHours(),ts.getMinutes(),ts.getSeconds()]
     };
+
     const newHomeLog=[...homeLog,message];
     setHomeLog(newHomeLog);
     localStorage.setItem('homeLog',JSON.stringify(newHomeLog));
@@ -64,6 +92,10 @@ export default function Home(props){
     props.handleExit()
   }
 
+  function handleChat(){ setMode('Chat');}
+  function handleEdit(){ setMode('ScriptEditor')}
+  function handleUpload(){ setMode('Uploader')}
+
   return(
       <Box display="flex"
         flexDirection="column"
@@ -75,30 +107,32 @@ export default function Home(props){
         <Box order={0}>
           <ApplicationBar
             handleExit= {handleExit}
-            handleChat = {()=>setMode('Chat') }
-            handleEdit = {()=>setMode('ScriptEditor')}
-            handleUpload = {()=>setMode('Uploader')}
+            handleChat = {handleChat}
+            handleEdit = {handleEdit}
+            handleUpload = {handleUpload}
           />
         </Box>
 
         { mode === "Chat" &&
           <>
-            <Box flexGrow={1} order={0}
-               style={{height:'calc( 100vh-64px)',overflowY:'scroll'}}>
+            <Box
+              flexGrow={1} order={0} className={classes.container}>
+
               <ChatViewer
                   userId={0}
                   buddyId={0}
                   log={homeLog.slice(-CHAT_WINDOW)}/>
-
             </Box>
             <Box order={0}>
-              <Console handleWriteMessage={handleWriteMessage}/>
+              <Console
+                position={position}
+                handleWriteMessage={handleWriteMessage}/>
             </Box>
           </>
         }
         { mode === "ScriptEditor" &&
           <Box>
-            <div style={{height:'calc(100vh - 64px)',overflowY:'scroll'}}>
+            <div style={{height:'calc( 100vh - 64px )',overflowY:'scroll'}}>
             <ScriptEditor />
             </div>
           </Box>

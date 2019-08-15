@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
@@ -71,16 +71,25 @@ function RightBalloon(props){
 export default function ChatViewer(props){
   const classes = useStyles();
 
+  const myRef = useCallback(element =>{
+    if(element !== null){
+      element.scrollIntoView({behavior:"smooth",block:"end"});
+    }
+  });
+
   const speeches = props.log.map(speech =>{
-    
+
     return(
         <LeftBalloon speech={speech}/>
     )
   }
    );
+
+
   return(
-    <Box>
+    <Box >
       {speeches}
+      <div ref={myRef}></div>
     </Box>
   );
 }

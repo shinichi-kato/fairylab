@@ -33,9 +33,18 @@ firebase deploy
 ```
 
 ## TODO
+### dashboard
+ボット名入力でOKボタンだといいがEnterだと名前がセットされない
+ボットのアイコンをクリックしたら概要を表示
 
+### home
 ✔稼働率を変更したら文字列型に変わりtoFixが実行できない
 scriptEditorのパート追加ボタンの位置がずれる
 ✔chatViewが長くなってもスクロールにならない
+✔chatView最下行への自動スクロール
 hubはサインインしてないと入れないように
-スマホでキーボードが隠れても描画が戻らない→入力イベントで書き換える？
+スマホのキーボード表示/非表示でウィンドウの高さが変わらない
+-> http://shanabrian.com/web/html-css-js-technics/css-ios-bug-fixed-position-breaks-keyboard-opened.php
+   キーボード出現時にviewportのサイズは変わらないがスクロールはする。
+   そのスクロールをonfocus後のpromiseで捉えてリサイズする。
+   onblurでもとのサイズに戻す
