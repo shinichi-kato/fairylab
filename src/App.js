@@ -8,6 +8,7 @@ import Hub from './hub/hub.jsx';
 
 import * as firebase from 'firebase/app';
 import "firebase/auth";
+import "firebase/firestore";
 
 import {firebaseConfig} from './credentials/firebase-config.jsx';
 firebase.initializeApp(firebaseConfig);
@@ -36,7 +37,14 @@ function App() {
   const [mode, setMode] = useState("Dashboard");
   const [account,setAccount] = useState({...accountDisconnected  });
 
+
+
+  //-------------------------------------------------------------------
+  // firabase/auth
+
+
   useEffect(()=>{
+    // 認証状態のチェック
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         setAccount({...user,state:'ok'});
@@ -46,6 +54,51 @@ function App() {
       }
     });
   },[]);
+
+
+  // --------------------------------------------------------------------------
+  // firebase / firestore
+
+
+  const db = firebase.firestore();
+  const messageRef = db.collection("Messages");
+
+  const [hubLog,setHubLog] = useState([]);
+
+  function syncHubLog(query){
+    const messages = query.docs.map(doc => {
+      return {...doc.data,id:doc.id}
+    });
+    setHubLog(messages);
+  }
+
+  useEffect(()=>{
+    messageRef
+      .orderBy('timestamp','desc')
+      .limit(12)
+      .onSnapshot((query)=>syncHubLog(query));
+
+    return(()=>{
+      messageRef
+        .orderBy('timestamp','desc')
+        .limit(12)
+        .onSnapshot(function(){});
+
+    })
+  },[]);
+
+  function handleWriteUserMessage(message,userName,userAvatar){
+    db.collection("Messages").add({
+      uid:account.uid,
+      name:userName,
+      message:message,
+      avatarId:userAvatar,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    })
+  }
+
+
+  //------------------------------------------------------------------
 
   useEffect(() => {
     // body要素のバウンススクロールを無効化
@@ -64,7 +117,11 @@ function App() {
       window.removeEventListener("touchmove",handler);
       window.removeEventListener("touchend",handler);
     }
-  });
+  },[]);
+  function handleChangeAccount(a) { setAccount(a) }
+  function handleToHome(){ setMode('Home') }
+  function handleToHub(){ setMode('Hub') }
+  function handleToDashboard(){ setMode('Dashboard') }
 
 
   return (
@@ -72,21 +129,23 @@ function App() {
       { mode === "Dashboard" &&
         <Dashboard
           account={account}
-          handleChangeAccount={a=>setAccount(a)}
+          handleChangeAccount={handleChangeAccount}
           firebase={firebase}
-          handleToHome={() => setMode('Home')}
-          handleToHub={() => setMode('Hub')}
+          handleToHome={handleToHome}
+          handleToHub={handleToHub}
         />
       }
       { mode === "Home" &&
         <Home
           account={account}
-          handleExit={() => setMode('Dashboard')}
+          handleExit={handleToDashboard}
         />
       }
       { mode === "Hub" &&
         <Hub
-          handleExit={() => setMode('Dashboard')}
+          hubLog={hubLog}
+          handleWriteUserMessage={handleWriteUserMessage}
+          handleExit={handleToDashboard}
         />
       }
     </ThemeProvider>

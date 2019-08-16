@@ -1,10 +1,8 @@
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-
-const CHAT_WINDOW = 10;
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
@@ -70,40 +68,18 @@ function RightBalloon(props){
 
 
 }
+
 export default function ChatViewer(props){
   const classes = useStyles();
 
-  const myRef = useCallback(element =>{
-    if(element !== null){
-
-      element.scrollIntoView({behavior:"smooth",block:"end"});
+  const myRef = useCallback(node => {
+    if(node!== null){
+      node.scrollIntoView({behavior:"smooth",block:"end"});
     }
-  });
+  })
 
-  const componentRef = useRef(null);
-  const anchorRef = useRef(null);
-
-  function scrollToBottom(){
-    console.log("scrollToBottom");
-    anchorRef.scrollIntoView({
-      block: "end",
-      inline: "nearest",
-      behavior: 'smooth'
-    });
-  }
-
-  useEffect(() => {
-    componentRef.current.addEventListener('resize',scrollToBottom);
-
-    return ()=>{
-      componentRef.current.removeEventListener('resize',scrollToBottom)
-
-    }
-  },[])
-
-  const currentLog = props.log.slice(-CHAT_WINDOW);
-  console.log(currentLog);
-  const speeches = currentLog.map(speech =>{
+   console.log("log",props.log)
+  const speeches = props.log.map(speech =>{
 
     return(
         <LeftBalloon speech={speech}/>
@@ -113,9 +89,9 @@ export default function ChatViewer(props){
 
 
   return(
-    <Box ref={componentRef}>
+    <Box >
       {speeches}
-      <div ref={anchorRef}></div>
+      <div ref={myRef}></div>
     </Box>
   );
 }

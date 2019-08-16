@@ -8,7 +8,7 @@ import ChatViewer from './chat-viewer.jsx';
 import Console from './console.jsx';
 import ScriptUploader from './script-uploader.jsx';
 
-const CHAT_WINDOW = 10;
+
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -66,7 +66,7 @@ export default function Home(props){
     return () => {
       window.removeEventListener("scroll",handler);
     }
-  });
+  },[]);
 
   function handleWriteMessage(text){
     const ts = new Date()
@@ -97,6 +97,7 @@ export default function Home(props){
   function handleEdit(){ setMode('ScriptEditor')}
   function handleUpload(){ setMode('Uploader')}
 
+
   return(
       <Box display="flex"
         flexDirection="column"
@@ -121,9 +122,7 @@ export default function Home(props){
               flexGrow={1} order={0} className={classes.container}>
 
               <ChatViewer
-                  userId={0}
-                  buddyId={0}
-                  log={homeLog.slice(-CHAT_WINDOW)}/>
+                  log={homeLog}/>
             </Box>
             <Box order={0} justifyContent="center">
               <Console

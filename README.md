@@ -38,6 +38,7 @@ firebase deploy
 ボットのアイコンをクリックしたら概要を表示
 
 ### home
+chat-viewのレンダリングが常に繰り返される
 ✔稼働率を変更したら文字列型に変わりtoFixが実行できない
 scriptEditorのパート追加ボタンの位置がずれる
 ✔chatViewが長くなってもスクロールにならない

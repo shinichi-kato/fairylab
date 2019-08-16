@@ -1,16 +1,55 @@
 import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 
 import ApplicationBar from './application-bar.jsx';
+import ChatViewer from './chat-viewer.jsx';
+import Console from './console.jsx';
 
 
-export default function Dashboard(props){
-  const [mode, setMode] = useState('Ready');
+
+const useStyles = makeStyles(theme => ({
+  container: {
+   height:'calc( 100vh - 64px )',
+   overflowY:'scroll',
+   overscrollBehavior:'auto',
+   WebkitOverflowScrolling:'touch'
+ }
+}));
+
+
+export default function Hub(props){
+
+
   const userAvatar = localStorage.getItem('userAvatar');
   const userName  = localStorage.getItem('userName');
   const botId = localStorage.getItem('botId');
   const botName = localStorage.getItem('botName');
   const botAvatar  = localStorage.getItem('botAvatar');
+
+  const [position,setPosition] = useState(0);
+
+  useEffect(() => {
+    // body要素はfixedであるが、にもかかわらずスクロールを検出した場合は
+    // スマホ端末でソフトキーボードが出現したときと消えたとき。
+    // これらに対応してチャットログを表示する<Box>のりサイズを行う
+    //
+    const handler = (event) => {
+      // 新しい高さを計算して・・・のつもりだが、inputに値を書き込むことで
+      // 画面が再描画されて同じ効果になってる・・・      かもしれない
+      setPosition(window.scrollY);
+
+    }
+    window.addEventListener("scroll",handler);
+
+    return () => {
+      window.removeEventListener("scroll",handler);
+    }
+  });
+
+
+
+
 
 
   return(
@@ -28,10 +67,12 @@ export default function Dashboard(props){
         </Box>
 
         <Box order={0} flexGrow={1}>
-                chat window
+          <ChatViewer
+            log={props.hubLog} />
         </Box>
         <Box order={0}>
-        input
+          <Console handleWriteMessage={(message)=>
+            props.handleWriteUserMessage(message,userName,userAvatar)}/>
         </Box>
       </Box>
   );
