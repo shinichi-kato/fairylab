@@ -68,10 +68,11 @@ export default function Hub(props){
 
         <Box order={0} flexGrow={1}>
           <ChatViewer
+            account={props.account}
             log={props.hubLog} />
         </Box>
         <Box order={0}>
-          <Console handleWriteMessage={(message)=>
+          <Console handleWriteUserMessage={(message)=>
             props.handleWriteUserMessage(message,userName,userAvatar)}/>
         </Box>
       </Box>

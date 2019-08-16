@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 
@@ -143,6 +143,7 @@ function App() {
       }
       { mode === "Hub" &&
         <Hub
+          account={account}
           hubLog={hubLog}
           handleWriteUserMessage={handleWriteUserMessage}
           handleExit={handleToDashboard}

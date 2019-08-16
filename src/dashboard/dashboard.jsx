@@ -56,9 +56,11 @@ export default function Dashboard(props){
     setBotSettings(newSettings);
   }
 
-  function handleCancel(){
-    setMode('Ready');
-  }
+  function handleCancel(){ setMode('Ready'); }
+  function handleToAvatarSelect(){ setMode('AvatarSelect') }
+  function handleToUserNameInput(){ setMode('UserNameInput') }
+  function handleToBotDownload(){ setMode('BotDownload') }
+  function handleToBotNameInput(){ setMode('BotNameInput') }
 
   return(
     <Box display="flex"
@@ -73,7 +75,7 @@ export default function Dashboard(props){
           firebase={props.firebase}
           account={props.account}
           handleChangeAccount={props.handleChangeAccount}
-          handleDoSettings= {()=>setMode('AvatarSelect')}
+          handleDoSettings= {handleToAvatarSelect}
         />
       </Box>
       <Box order={0}>
@@ -85,8 +87,8 @@ export default function Dashboard(props){
         { mode === 'AvatarSelect' &&
           <AvatarSelector
             handleSetUserAvatar={handleSetUserAvatar}
-            handleCancel={() => setMode('Ready')}
-            handleNext = {() => setMode('UserNameInput')}  />
+            handleCancel={handleCancel}
+            handleNext = {handleToUserNameInput}  />
         }
         { mode === 'UserNameInput' &&
           <NameInput
@@ -94,13 +96,13 @@ export default function Dashboard(props){
             name={userName}
             handleChangeName={handleSetUserName}
             handleCancel={handleCancel}
-            handleNext = {() => setMode('BotDownload')} />
+            handleNext = {handleToBotDownload} />
         }
         { mode === 'BotDownload' &&
           <BotDownload
             settings={botSettings}
             handleSetBotSettings = {handleSetBotSettings}
-            handleNext = {() => setMode('BotNameInput')} />
+            handleNext = {handleToBotNameInput} />
         }
         { mode === 'BotNameInput' &&
           <NameInput
@@ -108,7 +110,7 @@ export default function Dashboard(props){
             name={botSettings.name}
             handleChangeName={handleSetBotName}
             handleCancel={handleCancel}
-            handleNext = {() => setMode('Ready')} />
+            handleNext = {handleCancel} />
         }
       </Box>
       <Box order={0} flexGrow={1}>

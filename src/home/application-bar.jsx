@@ -39,7 +39,7 @@ export default function ApplicationBar(props){
     props.handleEdit();
   }
 
-  function handleChat(){
+  function handleChat(e){
     handleClose();
     props.handleChat();
   }
@@ -84,7 +84,7 @@ export default function ApplicationBar(props){
             anchorEl={anchorEl}
             anchorOrigin={{
                 vertical: 'top',
-                
+
                 horizontal: 'right',
             }}
             keepMounted

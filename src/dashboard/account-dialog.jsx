@@ -145,7 +145,6 @@ export default function AccountDialog(props){
           <TextField
             required
             id="password"
-            id="password"
             label="Password"
             className={classes.textField}
             margin="normal"

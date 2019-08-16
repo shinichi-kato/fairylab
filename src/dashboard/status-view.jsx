@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react';
+import React from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -9,8 +9,8 @@ import Create from '@material-ui/icons/Create';
 const useStyles = makeStyles(theme => createStyles({
   root: {
     height: 180,
-    margin: 'auto'
-    
+    margin: 'auto',
+    padding: theme.spacing(1)
   }
 }));
 

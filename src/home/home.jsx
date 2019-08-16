@@ -46,7 +46,6 @@ export default function Home(props){
   const [mode, setMode] = useState('Chat');
   const userAvatar = localStorage.getItem('userAvatar');
   const userName  = localStorage.getItem('userName');
-  const userId = localStorage.getItem('userId');
   const botSettings = JSON.parse(localStorage.getItem('botSettings'));
   const [homeLog,setHomeLog]= useState(JSON.parse(localStorage.getItem('homeLog')));
 
@@ -122,7 +121,8 @@ export default function Home(props){
               flexGrow={1} order={0} className={classes.container}>
 
               <ChatViewer
-                  log={homeLog}/>
+                account={props.account}
+                log={homeLog}/>
             </Box>
             <Box order={0} justifyContent="center">
               <Console
@@ -133,14 +133,14 @@ export default function Home(props){
         }
         { mode === "ScriptEditor" &&
           <Box>
-            <div style={{height:'calc( 100vh - 64px )',overflowY:'scroll'}}>
+            <div className={classes.container}>
             <ScriptEditor />
             </div>
           </Box>
         }
         { mode === "Uploader" &&
           <Box>
-          <div style={{height:'calc( 100vh - 64px )',overflowY:'scroll'}}>
+          <div className={classes.containr}>
             <ScriptUploader
               handleClose={handleChat}
               botSettings={botSettings}

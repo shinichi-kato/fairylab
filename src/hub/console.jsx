@@ -38,13 +38,13 @@ export default function Console(props) {
   }
 
   const handleKeyPress = e => {
-      if(e.key == 'Enter'){
+      if(e.key === 'Enter'){
           e.preventDefault();
           handleWriteMessage();
       }
   }
 
-  function handleWriteMessage(){
+  function handleWriteMessage(event){
     const t = String(text);
     setText("");
     props.handleWriteUserMessage(t);
@@ -62,7 +62,7 @@ export default function Console(props) {
       />
       <Divider className={classes.divider} />
       <IconButton
-        onClick={e=>handleWriteMessage()}
+        onClick={handleWriteMessage}
         color="primary" className={classes.iconButton} aria-label="send">
         <Send />
       </IconButton>
