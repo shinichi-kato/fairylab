@@ -28,7 +28,7 @@ if (!localStorage.getItem('homeLog')){
         speakerId: 'mailaddress',
         avatar:'avatar/user/1boy.svg',
         text:'こんにちは！',
-        timestamp:[2019,7,9,12,12,22]
+        timestamp:Date.parse('04 Dec 2018 00:12:00 GMT')
       },
       {
         id: 1,
@@ -36,7 +36,7 @@ if (!localStorage.getItem('homeLog')){
         speakerId:'bot@mailadress',
         avatar:'avatar/user/8dino.svg',
         text:'やあ！',
-        timestamp:[2019,7,9,12,12,22]
+        timestamp:Date.parse('02 Dec 2018 00:12:00 GMT')
       }
     ]));
 }
@@ -68,15 +68,13 @@ export default function Home(props){
   },[]);
 
   function handleWriteMessage(text){
-    const ts = new Date()
+    const ts = new Date();
     const message={
       name:userName,
       speakerId: userName,
       avatar:userAvatar,
       text:text,
-      timestamp:[
-        ts.getFullYear(),ts.getMonth()+1,ts.getDate(),
-        ts.getHours(),ts.getMinutes(),ts.getSeconds()]
+      timestamp:ts.getTime()
     };
 
     const newHomeLog=[...homeLog,message];

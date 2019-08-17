@@ -59,12 +59,17 @@ const useStyles = makeStyles(theme => createStyles({
 }));
 
 
-
+function getTimestampStr(timestamp){
+  const t = new Date(timestamp);
+  return t.toISOString();
+}
 
 export function LeftBalloon(props){
   const classes = useStyles();
   const speech = props.speech;
-  const timestampStr = speech.timestamp.join('-');
+  const timestampStr = getTimestampStr(speech.timestamp);
+
+
   return (
     <Box key={speech.id}
       display="flex"
@@ -76,7 +81,7 @@ export function LeftBalloon(props){
       <Box className={classes.leftBalloon}>
         <Typography variant="subtitle2">{speech.name}</Typography>
         <Typography>{speech.text}</Typography>
-        <Typography variant="subtitle">{timestampStr}</Typography>
+        <Typography variant="caption">{timestampStr}</Typography>
       </Box>
     </Box>
   )
@@ -85,7 +90,8 @@ export function LeftBalloon(props){
 export function RightBalloon(props){
   const classes = useStyles();
   const speech = props.speech;
-  const timestampStr = speech.timestamp.join('-');
+  const timestampStr = getTimestampStr(speech.timestamp);
+
   return (
     <Box key={speech.id}
       display="flex"

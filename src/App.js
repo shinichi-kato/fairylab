@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useRef } from 'react';
+import React, { useState,useEffect } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 
@@ -67,7 +67,9 @@ function App() {
 
   function syncHubLog(query){
     const messages = query.docs.map(doc => {
-      return {...doc.data,id:doc.id}
+      const data=doc.data();
+      const ts=new Date(data.timestamp.seconds*1000);
+      return {...data,timestamp:ts,id:doc.id}
     });
     setHubLog(messages);
   }
@@ -85,14 +87,14 @@ function App() {
         .onSnapshot(function(){});
 
     })
-  },[]);
+  },[messageRef]);
 
   function handleWriteUserMessage(message,userName,userAvatar){
     db.collection("Messages").add({
       uid:account.uid,
       name:userName,
-      message:message,
-      avatarId:userAvatar,
+      text:message,
+      avatar:userAvatar,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     })
   }
