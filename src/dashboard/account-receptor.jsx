@@ -16,35 +16,29 @@ const useStyles = makeStyles(theme => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
+    width: "80%",
   },
   button: {
     margin: theme.spacing(1),
   }
 }));
 
-export default function AccountDialog(props){
+function AccountDialog(props){
   const classes = useStyles();
   const [email,setEmail] = useState(props.account.email || "");
-  const [password,setPassword] = useState("");
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [password,setPassword] = useState(props.account.password || "");
   const [message, setMessage] = useState("");
 
-
-
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
-  }
-
-  function handleClose() {
-    props.handleChangeAccount({...props.account,state:'yet'});
-    setAnchorEl(null);
-
-  }
   const authState = props.account.state;
 
-  function handleSignIn() {
+  function handleChangeEmail(e){ setEmail(e.target.value); }
+  function handleChangePassword(e){ setPassword(e.target.value);}
 
-    if (authState !== "run"){
+  function handleSignIn(e){
+    if(authState === "ok"){
+      props.handleClose();
+    }
+    else if (authState !== "run"){
       props.handleChangeAccount({...props.account,state:'run'});
 
       props.firebase.auth()
@@ -68,10 +62,8 @@ export default function AccountDialog(props){
           else{
             setMessage(errorMessage)
           };
-    });}
+      });
 
-    else if (authState === 'ok'){
-        handleClose();
     }
   }
 
@@ -96,25 +88,12 @@ export default function AccountDialog(props){
     localStorage.clear();
   }
 
-
-
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'account-popover' : undefined;
-
-
   return(
-    <div>
-      {props.account.displayName || props.account.email}
-      <IconButton
-        aria-describedby={id} variant="contained" onClick={handleClick}>
-      <AccountCircle />
-      </IconButton>
       <Popover
-         id={id}
-         open={open}
-         anchorEl={anchorEl}
-         onClose={handleClose}
+         id={props.id}
+         open={props.open}
+         anchorEl={props.anchorEl}
+         onClose={props.handleClose}
          anchorOrigin={{
            vertical: 'top',
            horizontal: 'right',
@@ -127,7 +106,7 @@ export default function AccountDialog(props){
         <Box display="flex" flexDirection="column">
         <Box>
 
-          <Typography><AccountCircle />サインイン</Typography>
+          <AccountCircle /><Typography>サインイン</Typography>
         </Box>
         <Box>
           <TextField
@@ -138,7 +117,7 @@ export default function AccountDialog(props){
             margin="normal"
             type="email"
             value={email}
-            onChange={e=>setEmail(e.target.value)}
+            onChange={handleChangeEmail}
           />
         </Box>
         <Box>
@@ -150,7 +129,7 @@ export default function AccountDialog(props){
             margin="normal"
             type="password"
             value={password}
-            onChange={e=>setPassword(e.target.value)} />
+            onChange={handleChangePassword} />
           </Box>
           <Box display="inline-box">
 
@@ -165,7 +144,7 @@ export default function AccountDialog(props){
             {authState === 'run' && '確認中'}
             </Button>
             <Button className={classes.button}
-              color="default" onClick={handleClose}>
+              color="default" onClick={props.handleClose}>
             Cancel
             </Button>
             <Button className={classes.button}
@@ -183,6 +162,47 @@ export default function AccountDialog(props){
         </Box>
        </Paper>
       </Popover>
-   </div>
  );
+}
+
+
+
+//----------------------------------------------------
+// アカウント表示＆ボタン
+//
+
+
+
+export default function AccountReceptor(props){
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const id = open ? 'account-popover' : undefined;
+
+  function handleClick(event) {
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose(){
+    setAnchorEl(null);
+  }
+
+  return (
+    <div>
+      {props.account.displayName || props.account.email}
+      <IconButton
+        aria-describedby={id} variant="contained" onClick={handleClick}>
+      <AccountCircle />
+      </IconButton>
+      <AccountDialog
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        handleClose={handleClose}
+        account={props.account}
+        firebase={props.firebase}
+        handleChangeAccount={props.handleChangeAccount}
+      />
+    </div>
+    );
 }

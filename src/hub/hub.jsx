@@ -10,20 +10,20 @@ import Console from './console.jsx';
 
 const useStyles = makeStyles(theme => ({
   container: {
-   height:'calc( 100vh - 64px )',
-   overflowY:'scroll',
-   overscrollBehavior:'auto',
-   WebkitOverflowScrolling:'touch'
+    height:'calc( 100vh - 64px - 12px )',
+    overflowY:'scroll',
+    overscrollBehavior:'auto',
+    WebkitOverflowScrolling:'touch',
+    padding: 6
  }
 }));
 
 
 export default function Hub(props){
-
+  const classes = useStyles();
 
   const userAvatar = localStorage.getItem('userAvatar');
   const userName  = localStorage.getItem('userName');
-  const botId = localStorage.getItem('botId');
   const botName = localStorage.getItem('botName');
   const botAvatar  = localStorage.getItem('botAvatar');
 
@@ -45,7 +45,7 @@ export default function Hub(props){
     return () => {
       window.removeEventListener("scroll",handler);
     }
-  });
+  },[]);
 
 
 
@@ -66,7 +66,7 @@ export default function Hub(props){
           />
         </Box>
 
-        <Box order={0} flexGrow={1}>
+        <Box order={0} flexGrow={1} className={classes.container}>
           <ChatViewer
             account={props.account}
             log={props.hubLog} />

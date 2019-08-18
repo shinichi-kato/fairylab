@@ -40,7 +40,7 @@ export default function Console(props) {
   const handleKeyPress = e => {
       if(e.key === 'Enter'){
           e.preventDefault();
-          handleWriteMessage();
+          handleWriteMessage(e);
       }
   }
 

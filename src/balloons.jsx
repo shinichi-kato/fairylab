@@ -100,7 +100,7 @@ export function RightBalloon(props){
       <Box className={classes.rightBalloon}>
         <Typography variant="subtitle2">{speech.name}</Typography>
         <Typography>{speech.text}</Typography>
-        <Typography variant="subtitle">{timestampStr}</Typography>
+        <Typography variant="caption">{timestampStr}</Typography>
       </Box>
       <Box >
         <Avatar src={speech.avatar} className={classes.avatar} />

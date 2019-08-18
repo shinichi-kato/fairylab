@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: '100%',
+    width: '90%',
   },
   dense: {
     marginTop: 19,
@@ -189,7 +189,10 @@ export default function ScriptEditor(props){
       </Grid>
       <Grid item xs={6}>
         <FormControlLabel
+          className={classes.textField}
           control={<Switch
+
+            color="primary"
             value="published"
             checked={settings.published}
             onChange={()=>handleChange('published')} />}

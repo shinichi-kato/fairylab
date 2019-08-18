@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Settings from '@material-ui/icons/Settings';
-import AccountDialog from './account-dialog.jsx';
+import AccountReceptor from './account-receptor.jsx';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,7 +36,7 @@ export default function ApplicationBar(props){
           <Typography variant="h6" className={classes.title}>
 
           </Typography>
-          <AccountDialog
+          <AccountReceptor
             account={props.account}
             handleChangeAccount={props.handleChangeAccount}
             firebase={props.firebase}

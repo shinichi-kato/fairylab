@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 
@@ -57,11 +57,33 @@ function App() {
 
 
   // --------------------------------------------------------------------------
-  // firebase / firestore
+  // firebase / firestore　への接続
 
 
-  const db = firebase.firestore();
-  const messageRef = db.collection("Messages");
+
+  const firestoreRef = useRef(null);
+  const fsMessageRef = useRef(null);
+
+  useEffect(() => {
+    if(account.uid !== null){
+      firestoreRef.current = firebase.firestore();
+      fsMessageRef.current = firestoreRef.current.collection("Messages");
+      fsMessageRef.current
+          .orderBy('timestamp','desc')
+          .limit(12)
+          .onSnapshot((query)=>syncHubLog(query));
+
+        return(()=>{
+          fsMessageRef.current
+            .orderBy('timestamp','desc')
+            .limit(12)
+            .onSnapshot(function(){});
+        });
+      }
+
+
+  },[account]);
+
 
   const [hubLog,setHubLog] = useState([]);
 
@@ -71,26 +93,12 @@ function App() {
       const ts=new Date(data.timestamp.seconds*1000);
       return {...data,timestamp:ts,id:doc.id}
     });
-    setHubLog(messages);
+    setHubLog(messages.reverse());
   }
 
-  useEffect(()=>{
-    messageRef
-      .orderBy('timestamp','desc')
-      .limit(12)
-      .onSnapshot((query)=>syncHubLog(query));
-
-    return(()=>{
-      messageRef
-        .orderBy('timestamp','desc')
-        .limit(12)
-        .onSnapshot(function(){});
-
-    })
-  },[messageRef]);
 
   function handleWriteUserMessage(message,userName,userAvatar){
-    db.collection("Messages").add({
+    fsMessageRef.current.add({
       uid:account.uid,
       name:userName,
       text:message,
@@ -127,7 +135,7 @@ function App() {
 
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme} >
       { mode === "Dashboard" &&
         <Dashboard
           account={account}

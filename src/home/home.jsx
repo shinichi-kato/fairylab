@@ -12,34 +12,35 @@ import ScriptUploader from './script-uploader.jsx';
 
 const useStyles = makeStyles(theme => ({
   container: {
-   height:'calc( 100vh - 64px )',
+   height:'calc( 100vh - 64px - 12px )',
    overflowY:'scroll',
    overscrollBehavior:'auto',
-   WebkitOverflowScrolling:'touch'
+   WebkitOverflowScrolling:'touch',
+   padding: 6
  }
 }));
 
-if (!localStorage.getItem('homeLog')){
-  localStorage.setItem('homeLog',JSON.stringify(
-    [
-      {
-        id:0,
-        name:'user',
-        speakerId: 'mailaddress',
-        avatar:'avatar/user/1boy.svg',
-        text:'こんにちは！',
-        timestamp:Date.parse('04 Dec 2018 00:12:00 GMT')
-      },
-      {
-        id: 1,
-        name:'bot',
-        speakerId:'bot@mailadress',
-        avatar:'avatar/user/8dino.svg',
-        text:'やあ！',
-        timestamp:Date.parse('02 Dec 2018 00:12:00 GMT')
-      }
-    ]));
-}
+// if (!localStorage.getItem('homeLog')){
+//   localStorage.setItem('homeLog',JSON.stringify(
+//     [
+//       {
+//         id:0,
+//         name:'user',
+//         speakerId: 'mailaddress',
+//         avatar:'avatar/user/1boy.svg',
+//         text:'こんにちは！',
+//         timestamp:Date.parse('04 Dec 2018 00:12:00 GMT')
+//       },
+//       {
+//         id: 1,
+//         name:'bot',
+//         speakerId:'bot@mailadress',
+//         avatar:'avatar/user/8dino.svg',
+//         text:'やあ！',
+//         timestamp:Date.parse('02 Dec 2018 00:12:00 GMT')
+//       }
+//     ]));
+// }
 
 export default function Home(props){
   const classes = useStyles();
@@ -47,14 +48,15 @@ export default function Home(props){
   const userAvatar = localStorage.getItem('userAvatar');
   const userName  = localStorage.getItem('userName');
   const botSettings = JSON.parse(localStorage.getItem('botSettings'));
-  const [homeLog,setHomeLog]= useState(JSON.parse(localStorage.getItem('homeLog')));
+  const [homeLog,setHomeLog]= useState(
+      JSON.parse(localStorage.getItem('homeLog')) || []);
 
   const [position,setPosition] = useState(0);
 
   useEffect(() => {
     // body要素はfixedであるが、にもかかわらずスクロールを検出した場合は
     // スマホ端末でソフトキーボードが出現したときと消えたとき。
-    // これらに対応してチャットログを表示する<Box>のりサイズを行う
+    // これらに対応してチャットログを表示する<Box>のりサイズを行う予定
     const handler = (event) => {
 
       setPosition(window.scrollY);
