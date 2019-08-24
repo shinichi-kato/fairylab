@@ -41,10 +41,10 @@ const swipeableStyles = {
 
 const bots_dummy = [
   {
-    avatar:'avatar/user/12panther.svg',
-    desc:'リフレーミングの実験用チャットボット',
-    ownerId:'',
-    id:'reflamer-test',
+    avatar:'avatar/bot/crystal/blueCrystal.svg',
+    desc:'内部表現に変換',
+    ownerId:'dev',
+    id:'internalRepr',
   },
   {
     avatar:'avatar/user/13lion.svg',

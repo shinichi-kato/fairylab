@@ -1,5 +1,4 @@
-import {TinySegmenter} from './tinesegmenter.js';
-import nj from './numjs';
+
 
 import {exampleScript} from './example-script.jsx';
 
@@ -7,6 +6,11 @@ export default class BiomeBot{
   constructor(){
     this.settings = {};
     this.parts = [];
+  }
+
+
+  compilePart(part){
+    // 辞書を読んでwv,tfidfを生成
   }
 
   compile(script){
@@ -17,7 +21,7 @@ export default class BiomeBot{
     this.parts = script.parts.map(part => ({...part}));
 
     for(let part of this.parts){
-      
+
     }
   }
 
