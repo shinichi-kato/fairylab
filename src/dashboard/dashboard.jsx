@@ -100,7 +100,10 @@ export default function Dashboard(props){
         }
         { mode === 'BotDownload' &&
           <BotDownload
+            firebase = {props.firebase}
+            firestoreRef = {props.firestoreRef}
             settings={botSettings}
+            account={props.account}
             handleSetBotSettings = {handleSetBotSettings}
             handleNext = {handleToBotNameInput} />
         }

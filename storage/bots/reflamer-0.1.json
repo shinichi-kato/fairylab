@@ -1,0 +1,14 @@
+{
+  "avatar":"avatar/bot/example/panther12.svg",
+  "desc":"リフレーミングだけを行う、辞書開発用のチャットボットです。",
+  "ownerId":"dev",
+  "id":"reflamer-0.01",
+  "part": [{
+    "name": "reflaming",
+    "type": "sensor",
+    "availability": 0.5,
+    "triggerLevel": 0.04,
+    "retention": 0.6,
+    "dictionary":"dictionary/reflaming.json" 
+  }]
+}

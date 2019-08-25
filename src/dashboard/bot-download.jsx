@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react';
+import React, {useEffect, useRef,useState } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -8,6 +8,9 @@ import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import SwipeableViews from 'react-swipeable-views';
+
+import 'firebase/storage';
+import 'firebase/firestore';
 
 const useStyles = makeStyles(theme => createStyles({
   card: {
@@ -39,28 +42,19 @@ const swipeableStyles = {
 
 };
 
-const bots_dummy = [
+const bots_blank = [
   {
-    avatar:'avatar/bot/crystal/blueCrystal.svg',
-    desc:'内部表現に変換',
-    ownerId:'dev',
-    id:'internalRepr',
-  },
-  {
-    avatar:'avatar/user/13lion.svg',
-    desc:'ライオン（Panthera leo） は、食肉目ネコ科ヒョウ属に分類される食肉類の哺乳類。別名はシシ（獅子）。オスは体重は250キログラムを超えることもあり、ネコ科ではトラに次いで2番目に大きな種である',
+    avatar:'avatar/bot/blank.svg',
+    desc:'ダウンロードするにはサインインが必要です',
     ownerId:'',
-    id:'test1',
-  },
-  {
-    avatar:'avatar/user/14panda.svg',
-    desc:'単にパンダといった場合、現在ではジャイアントパンダのことを指すことが多い。しかし、当初は先に発見されたレッサーパンダに対して「パンダ」と命名され、後に類縁関係にあると見做されたジャイアントパンダが',
-    ownerId:'',
-    id:'test2',
+    id:'',
+    parts:[]
   },
 ];
 
 export default function BotDownload(props){
+  // botのsettings情報はfirebaseに格納し、各パートの辞書はstorageに格納する。
+  // まずbotのsettingsリストをfirebaseから取得し、決定した後storageから辞書を得る。
 
   const classes = useStyles();
 
@@ -78,7 +72,31 @@ export default function BotDownload(props){
   }
 
 
-  const botItems = bots_dummy.map((bot) =>
+
+  // -----------------------------------------------------
+  // firestoreからbot群のsettingsを取得
+  //
+
+  const botsRef = useRef(null);
+  const [bots,setBots] = useState(bots_blank);
+
+  useEffect(()=> {
+    if(props.firestoreRef.current){
+      botsRef.current = props.firestoreRef.current.collection("Bots")
+      botsRef.current.get()
+        .then(snapshot => {
+          const b = [];
+          snapshot.forEach(doc => {
+            b.push(doc.data());
+          });
+          setBots(b);
+          console.log("bots=",b)
+        });
+    }
+  },[props.account]);
+
+
+  const botItems = bots.map((bot) =>
       <div style={swipeableStyles.slide}>
       <Card className={classes.card} >
         <CardHeader avatar={
@@ -87,7 +105,7 @@ export default function BotDownload(props){
         title={bot.id} />
 
         <CardContent>
-          <Typography>{bot.desc}</Typography>
+          <Typography>{bot.description}</Typography>
         </CardContent>
         <CardActions disableSpacing >
           <Button variant="contained" color="primary"

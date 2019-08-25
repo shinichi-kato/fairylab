@@ -10,6 +10,7 @@ import * as firebase from 'firebase/app';
 import "firebase/auth";
 import "firebase/firestore";
 
+
 import {firebaseConfig} from './credentials/firebase-config.jsx';
 firebase.initializeApp(firebaseConfig);
 
@@ -63,7 +64,7 @@ function App() {
 
   const firestoreRef = useRef(null);
   const fsMessageRef = useRef(null);
-
+  
   useEffect(() => {
     if(account.uid !== null){
       firestoreRef.current = firebase.firestore();
@@ -108,6 +109,8 @@ function App() {
   }
 
 
+
+
   //------------------------------------------------------------------
 
   useEffect(() => {
@@ -141,6 +144,7 @@ function App() {
           account={account}
           handleChangeAccount={handleChangeAccount}
           firebase={firebase}
+          firestoreRef={firestoreRef}
           handleToHome={handleToHome}
           handleToHub={handleToHub}
         />
@@ -148,6 +152,7 @@ function App() {
       { mode === "Home" &&
         <Home
           account={account}
+          firebase={firebase}
           handleExit={handleToDashboard}
         />
       }

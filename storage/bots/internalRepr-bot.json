@@ -1,0 +1,14 @@
+{
+  "avatar":"avatar/bot/crystal/blueCrystal.svg",
+  "desc":"チャットボットが受け取った自然言語の文字列を内部表現に変換する関数 internalRepr(text)を単独でテストするインタフェースです。",
+  "ownerId":"dev",
+  "id":"internalRepr",
+  "part": [{
+    "name": "function",
+    "type": "internalRepr",
+    "availability": 1,
+    "triggerLevel": 0.0,
+    "retention": 1,
+    "dictionary": ""
+  }]
+}
