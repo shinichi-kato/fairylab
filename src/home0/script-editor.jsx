@@ -132,6 +132,7 @@ export default function ScriptEditor(props){
   const handleSaveScript = e => {
     localStorage.setItem('botSettings',JSON.stringify(settings))
     localStorage.setItem('botParts',JSON.stringify(parts))
+    props.handleUpdate();
   }
 
   const partItems = parts.map( (part,index,parts) =>

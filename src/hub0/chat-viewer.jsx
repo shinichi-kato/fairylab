@@ -1,5 +1,4 @@
-import React, { useEffect, useState,useCallback } from 'react';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import React,{useCallback} from 'react';
 import Box from '@material-ui/core/Box';
 
 
@@ -12,7 +11,7 @@ export default function ChatViewer(props){
     if(node!== null){
       node.scrollIntoView({behavior:"smooth",block:"end"});
     }
-  })
+  },[props.log])
 
   const speeches = props.log.map(speech =>{
     return speech.uid === props.account.uid ?

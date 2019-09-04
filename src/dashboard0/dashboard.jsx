@@ -26,7 +26,6 @@ export default function Dashboard(props){
   const [userAvatar, setUserAvatar] = useState(localStorage.getItem('userAvatar') || '');
   const [userName, setUserName] = useState(localStorage.getItem('userName') || props.account.displayName || '');
   const [botSettings, setBotSettings] = useState(JSON.parse(localStorage.getItem('botSettings')));
-
   // const estate = localStorage.getItem('bot.estate') || ''
 
   useEffect(() => {
@@ -47,6 +46,7 @@ export default function Dashboard(props){
 
   function handleSetBotSettings(settings){
     localStorage.setItem('botSettings',JSON.stringify(settings));
+
     setBotSettings(settings);
   }
 

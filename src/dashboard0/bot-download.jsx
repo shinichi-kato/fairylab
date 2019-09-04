@@ -58,19 +58,6 @@ export default function BotDownload(props){
 
   const classes = useStyles();
 
-  function handleDownload(e,id,avatar,description){
-    props.handleSetBotSettings(
-      {
-          id: id,
-          avatarId: avatar,
-          description: description,
-          name: ''
-
-      }
-    );
-    props.handleNext();
-  }
-
 
 
   // -----------------------------------------------------
@@ -95,8 +82,27 @@ export default function BotDownload(props){
     }
   },[props.account]);
 
+  //-------------------------------------------------------
 
-  const botItems = bots.map((bot) =>
+  function handleDownload(e,index){
+    const bot = bots[index];
+
+    props.handleSetBotSettings(
+      {
+          id: bot.id,
+          avatarId: bot.avatar,
+          description: bot.description,
+          name: '',
+          parts:Object.assign({},bot.parts)
+
+      }
+    );
+
+    props.handleNext();
+  }
+
+
+  const botItems = bots.map((bot,index) =>
       <div style={swipeableStyles.slide}>
       <Card className={classes.card} >
         <CardHeader avatar={
@@ -109,7 +115,7 @@ export default function BotDownload(props){
         </CardContent>
         <CardActions disableSpacing >
           <Button variant="contained" color="primary"
-          onClick={e=>handleDownload(e,bot.id,bot.avatar,bot.description)} >
+          onClick={e=>handleDownload(e,index)} >
           Download
           </Button>
         </CardActions>

@@ -20,27 +20,6 @@ const useStyles = makeStyles(theme => ({
  }
 }));
 
-// if (!localStorage.getItem('homeLog')){
-//   localStorage.setItem('homeLog',JSON.stringify(
-//     [
-//       {
-//         id:0,
-//         name:'user',
-//         speakerId: 'mailaddress',
-//         avatar:'avatar/user/1boy.svg',
-//         text:'こんにちは！',
-//         timestamp:Date.parse('04 Dec 2018 00:12:00 GMT')
-//       },
-//       {
-//         id: 1,
-//         name:'bot',
-//         speakerId:'bot@mailadress',
-//         avatar:'avatar/user/8dino.svg',
-//         text:'やあ！',
-//         timestamp:Date.parse('02 Dec 2018 00:12:00 GMT')
-//       }
-//     ]));
-// }
 
 export default function Home(props){
   const classes = useStyles();
@@ -77,11 +56,19 @@ export default function Home(props){
       avatar:userAvatar,
       text:text,
       timestamp:ts.getTime()
+      // 個々でチャットボットのセリフを生成させるpromise
     };
 
     const newHomeLog=[...homeLog,message];
     setHomeLog(newHomeLog);
     localStorage.setItem('homeLog',JSON.stringify(newHomeLog));
+    props.chatbot.reply(message)
+      .then(reply => {
+        const newHomeLog2 = [...homeLog,reply];
+        setHomeLog(newHomeLog2);
+        localStorage.setItem('homeLog',JSON.stringift(newHomeLog2))
+      })
+
   }
 
   function handleExit(){
@@ -134,7 +121,7 @@ export default function Home(props){
         { mode === "ScriptEditor" &&
           <Box>
             <div className={classes.container}>
-            <ScriptEditor />
+            <ScriptEditor handleUpdate={props.handleUpdate}/>
             </div>
           </Box>
         }

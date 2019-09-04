@@ -34,6 +34,9 @@ const useStyles = makeStyles(theme => ({
   namer:{
     backgroundColor: '#009688', //terl[500],
   },
+  internalRepr:{
+    backgroundColor: '#999999',
+  },
 
   toUp:{
     marginLeft: 'auto',

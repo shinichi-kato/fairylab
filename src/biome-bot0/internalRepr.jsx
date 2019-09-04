@@ -1,8 +1,8 @@
-import {TinySegmenter} from './tinesegmenter.js';
+import {TinySegmenter} from './tinysegmenter.js';
  // note: [<>{}+-]がアルファベットに分類されるよう変更の必要あり
 
 function dispatch(table){
-  const rt = table['*'].map(c=>new Object());
+  const rt = table['*'].map(c=>new Object()); // c=>{} not work
   for(let k in table){
     for(let i in table[k]){
       let v=table[k][i];
@@ -22,7 +22,7 @@ const DI_PARTICLE_MAP = {
 }
 
 const STATE_TABLE = {
-    #      0  1  2  3  4  5  6  7  8
+    //     0  1  2  3  4  5  6  7  8
     '*' : [2, 2, 2, 2, 0, 0, 2, 2, 2],
     'p' : [1, 0, 3, 0, 0, 0, 0, 0, 0],
     '%' : [4, 4, 4, 4, 0, 0, 4, 4, 4],
@@ -36,16 +36,16 @@ const STATE_TABLE_DISPATCH = dispatch(STATE_TABLE);
 const LEX = {
   '*' : s => false,
   'p' : s => Boolean(DI_PARTICLE_MAP[s]),
-  '%' : s => s == '%',
+  '%' : s => s === '%',
   'dA': s => Boolean('0123456789ABCDEF'.indexOf(s)),
-  'AA': s => s.length == 2 && Boolean('ABCDEF'.indexOf(s[0])),
+  'AA': s => s.length === 2 && Boolean('ABCDEF'.indexOf(s[0])),
   '<>': s => s[0] === '<' && s.slice(-1) === '>'
 };
 
 
 function next_state(state,node){
   let defaultval = 0;
-  for(key in STATE_TABLE_DISPATCH){
+  for(let key in STATE_TABLE_DISPATCH){
     const val = STATE_TABLE_DISPATCH[key];
     if(key === '*'){
       defaultval = val;
@@ -58,7 +58,7 @@ function next_state(state,node){
 
 
 
-export default class internalRepr{
+export default class InternalRepr{
   /*
   ユーザ発言やスクリプトの入力文字列を内部表現に変換する。
 
@@ -102,10 +102,10 @@ export default class internalRepr{
 
   */
   constructor(){
-    const segmenter = new TinySegmenter();
+    this.segmenter = TinySegmenter;
   }
 
-  function from_message(message.text){
+  from_message(message){
     let text = message.text;
     let nodes = this.segmenter.tokenize(text);
     nodes = this.parse(nodes);
@@ -113,12 +113,12 @@ export default class internalRepr{
     return nodes;
   }
 
-  function parse(text){
-    const line = [];
-    const buff = [];
+  parse(text){
+    let line = [];
+    let buff = [];
     let state = 0;
 
-    for(node of text){
+    for(let node of text){
       state = next_state(state,node);
       switch(state) {
         case 0 : {
@@ -141,6 +141,7 @@ export default class internalRepr{
           buff.length=0;
           continue
         }
+
       }
 
       buff.push(node);
@@ -152,6 +153,6 @@ export default class internalRepr{
         }
       }
     }
+    return line;
   }
-  return line;
 }

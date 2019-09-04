@@ -131,6 +131,7 @@ export default function PartEditor(props){
             <MenuItem value={'questionser'}>questionser</MenuItem>
             <MenuItem value={'enactor'}>enactor</MenuItem>
             <MenuItem value={'namer'}>namer</MenuItem>
+            <MenuItem value={'internalRepr'}>internalRepr</MenuItem>
           </Select>
         </FormControl>
         </div>
