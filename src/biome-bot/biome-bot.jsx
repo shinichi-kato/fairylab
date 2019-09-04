@@ -1,6 +1,7 @@
 import React, { useState,useEffect,createContext } from 'react';
-import BiomeBot from '../biome-bot/BiomeBot.jsx'
-export const BiomebotContext = createContext();
+import BiomeBot from './BiomeBot.jsx';
+
+export const BiomeBotContext = createContext();
 
 // const echoBot={
 //   name:"Echo",
@@ -32,32 +33,26 @@ export const BiomebotContext = createContext();
 //   compiledDicts: JSON.parse(localStorage.getItem('bot.compiledDicts')) || [],
 // };
 
-function reducer(state,action) {
-  switch(action.type) {
-    case: ''
-  }
-}
+
 
 export default function BiomeBotProvider(props){
-
+  const [state,setState] = useState('init');
   const [bot,setBot] = useState(new BiomeBot());
-  const logRef =useRef(null);
 
   useEffect(()=>{
-    bot.load();
     bot.setup();
   },[])
 
-  function handleSetLog(log){
-    logRef.current
-  }
   function handleReply(message){
     // メッセージを受け取り返答をログに追記
+    console.log("handleReply",message)
+    return bot.reply(message)
   }
 
   function handleDownload(path){
     // pathで指定されたSettingsをfirebaseからlocalStorageにダウンロードし、
     // parts、dictsもダウンロード
+
   }
 
   function handleCompile(){
@@ -67,14 +62,14 @@ export default function BiomeBotProvider(props){
 
 
   return(
-    <BiomebotContext.Provider value={{
-      name:name,
-      handleSetLog:l=>handleSetLog(l),
+    <BiomeBotContext.Provider value={{
+      name:bot.name,
+      state:state,
       handleReply:m=>handleReply(m),
-      handleDownload:p=>handleDownload(m),
-      handleCompile:()=>handleCompile(),
+      handleDownload:p=>{handleDownload(p)},
+      handleCompile:()=>{handleCompile()},
     }}>
     {props.children}
-    </BiomebotContext.Provider>
+    </BiomeBotContext.Provider>
   )
 }

@@ -1,7 +1,8 @@
-import React, { useState,useEffect,useRef } from 'react';
+import React, { useState,useEffect,useRef,useReducer } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-
+import BiomeBotProvider from './biome-bot/biome-bot.jsx';
+import Dashboard from './dashboard/dashboard.jsx';
 
 import * as firebase from 'firebase/app';
 import "firebase/auth";
@@ -35,29 +36,30 @@ const initialState = {
     providerData: null,
   },
   accountState:'yet',
+  role:'developer',
 
   mode: 'Dashboard',
-}};
+};
 
 
 
 const reducer = (state,action) => {
-  swtich(action.type){
-    case : "AutoSignIn" : {
+  switch (action.type) {
+    case "AutoSignIn" : {
       return {
         ...state,
         account:{...action.account},
         mode: 'Dashboard'
-      };
+      }
     }
-    case ; "PromptSignIn": {
+    case "PromptSignIn" :{
       return {
         ...state,
         mode: 'PromptSignIn'
       };
     }
   }
-};
+}
 
 function App() {
   const [state,dispatch] = useReducer(reducer,initialState);
@@ -69,7 +71,7 @@ function App() {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         dispatch({type:'AutoSignIn',account:{...user}});
-      else{
+      }else{
         dispatch({type:'PromptSignIn'});
       }
     });
@@ -89,12 +91,9 @@ function App() {
 
   return (
     <ThemeProvider theme={theme} >
-      <BiomeBot>
-      <ApplicationBar />
-      { state.mode === 'Dashboard' &&
+      <BiomeBotProvider>
         <Dashboard />
-      }
-      </BiomeBot>
+      </BiomeBotProvider>
     </ThemeProvider>
   );
 }

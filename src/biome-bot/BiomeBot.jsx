@@ -1,4 +1,4 @@
-// BiomeBot.js
+// BiomeBot.jsx
 import InternalRepr from './internalRepr.jsx';
 
 const echoBot={
@@ -23,6 +23,7 @@ export default class BiomeBotCore{
   constructor(){
     this.internalRepr = new InternalRepr();
     this.state = "init";
+    this.load();
 
     // this.name = localStorage.getItem('bot.name') || echoBot.name;
     // this.id = localStorage.getItem('bot.id') || echoBot.id;
@@ -58,15 +59,16 @@ export default class BiomeBotCore{
     // partsの内容に従ってrun関数を生成
     for(let i in this.parts){
 
+
       switch(this.parts[i].type){
         case '@dev/echo':{
-          this.parts[i].replier=(message)=>{
+          this.parts[i].replier=(message)=>{return{
             name:this.name,
             speakerId:this.id,
             avatar:this.avatarId,
-            text:message.text
+            text:message.text,
             score:1
-            };
+            }};
           }
 
         }}
@@ -75,6 +77,7 @@ export default class BiomeBotCore{
 
 
     reply(message){
+      console.log("reply to ",message)
       return new Promise((resolve,reject) => {
         for(let i in this.parts){
           const part = this.parts[i];
@@ -97,4 +100,4 @@ export default class BiomeBotCore{
       });
     }
 
-  }
+}
