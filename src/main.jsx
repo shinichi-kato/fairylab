@@ -51,7 +51,14 @@ const reducer = (state,action) => {
         }
       };
     }
-
+    case 'ChangeUserSettings': {
+      return {
+        ...state,
+        account: {...state.account},
+        userName:action.userName,
+        userAvatar:action.userAvatar
+      };
+    }
 
     case 'ChangePage' : {
       if(state.page === 'Hub' || state.page === 'Home' || state.page==='Dashboard'){
@@ -151,14 +158,22 @@ export default function Main(){
       case 'Dashboard':
         return (
         <Dashboard
+          account={state.account}
           userName={state.userName}
           userAvatar={state.userAvatar}
           handleToUserSettings={()=>dispatch({type:'ChangePage',page:'UserSettings'})}
           handleToBotSettings={()=>dispatch({type:'ChangePage',page:'BotSettings'})}
+          handleToHome={()=>dispatch({type:'ChangePage',page:'Home'})}
+          handleToHub={()=>dispatch({type:'ChangePage',page:'Hub'})}
         />);
       case 'UserSettings':
         return (
-          <UserSettings />
+          <UserSettings
+            userName={state.userName}
+            userAvatar={state.userAvatar}
+            handleToParentPage={()=>dispatch({type:'ChangePage',page:'Dashboard'})}
+            hadleChangeUserSettings={(name,avatar)=>
+              dispatch({type:'ChangeUserSettings,userName:name,userAvatar:avatar'})}/>
         )
       case 'BotSettings':
         return(
