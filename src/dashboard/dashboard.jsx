@@ -1,21 +1,35 @@
 import React, { useContext,useState } from 'react';
-import Button from '@material-ui/core/Button';
-import {BiomeBotContext} from '../biome-bot/biome-bot.jsx';
+import Box from '@material-ui/core/Box';
+import IconsPanel from './icons-panel.jsx';
+import {BiomeBotContext} from '../biome-bot/biome-bot-provider.jsx';
+
+
+const initialState={
+
+}
 
 export default function Dashboard(props){
-  const bot = useContext(BiomeBotContext);
-  const [text,setText] = useState(null);
-  function test(){
-    console.log("dashboard.test")
-      bot.handleReply({text:"text()による返答送信"})
-        .then(msg => setText(msg.text))
-  }
+  const {userName,userAvatar,handleToUserSettings,handleToBotSettings} = props;
+
   return(
-    <>
-    <Button onClick={e=>{test()}}>
-    button
-    </Button>
-    text={text}
-    </>
+    <Box display="flex"
+      flexDirection="column"
+      flexWrap="nowrap"
+      justifyContent="flex-start"
+      alignContent="stretch"
+      alignItems="stretch"
+      height="100%">
+      <Box order={0} >
+        <IconsPanel
+          userName={userName}
+          userAvatar={userAvatar}
+          handleToUserSettings={handleToUserSettings}
+          handleToBotSettings={handleToBotSettings}
+        />
+      </Box>
+      <Box flexGrow={1}>
+
+      </Box>
+    </Box>
   )
 }

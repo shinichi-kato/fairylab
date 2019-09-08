@@ -16,6 +16,9 @@ const echoBot={
   }],
   sourceDicts: [],
   compiledDicts: [],
+
+  selfEstate:0,
+  memory:{dummy:'dummy'}
 };
 
 
@@ -24,15 +27,6 @@ export default class BiomeBotCore{
     this.internalRepr = new InternalRepr();
     this.state = "init";
     this.load();
-
-    // this.name = localStorage.getItem('bot.name') || echoBot.name;
-    // this.id = localStorage.getItem('bot.id') || echoBot.id;
-    // this.avatarId = localStorage.getItem('bot.avatarId') || echoBot.avatarId;
-    // this.description = localStorage.getItem('bot.description') || echoBot.description;
-    // this.parts = JSON.parse(localStorage.getItem('bot.parts')) || echoBot.parts;
-    // this.sourceDicts = JSON.parse(localStorage.getItem('bot.sourceDicts')) || echoBot.sourceDicts;
-    // this.compiledDicts = JSON.parse(localStorage.getItem('bot.compiledDicts')) || echoBot.compiledDict;
-
   }
 
   load(){
