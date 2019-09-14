@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => createStyles({
     margin: 'auto',
     padding: 'auto 10',
     borderRadius: '100% 0% 0% 100% / 100% 100% 0% 0% ',
-    backgroundColor: theme.palette.primary.main
+    backgroundColor: theme.palette.primary.main,
   },
   buttonImage: {
     width: 90,
@@ -44,7 +44,6 @@ export default function Navigation(props){
   const {handleToHome,handleToHub,account,userName,userAvatar} = props;
   const bot = useContext(BiomeBotContext);
   const classes = useStyles();
-  console.log("user=",userName,userAvatar)
   const homeDisabled = !userName || userName==="" || !userAvatar || !bot || !bot.name;
 
   const hubDisabled = homeDisabled || !account.uid ;

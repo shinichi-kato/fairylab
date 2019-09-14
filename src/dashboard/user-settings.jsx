@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
 
+const RE_FILENAME=/[\w-]+\.svg$/;
+
 const avatarsDir = 'avatar/user/';
 const avatarPaths = [
   '0person.svg',
@@ -28,47 +30,63 @@ const avatarPaths = [
   '15unico.svg',
 ];
 
+
+
 const useStyles = makeStyles(theme => createStyles({
-  card: {
-    width: '100%',
-    borderRadius: 10,
+  root: {
+    padding: theme.spacing(2),
   },
   avatarButton: {
     margin: theme.spacing(0),
   },
   avatar: {
-    width: 40,
-    height: 40
+    margin: 10,
+    width: 44,
+    height: 44
+  },
+  currentAvatar: {
+    margin: 2,
+    width: 60,
+    height: 60,
+    backgroundColor: theme.palette.primary.main,
+  },
+  textinput: {
+    width: '80%',
   }
 }));
 
 export default function UserSettings(props){
   const classes=useStyles();
   const [userName,setUserName] = useState(props.userName);
-  const [userAvatar,setUserAvatar] = useState(props.userAvatar);
+  const [userAvatar,setUserAvatar] =
+    useState(props.userAvatar.match(RE_FILENAME) || avatarPaths[0]);
 
 
   function handleSelectAvatar(event,img){
-    setUserAvatar(avatarsDir+img);
+    setUserAvatar(img);
   }
   function handleChangeName(name){
     setUserName(name);
   }
 
   function handleChangeUserSettings(){
-    props.handleChangeUserSettings(userName,userAvatar);
+    props.handleChangeUserSettings(userName,avatarsDir+userAvatar);
     props.handleToParentPage();
   }
 
   const avatarItems = avatarPaths.map((img) =>
     <IconButton className={classes.avatarButton} aria-label={img} key={img}
       onClick={(e) => handleSelectAvatar(e,img)}>
-      <Avatar src={avatarsDir+img} className={classes.avatar} />
+      <Avatar
+        src={avatarsDir+img}
+        className={
+          img === userAvatar ? classes.currentAvatar : classes.avatar}
+      />
     </IconButton>
   )
 
   return (
-    <form noValidate autoComplete="off">
+    <form noValidate autoComplete="off" className={classes.root}>
     <Box
       flexDirection="column"
       flexWrap="nowrap"
@@ -78,15 +96,18 @@ export default function UserSettings(props){
       height="100%">
 
       <Box>
-        <Typography>Avatar </Typography>
+        <Typography variant="h4">Avatar</Typography>
       </Box>
       <Box>
         {avatarItems}
       </Box>
+      <Box>
+        <Typography variant="h4">User Name</Typography>
+      </Box>
       <Box flexGrow={1}>
+
         <TextField
-          label={props.label}
-          className={classes.textField}
+          className={classes.textinput}
           value={userName}
           onChange={handleChangeName}
           margin="normal"

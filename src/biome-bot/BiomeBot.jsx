@@ -1,26 +1,6 @@
 // BiomeBot.jsx
 import InternalRepr from './internalRepr.jsx';
-
-const echoBot={
-  name:"Echo",
-  id:"@dev/echo",
-  avatarId:"blank",
-  description:"ユーザのセリフをそのまま返すエコーです",
-  parts: [{
-    name:'echo',
-    type:'@dev/echo',
-    availability: 0.9,
-    triggerLevel: 0,
-    retention: 1,
-    dictionary: "",
-  }],
-  sourceDicts: [],
-  compiledDicts: [],
-
-  selfEstate:0,
-  memory:{dummy:'dummy'}
-};
-
+import {echoBot} from './PresetBots.jsx';
 
 export default class BiomeBotCore{
   constructor(){
@@ -29,14 +9,25 @@ export default class BiomeBotCore{
     this.load();
   }
 
-  load(){
-    this.name = localStorage.getItem('bot.name') || echoBot.name;
-    this.id = localStorage.getItem('bot.id') || echoBot.id;
-    this.avatarId = localStorage.getItem('bot.avatarId') || echoBot.avatarId;
-    this.description = localStorage.getItem('bot.description') || echoBot.description;
-    this.parts = JSON.parse(localStorage.getItem('bot.parts')) || echoBot.parts;
-    this.sourceDicts = JSON.parse(localStorage.getItem('bot.sourceDicts')) || echoBot.sourceDicts;
-    this.compiledDicts = JSON.parse(localStorage.getItem('bot.compiledDicts')) || echoBot.compiledDict;
+  load(data){
+    if(data === void 0 ){
+      this.name = localStorage.getItem('bot.name') || echoBot.name;
+      this.id = localStorage.getItem('bot.id') || echoBot.id;
+      this.avatarId = localStorage.getItem('bot.avatarId') || echoBot.avatarId;
+      this.description = localStorage.getItem('bot.description') || echoBot.description;
+      this.parts = JSON.parse(localStorage.getItem('bot.parts')) || echoBot.parts;
+      this.sourceDicts = JSON.parse(localStorage.getItem('bot.sourceDicts')) || echoBot.sourceDicts;
+      this.compiledDicts = JSON.parse(localStorage.getItem('bot.compiledDicts')) || echoBot.compiledDict;
+    }
+    else{
+      this.name = data.name;
+      this.id = data.id;
+      this.avatarId = data.avatarId;
+      this.description = data.description;
+      this.parts = [...data.parts];
+      this.sourceDicts = {...data.sourceDicts};
+      this.compiledDicts = new Object();
+    }
   }
 
   save(){
@@ -48,6 +39,10 @@ export default class BiomeBotCore{
     localStorage.setItem('bot.sourceDicts',JSON.stringify(this.sourceDicts));
     localStorage.setItem('bot.compiledDicts',JSON.stringify(this.compiledDicts));
   }
+
+  loadDictionaries(dicts){
+      // {name:[],name2:[],...}という形式で格納された辞書をthisにコピー
+    }
 
   setup(){
     // partsの内容に従ってrun関数を生成
@@ -71,7 +66,6 @@ export default class BiomeBotCore{
 
 
     reply(message){
-      console.log("reply to ",message)
       return new Promise((resolve,reject) => {
         for(let i in this.parts){
           const part = this.parts[i];

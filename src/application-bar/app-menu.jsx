@@ -226,6 +226,12 @@ function AppMenuDialog(props){
               スクリプトの編集
             </Button>
             </Grid>
+            <Grid item xs={12}>
+            <Button className={classes.wideButton}
+              onClick={e=>localStorage.clear()}>
+              localStorage消去
+            </Button>
+            </Grid>
           </Grid>
          </Paper>
        </Popover>

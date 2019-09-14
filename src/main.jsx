@@ -52,6 +52,9 @@ const reducer = (state,action) => {
       };
     }
     case 'ChangeUserSettings': {
+      localStorage.setItem('userName',action.userName);
+      localStorage.setItem('userAvatar',action.userAvatar);
+
       return {
         ...state,
         account: {...state.account},
@@ -177,7 +180,9 @@ export default function Main(){
         )
       case 'BotSettings':
         return(
-          <BotSettings />
+          <BotSettings
+            account={state.account}
+          />
         );
       case 'ScriptEditor':
         return(
