@@ -46,7 +46,7 @@ const styles={
     padding: '0 30px'
   },
   slideContainer: {
-    padding: '0 10px',
+    padding: '0 0px',
   },
   slide: {
     padding: 15,
@@ -60,13 +60,14 @@ export default function BotSettings(props){
   const {account,firebase} = props;
   const classes = useStyles();
   const bot = useContext(BiomeBotContext);
-  const [name,setName] = useState("");
+  const [name,setName] = useState(bot.name);
   const [index,setIndex] = useState(null);
 
   useEffect(()=>{
     let isCancel = false;
     if(!isCancel){
-      bot.handleLoadBotSettingsList(firebase)
+      bot.handleLoadBotSettingsList(firebase);
+
     }
     return(()=>{
       isCancel = true;
@@ -85,7 +86,21 @@ export default function BotSettings(props){
   function handleExecuteBotSettings(){
     bot.handleSetName(name);
     bot.handleDownload(firebase,index);
+    props.handleToParentPage();
+
   }
+
+  const id = localStorage.getItem('bot.id') || null;
+  let cursor = null;
+  if(id !== null){
+    for(let i in bot.botSettingsList){
+      const b = bot.botSettingsList[i]
+      if (b.id === id){
+        cursor=i;
+      }
+    }
+  }
+  console.log("bot-settings index=",index);
 
   const botItems = bot.botSettingsList.map((bot,index) =>
     <Card style={styles.slide} key={index}>
@@ -95,6 +110,9 @@ export default function BotSettings(props){
       title={bot.id} />
       <CardContent>
         <Typography>{bot.description}</Typography>
+        {cursor === index &&
+          <Typography>選択中</Typography>
+        }
       </CardContent>
       <CardActions disableSpacing >
         <Button variant="contained" color="primary"
@@ -130,7 +148,7 @@ export default function BotSettings(props){
 
         <TextField
           className={classes.textinput}
-          value={bot.name}
+          value={name}
           onChange={handleChangeName}
           margin="normal"
         />
@@ -144,7 +162,7 @@ export default function BotSettings(props){
           disabled={!name || name.length === 0 || index === null}
           color="primary"
           type="submit"
-          onClick={e=>handleExecuteBotSettings}>
+          onClick={e=>{handleExecuteBotSettings()}}>
           OK
         </Button>
       </Box>

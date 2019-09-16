@@ -9,6 +9,7 @@ import NavigateBefore from '@material-ui/icons/NavigateBefore';
 import Close from '@material-ui/icons/Close';
 
 import AppMenu from './app-menu.jsx';
+import Indicator from '../biome-bot/indicator.jsx';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,6 +46,7 @@ export default function ApplicationBar(props){
           <Typography variant="h6" className={classes.title}>
           { page }
           </Typography>
+          <Indicator />
           <AppMenu
             account={props.account}
             firebase = {props.firebase}

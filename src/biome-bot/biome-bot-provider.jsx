@@ -4,33 +4,47 @@ import {echoBot,internalReprBot} from './PresetBots.jsx';
 
 export const BiomeBotContext = createContext();
 
+const bot = new BiomeBot();
+
 const initialState = {
   state: 'init',
-  current: null,
+  id: localStorage.getItem('bot.id') || null,
   botSettingsList : [echoBot,internalReprBot],
 };
 
 function reducer (state,action){
   switch(action.type){
+    case 'ready':{
+
+      return {
+        state: 'ready',
+        id: action.id,
+        botSettingsList: state.botSettingsList.map(node=>{
+          return {...node,parts:[...node.parts]}
+        })
+      }
+    }
     case 'listLoading':{
       return {
         state:'listLoading',
-        current: null,
+        id: state.id,
         botSettingsList: [],
       }
     }
     case 'listLoaded': {
       return {
         state:'listLoaded',
-        current: null,
-        botSettinigsList:action.botSettingsList
+        id: state.id,
+        botSettingsList: action.botSettingsList.map(node=>{
+          return {...node,parts:[...node.parts]}
+        })
         };
       }
 
     case 'firebaseDisconnected': {
       return {
         state: 'disconnented',
-        current: state.current,
+        id: state.id,
         botSettingsList: state.botSettingsList.map(node=>{
           return {...node,parts:[...node.parts]}
         })
@@ -58,7 +72,6 @@ export default function BiomeBotProvider(props){
   // このコンポーネントすべて処理する。
   // ダウンロードなどの状態はBiomeBotProviderで把握管理する。
   const [state,dispatch] = useReducer(reducer,initialState);
-  const [bot,setBot] = useState(new BiomeBot());
 
   function handleLoadBotSettingsList(firebase){
     // firebaseからbotのリストをロードしてbotSettingsListに格納
@@ -68,9 +81,11 @@ export default function BiomeBotProvider(props){
       dispatch({type:'listLoaded',botSettingsList:settings})
     }
     else{
+      //------------------------------------------
+      // firebaseからbotlistをダウンロード
       dispatch({type:'listLoading'});
-      //promise->thenで
-      //dispatch({type:'listLoaded',botSettingsList:settings})
+      // あとで
+      dispatch({type:'listLoaded',botSettingsList:settings})
     }
   }
 
@@ -78,10 +93,11 @@ export default function BiomeBotProvider(props){
     const botSettings = state.botSettingsList[index];
 
     bot.load(botSettings);
-
+    console.log("id=",botSettings.id)
     if(botSettings.id.startsWith('@dev')){
       bot.setup();
-
+      bot.save();
+      dispatch({type:'ready',id:botSettings.id});
       return;
     }
     if (!firebase) {
@@ -116,7 +132,7 @@ export default function BiomeBotProvider(props){
     // localStorageの辞書をコンパイル
   }
 
-
+  console.log("state=",state.state,"list=",state.botSettingsList)
 
   return(
     <BiomeBotContext.Provider value={{
@@ -127,8 +143,8 @@ export default function BiomeBotProvider(props){
       handleSetName:n=>{dispatch({type:"setName",name:n})},
       handleReply:m=>handleReply(m),
       handleLoadBotSettingsList:(firebase)=>handleLoadBotSettingsList(firebase),
-      handleDownload:(firebase,index,name)=>{handleDownload(firebase,index)},
-      handleCompile:()=>{handleCompile()},
+      handleDownload:(firebase,index)=>handleDownload(firebase,index),
+      handleCompile:()=>handleCompile(),
     }}>
     {props.children}
     </BiomeBotContext.Provider>

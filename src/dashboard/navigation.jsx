@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
-import BiomeBotContext from '../biome-bot/biome-bot-provider.jsx';
+import {BiomeBotContext} from '../biome-bot/biome-bot-provider.jsx';
 
 
 
@@ -44,7 +44,8 @@ export default function Navigation(props){
   const {handleToHome,handleToHub,account,userName,userAvatar} = props;
   const bot = useContext(BiomeBotContext);
   const classes = useStyles();
-  const homeDisabled = !userName || userName==="" || !userAvatar || !bot || !bot.name;
+  console.log("bot.state=",bot.state)
+  const homeDisabled = !userName || userName==="" || !userAvatar || bot.state !== "ready";
 
   const hubDisabled = homeDisabled || !account.uid ;
 

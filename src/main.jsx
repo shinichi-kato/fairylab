@@ -182,6 +182,8 @@ export default function Main(){
         return(
           <BotSettings
             account={state.account}
+            firebase ={firebase}
+            handleToParentPage={()=>dispatch({type:'ChangePage',page:'Dashboard'})}
           />
         );
       case 'ScriptEditor':
