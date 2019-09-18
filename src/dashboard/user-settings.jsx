@@ -62,28 +62,30 @@ export default function UserSettings(props){
     useState(props.userAvatar.match(RE_FILENAME) || avatarPaths[0]);
 
 
-  function handleSelectAvatar(event,img){
+  function handleSelectAvatar(img){
     setUserAvatar(img);
   }
-  function handleChangeName(name){
-    setUserName(name);
+
+  function handleChangeName(event){
+    setUserName(event.target.value);
   }
 
-  function handleChangeUserSettings(){
+  function handleChangeUserSettings(event){
+    console.log("changeUserSetting",userName,userAvatar)
     props.handleChangeUserSettings(userName,avatarsDir+userAvatar);
     props.handleToParentPage();
   }
 
   const avatarItems = avatarPaths.map((img) =>
     <IconButton className={classes.avatarButton} aria-label={img} key={img}
-      onClick={(e) => handleSelectAvatar(e,img)}>
+      onClick={(e) => handleSelectAvatar(img)}>
       <Avatar
         src={avatarsDir+img}
         className={
           img === userAvatar ? classes.currentAvatar : classes.avatar}
       />
     </IconButton>
-  )
+  );
 
   return (
     <form noValidate autoComplete="off" className={classes.root}>
@@ -96,19 +98,20 @@ export default function UserSettings(props){
       height="100%">
 
       <Box>
-        <Typography variant="h4">Avatar</Typography>
+        <Typography variant="h5">Avatar</Typography>
       </Box>
       <Box>
         {avatarItems}
       </Box>
       <Box>
-        <Typography variant="h4">User Name</Typography>
+        <Typography variant="h5">User Name</Typography>
       </Box>
       <Box flexGrow={1}>
 
         <TextField
           className={classes.textinput}
           value={userName}
+          placeHolder="ユーザの名前"
           onChange={handleChangeName}
           margin="normal"
         />
@@ -121,8 +124,9 @@ export default function UserSettings(props){
         <Button
           disabled={!userName || userName.length === 0 || !userAvatar || userAvatar.length ===0}
           color="primary"
+          variant="contained"
           type="submit"
-          onClick={e=>handleChangeUserSettings}>
+          onClick={(e)=>handleChangeUserSettings(e)}>
           OK
         </Button>
       </Box>

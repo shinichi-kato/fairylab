@@ -5,6 +5,7 @@ import Dashboard from './dashboard/dashboard.jsx';
 import UserSettings from './dashboard/user-settings.jsx';
 import BotSettings from './dashboard/bot-settings.jsx';
 import ScriptEditor from './script-editor/script-editor.jsx';
+import Home from './home/home.jsx';
 
 import * as firebase from 'firebase/app';
 import "firebase/auth";
@@ -24,7 +25,7 @@ const initialState = {
   },
   accountState: 'init',
   userName: localStorage.getItem('userName') || '',
-  userAvatar: localStorage.getItem('userAvatar') || 'blank',
+  userAvatar: localStorage.getItem('userAvatar') || 'avatar/user/blank.svg',
 
   page: 'Dashboard',
   parentPage: null,
@@ -54,7 +55,7 @@ const reducer = (state,action) => {
     case 'ChangeUserSettings': {
       localStorage.setItem('userName',action.userName);
       localStorage.setItem('userAvatar',action.userAvatar);
-
+      console.log("changeUserSettings,",action.userName,action.userAvatar);
       return {
         ...state,
         account: {...state.account},
@@ -175,8 +176,8 @@ export default function Main(){
             userName={state.userName}
             userAvatar={state.userAvatar}
             handleToParentPage={()=>dispatch({type:'ChangePage',page:'Dashboard'})}
-            hadleChangeUserSettings={(name,avatar)=>
-              dispatch({type:'ChangeUserSettings,userName:name,userAvatar:avatar'})}/>
+            handleChangeUserSettings={(name,avatar)=>
+              dispatch({type:'ChangeUserSettings',userName:name,userAvatar:avatar})}/>
         )
       case 'BotSettings':
         return(
@@ -190,6 +191,13 @@ export default function Main(){
         return(
           <ScriptEditor />
         );
+      case 'Home':
+        return(
+          <Home
+            account={state.account}
+            userName={state.userName}
+            userAvatar={state.userAvatar}
+          />);
       default :
         return(
           <div>invalid page {page}</div>

@@ -9,6 +9,7 @@ import {BiomeBotContext} from '../biome-bot/biome-bot-provider.jsx';
 
 const blankUserAvatar = 'avatar/user/blank.svg';
 const blankBotAvatar = 'avatar/bot/blank.svg';
+const avatarDir  = 'avatar/bot/';
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
@@ -53,7 +54,7 @@ export default function IconsPanel(props){
           className={classes.char}>
           <Typography
             className={classes.name}>
-            {props.userName}
+            {props.userName || "上のアイコンをクリック"}
           </Typography>
         </Grid>
       </Grid>
@@ -62,7 +63,7 @@ export default function IconsPanel(props){
           <Button onClick={props.handleToBotSettings}>
           <Avatar
             className={classes.avatar}
-            src={bot.avatarId || blankBotAvatar} />
+            src={avatarDir+bot.avatarId || blankBotAvatar} />
           </Button>
         </Grid>
         <Grid item xs={12} className={classes.char}>

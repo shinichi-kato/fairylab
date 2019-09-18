@@ -28,6 +28,7 @@ export default class BiomeBotCore{
       this.sourceDicts = {...data.sourceDicts};
       this.compiledDicts = new Object();
     }
+    this.setup();
   }
 
   save(){
@@ -48,33 +49,52 @@ export default class BiomeBotCore{
     // partsの内容に従ってrun関数を生成
     for(let i in this.parts){
 
-
       switch(this.parts[i].type){
         case '@dev/echo':{
-          this.parts[i].replier=(message)=>{return{
+
+          this.parts[i].replier=(message)=>{return({
             name:this.name,
             speakerId:this.id,
             avatar:this.avatarId,
             text:message.text,
             score:1
-            }};
-          }
+            })};
 
-        }}
+          }
+        case '@dev/internalRepr':{
+          this.parts[i].replier=(message)=>{return ({
+            name:this.name,
+            speakerId:this.id,
+            avatar:this.avatarId,
+            text:this.internalRepr.from_message(message.text).join("/"),
+            score:1
+          })}
+        }
+
+        }
+      }
       this.state = "ready"
     }
 
 
     reply(message){
       return new Promise((resolve,reject) => {
+        const ts = new Date();
         for(let i in this.parts){
           const part = this.parts[i];
 
-          if(Math.random() > part.availability ) continue;
+          if(Math.random() > part.availability ){
+            console.log("availability skip");
+            continue;
+          }
 
           const reply = part.replier(message);
+          reply['timestamp']=ts.getTime();
 
-          if(reply.score < part.triggerLevel) continue;
+          if(reply.score < part.triggerLevel){
+            console.log("triggerLevel=",part.triggerLevel,"score=",reply.score," not enough");
+            continue;
+          }
 
           if(Math.random() < part.retention){
             //現在のパートを最後尾に
@@ -84,7 +104,14 @@ export default class BiomeBotCore{
           }
           resolve(reply);
         }
-        reject("BiomeBot reply error");
+        resolve({
+          name:this.name,
+          speakerId:this.id,
+          avatar:this.avatarId,
+          text:null,
+          timestamp:ts.getTime(),
+          score:1
+        });
       });
     }
 

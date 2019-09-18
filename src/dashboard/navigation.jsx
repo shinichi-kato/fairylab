@@ -44,7 +44,6 @@ export default function Navigation(props){
   const {handleToHome,handleToHub,account,userName,userAvatar} = props;
   const bot = useContext(BiomeBotContext);
   const classes = useStyles();
-  console.log("bot.state=",bot.state)
   const homeDisabled = !userName || userName==="" || !userAvatar || bot.state !== "ready";
 
   const hubDisabled = homeDisabled || !account.uid ;
@@ -54,7 +53,7 @@ export default function Navigation(props){
       <Grid container spacing={0}>
         <Grid item xs={6} style={{textAlign:'left'}}>
           <Tooltip title={
-            homeDisabled ? "ユーザ・チャットボットの設定が必要です" : "ユーザとチャットボットで会話します"
+            homeDisabled ? "ユーザ・チャットボットの設定が必要です" : "チャットボットと会話します"
           }>
             <span>
               <Button className={classes.homeButton}

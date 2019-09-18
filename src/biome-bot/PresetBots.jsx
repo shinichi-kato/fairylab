@@ -2,7 +2,7 @@
 export const echoBot={
   name:"Echo",
   id:"@dev/echo",
-  avatarId:"crystal/buleCrystal.svg",
+  avatarId:"crystal/blueCrystal.svg",
   description:"テスト用：ユーザのセリフをそのまま返すエコーです",
   creator: 'system',
   parts: [{
@@ -23,7 +23,7 @@ export const echoBot={
 export const internalReprBot={
   name:"InternalRepr",
   id:"@dev/internalRepr",
-  avatarId:"crystal/buleCrystal.svg",
+  avatarId:"crystal/blueCrystal.svg",
   description:"テスト用：ユーザのセリフを内部表現に変換します",
   creator: 'system',
   parts: [{

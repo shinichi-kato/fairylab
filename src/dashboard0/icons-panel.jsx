@@ -11,6 +11,7 @@ import BotStatusDialog from './bot-status-dialog.jsx';
 
 const blankUserAvatar = 'avatar/user/blank.svg';
 const blankBotAvatar = 'avatar/bot/blank.svg';
+const botAvatarDir = 'avatar/bot/';
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
@@ -67,7 +68,7 @@ export default function IconsPanel(props){
           <Button onClick={handleClickOpen}>
           <Avatar
             className={classes.avatar}
-            src={botSettings.avatarId || blankBotAvatar} />
+            src={botAvatarDir+botSettings.avatarId || blankBotAvatar} />
           </Button>
             <Dialog
               open={open}

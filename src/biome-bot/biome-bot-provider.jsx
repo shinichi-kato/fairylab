@@ -6,8 +6,10 @@ export const BiomeBotContext = createContext();
 
 const bot = new BiomeBot();
 
+
+
 const initialState = {
-  state: 'init',
+  state: localStorage.getItem('bot.id') ? 'ready' : 'init',
   id: localStorage.getItem('bot.id') || null,
   botSettingsList : [echoBot,internalReprBot],
 };
@@ -32,13 +34,19 @@ function reducer (state,action){
       }
     }
     case 'listLoaded': {
+      let state='listLoaded';
+      let id= state.id;
+      if(bot.id !== null && bot.name !== null){
+        // ボット設定済みの状態でリストをロード→キャンセルした場合
+        state='ready';
+        id=bot.id;
+      }
       return {
-        state:'listLoaded',
-        id: state.id,
+        state:state,
+        id: id,
         botSettingsList: action.botSettingsList.map(node=>{
           return {...node,parts:[...node.parts]}
-        })
-        };
+        })};
       }
 
     case 'firebaseDisconnected': {
@@ -93,7 +101,6 @@ export default function BiomeBotProvider(props){
     const botSettings = state.botSettingsList[index];
 
     bot.load(botSettings);
-    console.log("id=",botSettings.id)
     if(botSettings.id.startsWith('@dev')){
       bot.setup();
       bot.save();
@@ -137,7 +144,7 @@ export default function BiomeBotProvider(props){
   return(
     <BiomeBotContext.Provider value={{
       name:bot.name,
-      avatar:bot.avatarId,
+      avatarId:bot.avatarId,
       state:state.state,
       botSettingsList:state.botSettingsList,
       handleSetName:n=>{dispatch({type:"setName",name:n})},

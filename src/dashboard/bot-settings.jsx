@@ -100,7 +100,6 @@ export default function BotSettings(props){
       }
     }
   }
-  console.log("bot-settings index=",index);
 
   const botItems = bot.botSettingsList.map((bot,index) =>
     <Card style={styles.slide} key={index}>
