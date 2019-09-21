@@ -139,7 +139,6 @@ export default function BiomeBotProvider(props){
     // localStorageの辞書をコンパイル
   }
 
-  console.log("state=",state.state,"list=",state.botSettingsList)
 
   return(
     <BiomeBotContext.Provider value={{

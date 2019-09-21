@@ -1,15 +1,13 @@
-import React, { useContext,useState } from 'react';
+import React, { useContext } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import Dialog from '@material-ui/core/Dialog';
 import Grid from '@material-ui/core/Grid';
 import {BiomeBotContext} from '../biome-bot/biome-bot-provider.jsx';
 
 const blankUserAvatar = 'avatar/user/blank.svg';
 const blankBotAvatar = 'avatar/bot/blank.svg';
-const avatarDir  = 'avatar/bot/';
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
@@ -63,7 +61,7 @@ export default function IconsPanel(props){
           <Button onClick={props.handleToBotSettings}>
           <Avatar
             className={classes.avatar}
-            src={avatarDir+bot.avatarId || blankBotAvatar} />
+            src={bot.avatarId || blankBotAvatar} />
           </Button>
         </Grid>
         <Grid item xs={12} className={classes.char}>

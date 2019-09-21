@@ -59,17 +59,20 @@ export default class BiomeBotCore{
             text:message.text,
             score:1
             })};
-
+            break;
           }
         case '@dev/internalRepr':{
           this.parts[i].replier=(message)=>{return ({
             name:this.name,
             speakerId:this.id,
             avatar:this.avatarId,
-            text:this.internalRepr.from_message(message.text).join("/"),
+            text:this.internalRepr.from_message(message).join("/"),
             score:1
           })}
-        }
+          break;
+          }
+        default:
+          throw new Error(`invalid type ${this.parts[i].type} in BiomeBot`)
 
         }
       }
@@ -84,6 +87,7 @@ export default class BiomeBotCore{
           const part = this.parts[i];
 
           if(Math.random() > part.availability ){
+            // part.availabilityで設定した確率でpartが起動
             console.log("availability skip");
             continue;
           }

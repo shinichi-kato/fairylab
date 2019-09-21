@@ -1,4 +1,4 @@
-import React, { useContext,useState,useCallback } from 'react';
+import React, { useContext,useCallback,useReducer } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 
@@ -7,6 +7,7 @@ import {RightBalloon,LeftBalloon} from '../balloons.jsx';
 
 import {BiomeBotContext} from '../biome-bot/biome-bot-provider.jsx';
 const CHAT_WINDOW = 10;
+const LOG_WINDOW = 100;
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -18,14 +19,36 @@ const useStyles = makeStyles(theme => ({
  }
 }));
 
+const localStorageHomeLog=JSON.parse(localStorage.getItem('homeLog')) || [];
 
+const initialState = {
+  homeLog : localStorageHomeLog,
+  homeLogSlice : localStorageHomeLog.slice(-CHAT_WINDOW),
+}
+
+function reducer(state,action) {
+  switch(action.type) {
+    case 'pushMessage' : {
+      const newHomeLog = [...state.homeLog,action.message].slice(-LOG_WINDOW);
+      localStorage.setItem('homeLog',JSON.stringify(newHomeLog));
+
+      return {
+        homeLog: newHomeLog,
+        homeLogSlice: newHomeLog.slice(-CHAT_WINDOW),
+      }
+    }
+    default:
+     throw new Error(`invalid action ${action} in Home`);
+  }
+}
 
 export default function Home(props){
   const classes = useStyles();
   const bot = useContext(BiomeBotContext);
   const {userName,userAvatar} = props;
-  const [homeLog,setHomeLog] = useState(JSON.parse(localStorage.getItem('homeLog'))|| []);
-  const homeLogSlice = homeLog.slice(-CHAT_WINDOW);
+  const [state,dispatch] = useReducer(reducer,initialState);
+  // const [homeLog,setHomeLog] = useState(JSON.parse(localStorage.getItem('homeLog'))|| []);
+  // let homeLogSlice = homeLog.slice(-CHAT_WINDOW);
 
 
   // --------------------------------------------------------
@@ -34,7 +57,8 @@ export default function Home(props){
     if(node!== null){
       node.scrollIntoView({behavior:"smooth",block:"end"});
     }
-  },[homeLogSlice])
+  },[state])
+
 
 
 
@@ -48,22 +72,21 @@ export default function Home(props){
       timestamp:ts.getTime()
     };
 
-    const newHomeLog=[...homeLog,message];
-    setHomeLog(newHomeLog);
-    localStorage.setItem('homeLog',JSON.stringify(newHomeLog));
+    dispatch({type:'pushMessage',message:message})
+
     bot.handleReply(message)
       .then(reply => {
         if(reply.text !== null){
-          newHomeLog.push(reply);
-          setHomeLog(newHomeLog);
-          localStorage.setItem('homeLog',JSON.stringify(newHomeLog))
+
+          dispatch({type:'pushMessage',message:reply});
+
         }
       })
 
   }
 
 
-  const speeches = homeLogSlice.map(speech =>{
+  const speeches = state.homeLogSlice.map(speech =>{
     return speech.uid === props.account.uid ?
       <LeftBalloon speech={speech}/>
     :

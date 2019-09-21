@@ -39,14 +39,15 @@ const LEX = {
   '%' : s => s === '%',
   'dA': s => Boolean('0123456789ABCDEF'.indexOf(s)),
   'AA': s => s.length === 2 && Boolean('ABCDEF'.indexOf(s[0])),
-  '<>': s => s[0] === '<' && s.slice(-1) === '>'
+  '<>': s => s[0] === '<' && s.slice(-1) === '>',
 };
 
 
 function next_state(state,node){
   let defaultval = 0;
-  for(let key in STATE_TABLE_DISPATCH){
-    const val = STATE_TABLE_DISPATCH[key];
+  const states = STATE_TABLE_DISPATCH[state]
+  for(let key in states){
+    const val = states[key];
     if(key === '*'){
       defaultval = val;
       continue;
@@ -109,7 +110,7 @@ export default class InternalRepr{
     let text = message.text;
     let nodes = this.segmenter.segment(text);
     nodes = this.parse(nodes);
-
+    console.log("text=",text,"response=",nodes.join(","))
     return nodes;
   }
 
@@ -120,6 +121,7 @@ export default class InternalRepr{
 
     for(let node of text){
       state = next_state(state,node);
+      console.log("state=",state,"node=",node)
       switch(state) {
         case 0 : {
           // clear
