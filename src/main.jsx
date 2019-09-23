@@ -1,4 +1,4 @@
-import React, { useContext,useReducer,useEffect } from 'react';
+import React, { useContext,useReducer,useEffect,useRef,useState } from 'react';
 import Box from '@material-ui/core/Box';
 import ApplicationBar from './application-bar/application-bar.jsx';
 import Dashboard from './dashboard/dashboard.jsx';
@@ -6,11 +6,13 @@ import UserSettings from './dashboard/user-settings.jsx';
 import BotSettings from './dashboard/bot-settings.jsx';
 import ScriptEditor from './script-editor/script-editor.jsx';
 import Home from './home/home.jsx';
+import Hub from './hub/hub.jsx';
 
 import * as firebase from 'firebase/app';
 import "firebase/auth";
+import "firebase/firestore";
 
-import {firebaseConfig} from './credentials/firebase-config.jsx';
+import {firebaseConfig} from './credentials/firebase-init.js';
 firebase.initializeApp(firebaseConfig);
 
 
@@ -133,6 +135,59 @@ export default function Main(){
     }
   },[]);
 
+  // ----------------------------------------------------
+  // firestore / hubLog I/O
+
+  const firestoreRef = useRef(null);
+  const fsMessagesRef = useRef(null);
+
+  useEffect(()=>{
+    let didCancel = false;
+
+    if(!didCancel && state.account.uid !== null){
+      firestoreRef.current = firebase.firestore();
+      fsMessagesRef.current = firestoreRef.current.collection("Messages");
+      fsMessagesRef.current
+          .orderBy('timestamp','desc')
+          .limit(12)
+          .onSnapshot((query)=>syncHubLog(query));
+
+        return(()=>{
+          didCancel = true;
+          fsMessagesRef.current
+            .orderBy('timestamp','desc')
+            .limit(12)
+            .onSnapshot(function(){});
+        });
+      }
+
+
+  },[state.account]);
+
+
+
+const [hubLog,setHubLog] = useState([]);
+
+function syncHubLog(query){
+  const messages = query.docs.map(doc => {
+    const data=doc.data();
+    const ts=new Date(data.timestamp.seconds*1000);
+    return {...data,timestamp:ts,id:doc.id}
+  });
+  setHubLog(messages.reverse());
+}
+
+
+function handleWriteUserMessage(message,userName,userAvatar){
+  fsMessagesRef.current.add({
+    uid:state.account.uid,
+    name:userName,
+    text:message,
+    avatar:userAvatar,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  })
+}
+
   //------------------------------------------------------------------
   //  body要素のバウンススクロールを無効化
 
@@ -189,11 +244,24 @@ export default function Main(){
         );
       case 'ScriptEditor':
         return(
-          <ScriptEditor />
+          <ScriptEditor
+            account={state.account}
+            firebase={firebase}
+            userName={state.userName}
+          />
         );
       case 'Home':
         return(
           <Home
+            account={state.account}
+            userName={state.userName}
+            userAvatar={state.userAvatar}
+          />);
+      case 'Hub':
+        return(
+          <Hub
+            hubLog={hubLog}
+            handleWriteUserMessage={handleWriteUserMessage}
             account={state.account}
             userName={state.userName}
             userAvatar={state.userAvatar}

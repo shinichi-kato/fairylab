@@ -19,34 +19,23 @@ const useStyles = makeStyles(theme => ({
  }
 }));
 
-const localStorageHomeLog=JSON.parse(localStorage.getItem('homeLog')) || [];
 
-const initialState = {
-  homeLog : localStorageHomeLog,
-  homeLogSlice : localStorageHomeLog.slice(-CHAT_WINDOW),
-}
 
-function reducer(state,action) {
-  switch(action.type) {
-    case 'pushMessage' : {
-      const newHomeLog = [...state.homeLog,action.message].slice(-LOG_WINDOW);
-      localStorage.setItem('homeLog',JSON.stringify(newHomeLog));
 
-      return {
-        homeLog: newHomeLog,
-        homeLogSlice: newHomeLog.slice(-CHAT_WINDOW),
-      }
-    }
-    default:
-     throw new Error(`invalid action ${action} in Home`);
-  }
-}
 
-export default function Home(props){
+export default function Hub(props){
   const classes = useStyles();
   const bot = useContext(BiomeBotContext);
   const {userName,userAvatar} = props;
-  const [state,dispatch] = useReducer(reducer,initialState);
+
+
+  const speeches = props.hubLog.map(speech =>{
+    return speech.speakerId === props.account.uid ?
+      <LeftBalloon speech={speech}/>
+    :
+      <RightBalloon speech={speech} />
+    }
+  );
 
   // --------------------------------------------------------
   // currentLogが変更されたら最下行へ自動スクロール
@@ -54,42 +43,8 @@ export default function Home(props){
     if(node!== null){
       node.scrollIntoView({behavior:"smooth",block:"end"});
     }
-  },[state])
+  },[props.hubLog])
 
-
-
-
-  function handleWriteMessage(text){
-    const ts = new Date();
-    const message={
-      name:userName,
-      speakerId: props.account.id || -1,
-      avatar:userAvatar,
-      text:text,
-      timestamp:ts.getTime()
-    };
-
-    dispatch({type:'pushMessage',message:message})
-
-    bot.handleReply(message)
-      .then(reply => {
-        if(reply.text !== null){
-
-          dispatch({type:'pushMessage',message:reply});
-
-        }
-      })
-
-  }
-
-
-  const speeches = state.homeLogSlice.map(speech =>{
-    return speech.speakerId === props.account.uid ?
-      <LeftBalloon speech={speech}/>
-    :
-      <RightBalloon speech={speech} />
-  }
-   );
 
   return(
       <Box display="flex"
@@ -106,7 +61,7 @@ export default function Home(props){
         <Box order={0} justifyContent="center">
           <Console
             position={0}
-            handleWriteMessage={handleWriteMessage}/>
+            handleWriteMessage={props.handleWriteMessage}/>
         </Box>
       </Box>
     )

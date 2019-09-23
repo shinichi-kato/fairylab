@@ -6,7 +6,6 @@ export const echoBot={
   description:"テスト用：ユーザのセリフをそのまま返すエコーです",
   creator: 'system',
   parts: [{
-    name:'echo',
     type:'@dev/echo',
     availability: 0.9,
     triggerLevel: 0,
@@ -27,7 +26,6 @@ export const internalReprBot={
   description:"テスト用：ユーザのセリフを内部表現に変換します",
   creator: 'system',
   parts: [{
-    name:'internalRepr',
     type:'@dev/internalRepr',
     availability: 0.9,
     triggerLevel: 0,

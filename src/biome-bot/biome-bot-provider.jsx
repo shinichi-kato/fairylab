@@ -1,4 +1,4 @@
-import React, { useState,useReducer,createContext } from 'react';
+import React, {useReducer,createContext } from 'react';
 import BiomeBot from './BiomeBot.jsx';
 import {echoBot,internalReprBot} from './PresetBots.jsx';
 
@@ -33,6 +33,7 @@ function reducer (state,action){
         botSettingsList: [],
       }
     }
+
     case 'listLoaded': {
       let state='listLoaded';
       let id= state.id;
@@ -47,7 +48,7 @@ function reducer (state,action){
         botSettingsList: action.botSettingsList.map(node=>{
           return {...node,parts:[...node.parts]}
         })};
-      }
+    }
 
     case 'firebaseDisconnected': {
       return {
@@ -59,12 +60,13 @@ function reducer (state,action){
       }
     }
 
-    case 'setName':
-    return {
-      ...state,
-      botSettingsList: state.botSettingsList.map(node=>{
-        return {...node,parts:[...node.parts]}
-      })
+    case 'setName':{
+      return {
+        ...state,
+        botSettingsList: state.botSettingsList.map(node=>{
+          return {...node,parts:[...node.parts]}
+        })
+      }
     }
     default:
       throw new Error('invalid action ${action} in BiomeBotProvider')

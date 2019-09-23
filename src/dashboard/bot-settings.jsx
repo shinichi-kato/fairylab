@@ -112,6 +112,7 @@ export default function BotSettings(props){
         {cursor === index &&
           <Typography>選択中</Typography>
         }
+        <Typography>creator:{bot.creator}</Typography>
       </CardContent>
       <CardActions disableSpacing >
         <Button variant="contained" color="primary"

@@ -14,6 +14,7 @@ export default class BiomeBotCore{
       this.name = localStorage.getItem('bot.name') || echoBot.name;
       this.id = localStorage.getItem('bot.id') || echoBot.id;
       this.avatarId = localStorage.getItem('bot.avatarId') || echoBot.avatarId;
+      this.creator = localStorage.getItem('bot.creator') || echoBot.creator;
       this.description = localStorage.getItem('bot.description') || echoBot.description;
       this.parts = JSON.parse(localStorage.getItem('bot.parts')) || echoBot.parts;
       this.sourceDicts = JSON.parse(localStorage.getItem('bot.sourceDicts')) || echoBot.sourceDicts;
@@ -23,6 +24,7 @@ export default class BiomeBotCore{
       this.name = data.name;
       this.id = data.id;
       this.avatarId = data.avatarId;
+      this.creator = data.creator;
       this.description = data.description;
       this.parts = [...data.parts];
       this.sourceDicts = {...data.sourceDicts};
@@ -35,6 +37,7 @@ export default class BiomeBotCore{
     localStorage.setItem('bot.name',this.name);
     localStorage.setItem('bot.id',this.id);
     localStorage.setItem('bot.avatarId',this.avatarId);
+    localStorage.setItem('bot.creator',this.creator);
     localStorage.setItem('bot.description',this.description);
     localStorage.setItem('bot.parts',JSON.stringify(this.parts));
     localStorage.setItem('bot.sourceDicts',JSON.stringify(this.sourceDicts));
