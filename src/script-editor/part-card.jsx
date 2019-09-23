@@ -85,7 +85,9 @@ export default function PartCard(props){
       />
       <CardActions>
       {part.dictionary}
-      <IconButton><EditIcon /></IconButton>
+      <IconButton
+        onClick={e=>props.handleEdit()}
+      ><EditIcon /></IconButton>
       </CardActions>
     </Card>
 

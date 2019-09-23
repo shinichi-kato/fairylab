@@ -30,6 +30,7 @@ const initialState = {
   userAvatar: localStorage.getItem('userAvatar') || 'avatar/user/blank.svg',
 
   page: 'Dashboard',
+  currentPart: null,
   parentPage: null,
 }
 
@@ -74,7 +75,15 @@ const reducer = (state,action) => {
           page: action.page,
           parentPage: state.page
         };
-      }else{
+      }else if(state.page === 'PartEditor'){
+        return {
+          ...state,
+          account: {...state.account},
+          page:action.page,
+          currentPart:action.part,
+        }
+
+      } else {
         return {
           ...state,
           account: {...state.account},
@@ -82,8 +91,10 @@ const reducer = (state,action) => {
         }
       }
     }
+
     case 'ToParentPage' : {
       let page = null;
+      let part = null;
       switch(state.page) {
         case 'ScriptEditor':
           page = state.parentPage || 'Dashboard';
@@ -93,6 +104,7 @@ const reducer = (state,action) => {
           break;
         case 'DictionaryEditor' :
           page='PartEditor';
+          part=state.currentPart;
           break;
         case 'Dashboard' :
           page=null;
@@ -103,6 +115,7 @@ const reducer = (state,action) => {
       return {
         ...state,
         account:{...state.account},
+        currentPart:part,
         page:page
       }}
 
@@ -248,8 +261,16 @@ function handleWriteUserMessage(message,userName,userAvatar){
             account={state.account}
             firebase={firebase}
             userName={state.userName}
+            handleEdit={(index)=>dispatch(
+              {type:'ChangePage',page:'DictionaryEditor',part:index})}
           />
         );
+      case 'DictionaryEditor':
+        return (
+          <DictionaryEditor
+            index={state.currentPart}
+          />
+        )
       case 'Home':
         return(
           <Home

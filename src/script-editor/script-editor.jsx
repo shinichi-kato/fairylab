@@ -111,7 +111,7 @@ function reducer(state,action){
       });
     }
 
-    case 'Save':{
+    case 'LocalSave':{
       localStorage.setItem('bot.name',state.name);
       localStorage.setItem('bot.id',state.id);
       localStorage.setItem('bot.avatarId',state.avatarId);
@@ -199,7 +199,7 @@ export default function ScriptEditor(props){
               part={part}
               handleUp={()=>dispatch({type:'Up',index:index,creator:creator})}
               handleDown={()=>dispatch({type:'Down',index:index,creator:creator})}
-
+              handleEdit={()=>props.handleEditPart(index)}
             />
           )}
           <Button
