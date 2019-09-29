@@ -63,7 +63,7 @@ export default class BiomeBotCore{
             score:1
             })};
             break;
-          }
+        }
         case '@dev/internalRepr':{
           this.parts[i].replier=(message)=>{return ({
             name:this.name,
@@ -73,7 +73,13 @@ export default class BiomeBotCore{
             score:1
           })}
           break;
-          }
+        }
+
+        case 'answerer':{
+          this.parts[i].replier=(message)=>{return}
+          break;
+        }
+
         default:
           throw new Error(`invalid type ${this.parts[i].type} in BiomeBot`)
 

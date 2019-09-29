@@ -1,19 +1,21 @@
 
 export const echoBot={
-  name:"Echo",
-  id:"@dev/echo",
+  name:"Greeting",
+  id:"",
   avatarId:"avatar/bot/crystal/blueCrystal.svg",
-  description:"テスト用：ユーザのセリフをそのまま返すエコーです",
+  description:"テスト用：挨拶を返すボットです",
   creator: 'system',
   parts: [{
-    type:'@dev/echo',
+    name:'greeting',
+    type:'answerer',
     availability: 0.9,
     triggerLevel: 0,
     retention: 1,
-    dictionary: "",
   }],
-  sourceDicts: [],
-  compiledDicts: [],
+  sourceDicts: {greeting:[
+    [['こんにちは'],['ハロー！']]
+  ]},
+  compiledDicts: {},
 
   selfEstate:0,
   memory:{dummy:'dummy'}
@@ -26,14 +28,14 @@ export const internalReprBot={
   description:"テスト用：ユーザのセリフを内部表現に変換します",
   creator: 'system',
   parts: [{
+    name:'internalRepr',
     type:'@dev/internalRepr',
     availability: 0.9,
     triggerLevel: 0,
     retention: 1,
-    dictionary: "",
   }],
-  sourceDicts: [],
-  compiledDicts: [],
+  sourceDicts: {},
+  compiledDicts: {},
 
   selfEstate:0,
   memory:{dummy:'dummy'}

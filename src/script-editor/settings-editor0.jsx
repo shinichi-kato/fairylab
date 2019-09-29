@@ -25,18 +25,12 @@ const useStyles = makeStyles(theme => ({
  },
 }));
 
-
-const initialState={
-  // currentPartIndex:null,  // open/closeフラグを兼ねる
-
-  name: localStorage.getItem('bot.name') || "",
-  id : localStorage.getItem('bot.id') || "",
-  avatarId : localStorage.getItem('bot.avatarId') || "",
-  creator : localStorage.getItem('bot.creator') || "",
-  description : localStorage.getItem('bot.description') || "",
-  published: localStorage.getItem('bot.published') || false,
-  parts: JSON.parse(localStorage.getItem('bot.parts')) || [],
-};
+function initialState(settings){
+  return {
+    ...settings,
+    parts:[...settings.parts],
+  }
+}
 
 function reducer(state,action){
   switch(action.type){
@@ -102,12 +96,11 @@ function reducer(state,action){
 
     case 'Add':{
       const newPart={
-        name: "",
         type:'sensor',
         availability: 1,
         triggerLevel: 0,
         retention: 1,
-
+        dictionary: "",
       };
       return ({
         ...state,creator:action.creator,
@@ -115,52 +108,22 @@ function reducer(state,action){
       });
     }
 
-    case 'ChangePart':{
-      const newParts=[...state.parts];
-      const cell = action.aprt;
-      newParts.splice(action.index,1);
-      newParts.splice(action.index,0,cell);
-      return ({
-        ...state,
-        creator:action.creator,
-        // currentPartIndex:null,  // dialogをclose
-        parts:[...newParts],
-      });
-    }
 
 
-    case 'LocalSave':{
-
-      localStorage.setItem('bot.name',state.name);
-      localStorage.setItem('bot.id',state.id);
-      localStorage.setItem('bot.avatarId',state.avatarId);
-      localStorage.setItem('bot.creator',state.creator);
-      localStorage.setItem('bot.description',state.description);
-      localStorage.setItem('bot.published',state.published);
-      localStorage.setItem('bot.parts',JSON.stringify(state.parts));
-
-      return ({
-        // currentPartIndex:null,
-        ...state,
-        parts:[...state.parts],
-      });
-    }
+   }
 
     default:
-      throw new Error(`invalid action ${action.type}`);
+      throw new Error(`invalid action ${action} in ScriptEditor`);
   }
 }
 
-export default function ScriptEditor(props){
+
+
+export default function SettingsEditor(props){
   const classes = useStyles();
   const {account,userName,firebase} = props;
-  const [state,dispatch] = useReducer(reducer,initialState);
+  const [state,dispatch] = useReducer(reducer,initialState(props.settings));
   const creator = account.email || userName;
-
-  function handleSaveScript(){
-    dispatch({type:'LocalSave'});
-    props.handleSaveScript();
-  }
 
   return(
     <div className={classes.container}>
@@ -215,13 +178,12 @@ export default function ScriptEditor(props){
         </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle">パート</Typography>
-          {state.parts.map((part,index) =>
+        {state.parts.map((part,index) =>
             <PartCard
               part={part}
               handleUp={()=>dispatch({type:'Up',index:index,creator:creator})}
               handleDown={()=>dispatch({type:'Down',index:index,creator:creator})}
-              handleChangePart=
-                {p=>dispatch({type:'ChangePart',part:p,index:index,creator:creator})}
+              handleEdit={()=>props.handleEditPart(index)}
             />
           )}
           <Button
@@ -230,15 +192,15 @@ export default function ScriptEditor(props){
             onClick={()=>dispatch({type:'Add',creator:creator})}
           ><AddCircleIcon />パートを追加</Button>
         </Grid>
-
         <Grid item xs={12}>
-          <Button
-            className={classes.partCard}
-            variant="contained"
-            color="primary"
-            onClick={e=>handleSaveScript()}>
-            保存
-          </Button>
+        <Button
+          className={classes.partCard}
+          variant="contained"
+          color="primary"
+          onClick={e=>props.handleSaveSettings(state)}>
+          保存
+        </Button>
+
         </Grid>
       </Grid>
     </div>

@@ -5,6 +5,7 @@ import Dashboard from './dashboard/dashboard.jsx';
 import UserSettings from './dashboard/user-settings.jsx';
 import BotSettings from './dashboard/bot-settings.jsx';
 import ScriptEditor from './script-editor/script-editor.jsx';
+import PartEditor from './script-editor/part-editor.jsx';
 import Home from './home/home.jsx';
 import Hub from './hub/hub.jsx';
 
@@ -58,7 +59,6 @@ const reducer = (state,action) => {
     case 'ChangeUserSettings': {
       localStorage.setItem('userName',action.userName);
       localStorage.setItem('userAvatar',action.userAvatar);
-      console.log("changeUserSettings,",action.userName,action.userAvatar);
       return {
         ...state,
         account: {...state.account},
@@ -75,15 +75,7 @@ const reducer = (state,action) => {
           page: action.page,
           parentPage: state.page
         };
-      }else if(state.page === 'PartEditor'){
-        return {
-          ...state,
-          account: {...state.account},
-          page:action.page,
-          currentPart:action.part,
-        }
-
-      } else {
+      }else {
         return {
           ...state,
           account: {...state.account},
@@ -91,6 +83,14 @@ const reducer = (state,action) => {
         }
       }
     }
+    // case 'ChangePageToPartEditor' : {
+    //   return {
+    //     ...state,
+    //     account: {...state.account},
+    //     page: 'PartEditor',
+    //     currentPart: action.index,
+    //   }
+    // }
 
     case 'ToParentPage' : {
       let page = null;
@@ -101,10 +101,6 @@ const reducer = (state,action) => {
           break;
         case 'PartEditor' :
           page = 'ScriptEditor';
-          break;
-        case 'DictionaryEditor' :
-          page='PartEditor';
-          part=state.currentPart;
           break;
         case 'Dashboard' :
           page=null;
@@ -222,6 +218,14 @@ function handleWriteUserMessage(message,userName,userAvatar){
     }
   },[]);
 
+  //-------------------------------------------------------------------
+
+
+  function handleRestartBot()
+  {
+    //botをコンパイルして再起動
+
+  }
 
   //-------------------------------------------------------------------
 
@@ -261,16 +265,10 @@ function handleWriteUserMessage(message,userName,userAvatar){
             account={state.account}
             firebase={firebase}
             userName={state.userName}
-            handleEdit={(index)=>dispatch(
-              {type:'ChangePage',page:'DictionaryEditor',part:index})}
+            handleSaveScript={handleRestartBot}
           />
         );
-      case 'DictionaryEditor':
-        return (
-          <DictionaryEditor
-            index={state.currentPart}
-          />
-        )
+
       case 'Home':
         return(
           <Home
@@ -294,6 +292,8 @@ function handleWriteUserMessage(message,userName,userAvatar){
     };
   }
 
+
+
   return (
     <Box display="flex"
       flexDirection="column"
@@ -309,7 +309,8 @@ function handleWriteUserMessage(message,userName,userAvatar){
           account={state.account}
           handleAuth={(user) => dispatch({type:'Auth',user:user})}
           handleToScriptEditor={()=>dispatch({type:'ChangePage',page:'ScriptEditor'})}
-          handleToParentPage={()=>dispatch({type:'ToParentPage'})} />
+          handleToParentPage={()=>dispatch({type:'ToParentPage'})}
+          />
       </Box>
       <Box flexGrow={1}>
         {mainView(state.page)}
