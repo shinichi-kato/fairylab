@@ -7,8 +7,8 @@ import Main from './main.jsx';
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: '#FFB300' },
-    secondary: { main: '#26C6DA' },
+    primary: { main: '#0D47A1' },
+    secondary: { main: '#BF360C' },
     background: { default: '#ffe032'}
   },
 

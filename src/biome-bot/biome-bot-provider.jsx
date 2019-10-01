@@ -61,6 +61,8 @@ function reducer (state,action){
     }
 
     case 'setName':{
+      bot.name=action.name;
+      localStorage.setItem('bot.name',bot.name);
       return {
         ...state,
         botSettingsList: state.botSettingsList.map(node=>{
@@ -148,7 +150,7 @@ export default function BiomeBotProvider(props){
       avatarId:bot.avatarId,
       state:state.state,
       botSettingsList:state.botSettingsList,
-      handleSetName:n=>{dispatch({type:"setName",name:n})},
+      handleSetName:n=>dispatch({type:"setName",name:n}),
       handleReply:m=>handleReply(m),
       handleLoadBotSettingsList:(firebase)=>handleLoadBotSettingsList(firebase),
       handleDownload:(firebase,index)=>handleDownload(firebase,index),

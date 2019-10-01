@@ -7,15 +7,14 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import TypeSelectorDialog from './type-selector-dialog.jsx';
+import DeleteIcon from '@material-ui/icons/Delete';
 
+import TypeSelectorDialog from './type-selector-dialog.jsx';
+import DeletePartDialog from './delete-part-dialog.jsx';
 
 import {partIcons} from './part-icons.jsx';
 
 const useStyles = makeStyles(theme => ({
-  container: {
-    padding:theme.spacing(2),
- },
  textField: {
    width: "100%",
  },
@@ -32,14 +31,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function initialState(part){
-  console.log(part);
   return {
     name:part.name,
     type:part.type,
     availability:part.availability,
     triggerLevel:part.triggerLevel,
     retention:part.retention,
-    anchorEl:null,
   }
 }
 
@@ -56,38 +53,24 @@ function reducer(state,action){
       return {
         ...state,
         type:action.typeName,
-        anchorEl:false,
       }
     }
     case 'ChangeAvailability':{
       return {
         ...state,
-        availability:parseFloat(action.availability),
+        availability:action.availability,
       }
     }
     case 'ChangeRetention':{
       return {
         ...state,
-        retention:parseFloat(action.retention),
+        retention:action.retention,
       }
     }
     case 'ChangeTriggerLevel':{
       return {
         ...state,
-        triggerLevel:parseFloat(action.triggerLevel),
-      }
-    }
-    case 'OpenDialog':{
-      return {
-        ...state,
-        anchorEl:action.event.currentTarget,
-      }
-    }
-
-    case 'CloseDialog':{
-      return {
-        ...state,
-        anchorEl:false,
+        triggerLevel:action.triggerLevel,
       }
     }
 
@@ -98,6 +81,7 @@ function reducer(state,action){
 
 
 export default function PartEditor(props){
+
   // Partのパラメータ、名前、辞書を編集する。
   // 辞書は巨大になるので`bot.sourceDicts.${name}`という個別のlocalStorageに格納する。
   // ${name}はpartの名前と同じにする。
@@ -110,21 +94,17 @@ export default function PartEditor(props){
   const [dict,setDict] = useState(
     localStorage.getItem(`bot.dict.${state.name}`) || "");
 
+    function handleChangePart(){
+      localStorage.setItem(`bot.dict.${state.name}`,dict);
+      props.handleChangePart(state);
+    }
 
-  function handleChangePart(){
-    localStorage.setItem(`bot.dict.${state.name}`,dict);
-    const newPart={
-      name:state.name,
-      type:state.type,
-      availability:state.availability,
-      triggerLevel:state.triggerLevel,
-      retention:state.retention,
-    };
-    props.handleChangePart(newPart);
-  }
+    function handleChangeType(t){
+      dispatch({type:'ChangeType',typeName:t});
+      props.handleCloseTypeSelector();
+    }
 
-  return (
-    <Paper className={classes.container}>
+    return (
       <Grid container spacing={1}>
         <Grid item xs={6}>
           <TextField
@@ -142,7 +122,7 @@ export default function PartEditor(props){
             className={classes.partTypeButton}
             aria-controls="type-selector-dialog"
             aria-haspopup="true"
-            onClick={e=>dispatch({type:'OpenDialog',event:e})}
+            onClick={e=>props.handleOpenTypeSelector(e)}
           >
           {state.type !== '' &&
           <Avatar style={{backgroundColor:partIcons[state.type].backgroundColor}}>
@@ -153,10 +133,10 @@ export default function PartEditor(props){
 
           </Button>
           <TypeSelectorDialog
-            anchorEl={state.anchorEl}
-            open={Boolean(state.anchorEl)}
-            handleChangeType={t=>dispatch({type:'ChangeType',typeName:t})}
-            handleClose={()=>dispatch({type:'CloseDialog'})}
+            anchorEl={props.anchorEl}
+            open={Boolean(props.anchorEl)}
+            handleChangeType={t=>handleChangeType(t)}
+            handleClose={props.handleCloseTypeSelector}
           />
         </Grid>
         <Grid item xs={4}>
@@ -199,19 +179,37 @@ export default function PartEditor(props){
           id="availability"
           margin="normal"
           label="辞書"
+          multiline
           row={12}
           value={dict}
           onChange={e=>setDict(e.target.value)}
         />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <Button
             className={classes.partCard}
-            variant="contained"
-            color="default"
+            variant="text"
+            color="inherit"
             onClick={e=>props.handleClose()}>
             キャンセル
           </Button>
+        </Grid>
+        <Grid item xs={6}>
+
+          <Button
+            aria-label="delete"
+            className={classes.partCard}
+            variant="contained"
+            color="default"
+            onClick={e=>props.handleOpenDeleteDialog()}>
+            <DeleteIcon/>削除
+          </Button>
+          <DeletePartDialog
+            part={part}
+            open={props.deleteDialogOpen}
+            handleClose={props.handleCloseDeleteDialog}
+            handleExecuteDelete={props.handleExecuteDelete} />
+
         </Grid>
         <Grid item xs={12}>
           <Button
@@ -223,6 +221,5 @@ export default function PartEditor(props){
           </Button>
         </Grid>
       </Grid>
-    </Paper>
-  )
+    )
 }

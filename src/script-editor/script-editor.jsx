@@ -100,6 +100,15 @@ function reducer(state,action){
       });
     }
 
+    case 'Delete':{
+      const newParts=[...state.parts];
+      newParts.splice(action.index,1);
+      return ({
+        ...state,creator:action.creator,
+        parts:[...newParts]
+      });
+    }
+
     case 'Add':{
       const newPart={
         name: "",
@@ -117,7 +126,7 @@ function reducer(state,action){
 
     case 'ChangePart':{
       const newParts=[...state.parts];
-      const cell = action.aprt;
+      const cell = action.part;
       newParts.splice(action.index,1);
       newParts.splice(action.index,0,cell);
       return ({
@@ -222,6 +231,8 @@ export default function ScriptEditor(props){
               handleDown={()=>dispatch({type:'Down',index:index,creator:creator})}
               handleChangePart=
                 {p=>dispatch({type:'ChangePart',part:p,index:index,creator:creator})}
+              handleExecuteDelete=
+                {()=>dispatch({type:'Delete',index:index,creator:creator})}
             />
           )}
           <Button
@@ -230,7 +241,6 @@ export default function ScriptEditor(props){
             onClick={()=>dispatch({type:'Add',creator:creator})}
           ><AddCircleIcon />パートを追加</Button>
         </Grid>
-
         <Grid item xs={12}>
           <Button
             className={classes.partCard}

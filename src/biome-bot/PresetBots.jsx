@@ -1,7 +1,7 @@
 
 export const echoBot={
   name:"Greeting",
-  id:"",
+  id:"@dev/Echo",
   avatarId:"avatar/bot/crystal/blueCrystal.svg",
   description:"テスト用：挨拶を返すボットです",
   creator: 'system',

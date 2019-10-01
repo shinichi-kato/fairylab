@@ -7,11 +7,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import {partIcons} from './part-icons.jsx';
 
-// import ExtensionIcon from '@material-ui/icons/Extension';
-// import HearingIcon from '@material-ui/icons/Hearing';
-// import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
-// import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
-// import AssignmentIcon from '@material-ui/icons/Assignment';
 
 export default function TypeSelectorDialog(props){
   const {handleChangeType,handleClose}=props;
