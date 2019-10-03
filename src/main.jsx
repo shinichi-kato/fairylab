@@ -1,4 +1,4 @@
-import React, { useContext,useReducer,useEffect,useRef,useState } from 'react';
+import React, {useReducer,useEffect,useRef,useState } from 'react';
 import Box from '@material-ui/core/Box';
 import ApplicationBar from './application-bar/application-bar.jsx';
 import Dashboard from './dashboard/dashboard.jsx';
@@ -220,15 +220,6 @@ function handleWriteUserMessage(message,userName,userAvatar){
 
   //-------------------------------------------------------------------
 
-
-  function handleRestartBot()
-  {
-    //botをコンパイルして再起動
-
-  }
-
-  //-------------------------------------------------------------------
-
   const mainView = (page) => {
     switch(page){
       case 'Dashboard':
@@ -265,7 +256,6 @@ function handleWriteUserMessage(message,userName,userAvatar){
             account={state.account}
             firebase={firebase}
             userName={state.userName}
-            handleSaveScript={handleRestartBot}
           />
         );
 
@@ -303,6 +293,7 @@ function handleWriteUserMessage(message,userName,userAvatar){
       alignItems="stretch"
       height="100%">
       <Box >
+
         <ApplicationBar
           page={state.page}
           parentPage={state.parentPage}

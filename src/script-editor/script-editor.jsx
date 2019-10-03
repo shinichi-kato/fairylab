@@ -6,6 +6,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
+import {BiomeBotContext} from '../biome-bot/biome-bot-provider.jsx';
+
 import PartCard from './part-card.jsx';
 
 const useStyles = makeStyles(theme => ({
@@ -168,7 +170,7 @@ export default function ScriptEditor(props){
 
   function handleSaveScript(){
     dispatch({type:'LocalSave'});
-    props.handleSaveScript();
+
   }
 
   return(

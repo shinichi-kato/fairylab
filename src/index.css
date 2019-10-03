@@ -33,6 +33,5 @@ code {
     height: 100vh;
     margin-left: calc((100% - 480px)  * 0.7);
     margin-right: calc((100% - 480px) * 0.3);
-    background-color: #de4dde;
   }
 }

@@ -232,6 +232,12 @@ function AppMenuDialog(props){
               localStorage消去
             </Button>
             </Grid>
+            <Grid item xs={12}>
+            <Button className={classes.wideButton}
+              onClick={e=>window.location.reload(true)}>
+              再描画
+            </Button>
+            </Grid>
           </Grid>
          </Paper>
        </Popover>

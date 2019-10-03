@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
    overflowY:'scroll',
    overscrollBehavior:'auto',
    WebkitOverflowScrolling:'touch',
-   padding: 6
+   padding: 0
  }
 }));
 

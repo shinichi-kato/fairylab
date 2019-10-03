@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Faily Lab",
+  "name": "Faily Lab",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,6 +8,7 @@
       "type": "image/x-icon"
     }
   ],
+  "orientation": "portrait",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
