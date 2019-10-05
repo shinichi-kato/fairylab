@@ -53,14 +53,16 @@ export default class BiomeBotCore{
     this.dicts = new Object();
     for(let i in this.parts){
       const name=this.parts[i].name;
+      const d;
       try {
-        this.dicts[name] = JSON.parse(this.sourceDicts[name]);
+        d = JSON.parse(this.sourceDicts[name]);
       } catch(e) {
         if (e instanceof SyntaxError){
           return `辞書${name}の line:${e.lineNumber} column:${e.columnNumber} に文法エラーがあります`;
         }
         return e.message;
       }
+      this.dicts[name] = d.filter(n=>Object.prototype.toString.call(n)!=='[object String]');
     }
     return true;
   }
@@ -96,7 +98,7 @@ export default class BiomeBotCore{
           break;
         }
 
-        case 'sensor': 
+        case 'sensor':
         case 'answerer': {
           this.parts[i].replier=(message)=>{return ({
             name:this.name,
