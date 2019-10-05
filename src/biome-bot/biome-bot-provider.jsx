@@ -12,6 +12,7 @@ const initialState = {
   state: localStorage.getItem('bot.id') ? 'ready' : 'init',
   id: localStorage.getItem('bot.id') || null,
   botSettingsList : [echoBot,internalReprBot],
+  message: null,
 };
 
 function reducer (state,action){
@@ -19,31 +20,32 @@ function reducer (state,action){
     case 'ready':{
 
       return {
-        state: 'ready',
+        botState: 'ready',
         id: action.id,
-        botSettingsList: state.botSettingsList.map(node=>{
-          return {...node,parts:[...node.parts]}
-        })
+        botSettingsList:[...state.botSettingsList],
+        // botSettingsList: state.botSettingsList.map(node=>{
+        //   return {...node,parts:[...node.parts]}
+        // })
       }
     }
     case 'listLoading':{
       return {
-        state:'listLoading',
+        botState:'listLoading',
         id: state.id,
         botSettingsList: [],
       }
     }
 
     case 'listLoaded': {
-      let state='listLoaded';
+      let botState='listLoaded';
       let id= state.id;
       if(bot.id !== null && bot.name !== null){
         // ボット設定済みの状態でリストをロード→キャンセルした場合
-        state='ready';
+        botState='ready';
         id=bot.id;
       }
       return {
-        state:state,
+        botState:botState,
         id: id,
         botSettingsList: action.botSettingsList.map(node=>{
           return {...node,parts:[...node.parts]}
@@ -52,23 +54,27 @@ function reducer (state,action){
 
     case 'firebaseDisconnected': {
       return {
-        state: 'disconnented',
+        botState: 'disconnented',
         id: state.id,
-        botSettingsList: state.botSettingsList.map(node=>{
-          return {...node,parts:[...node.parts]}
-        })
+        botSettingsList:[...state.botSettingsList],
+        // botSettingsList: state.botSettingsList.map(node=>{
+        //   return {...node,parts:[...node.parts]}
+        // })
       }
     }
 
     case 'setName':{
       bot.name=action.name;
       localStorage.setItem('bot.name',bot.name);
+      return state;
+    }
+    case 'ParseError':{
       return {
         ...state,
-        botSettingsList: state.botSettingsList.map(node=>{
-          return {...node,parts:[...node.parts]}
-        })
+        botState:'ParseError',
+        message:action.message,
       }
+
     }
     default:
       throw new Error('invalid action ${action} in BiomeBotProvider')
@@ -140,7 +146,17 @@ export default function BiomeBotProvider(props){
 
 
   function handleCompile(){
+    bot.load();
+
+    // localStorageから読んだ辞書のソースをパース
+    const result = bot.parseDictionaries();
+    if(result !== true){
+      dispatch({type:"ParseError",message:result});
+    }
+    dispatch({type:"ready"});
     // localStorageの辞書をコンパイル
+
+    bot.compile();
   }
 
 
@@ -148,7 +164,8 @@ export default function BiomeBotProvider(props){
     <BiomeBotContext.Provider value={{
       name:bot.name,
       avatarId:bot.avatarId,
-      state:state.state,
+      state:state.botState,
+      message:state.message,
       botSettingsList:state.botSettingsList,
       handleSetName:n=>dispatch({type:"setName",name:n}),
       handleReply:m=>handleReply(m),

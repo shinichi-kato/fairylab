@@ -41,7 +41,7 @@ export default function Dashboard(props){
         alignItems="stretch"
         height="100%">
         <Box orfer={0} >
-        ver 0.2.2
+        ver 0.2.3
         </Box>
         <Box order={0} flexGrow={1} >
           <IconsPanel

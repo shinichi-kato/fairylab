@@ -1,4 +1,4 @@
-import React , {useReducer,useEffect} from 'react';
+import React , {useReducer,useEffect,useContext} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -172,15 +172,18 @@ export default function ScriptEditor(props){
   const {account,userName,firebase} = props;
   const [state,dispatch] = useReducer(reducer,init());
   const creator = account.email || userName;
+  const bot = useContext(BiomeBotContext);
 
   function handleSaveScript(){
     dispatch({type:'LocalSave'});
-
+    bot.handleCompile();
   }
 
   useEffect(()=>{
     dispatch({type:'Load'})
   },[]);
+
+  const fieldUnsatisfied= state.name.length == 0 || state.id.length == 0;
 
   return(
     <div className={classes.container}>
@@ -189,6 +192,7 @@ export default function ScriptEditor(props){
           <TextField
             className={classes.textField}
             variant="filled"
+            required
             id="name"
             margin="normal"
             label="チャットボットの名前"
@@ -200,6 +204,7 @@ export default function ScriptEditor(props){
           <TextField
             className={classes.textField}
             variant="filled"
+            required
             id="name"
             margin="normal"
             label="id(型式)"
@@ -256,6 +261,7 @@ export default function ScriptEditor(props){
           <Button
             className={classes.partCard}
             variant="contained"
+            disabled ={fieldUnsatisfied}
             color="primary"
             onClick={e=>handleSaveScript()}>
             保存

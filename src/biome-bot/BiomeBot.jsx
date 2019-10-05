@@ -17,8 +17,12 @@ export default class BiomeBotCore{
       this.creator = localStorage.getItem('bot.creator') || echoBot.creator;
       this.description = localStorage.getItem('bot.description') || echoBot.description;
       this.parts = JSON.parse(localStorage.getItem('bot.parts')) || echoBot.parts;
-      this.sourceDicts = JSON.parse(localStorage.getItem('bot.sourceDicts')) || echoBot.sourceDicts;
-      this.compiledDicts = JSON.parse(localStorage.getItem('bot.compiledDicts')) || echoBot.compiledDict;
+      this.sourceDicts = new Object();
+      for(let i in this.parts){
+        const name = this.parts[i].name;
+        this.sourceDicts[name] =
+          localStorage.getItem(`bot.dict.${name}`) || [];
+      }
     }
     else{
       this.id = data.id;
@@ -26,8 +30,8 @@ export default class BiomeBotCore{
       this.creator = data.creator;
       this.description = data.description;
       this.parts = [...data.parts];
-      this.sourceDicts = {...data.sourceDicts};
-      this.compiledDicts = new Object();
+      this.sourceDicts= new Object();
+      // 個々でロードしてないのはどうする
     }
     this.setup();
   }
@@ -39,13 +43,31 @@ export default class BiomeBotCore{
     localStorage.setItem('bot.creator',this.creator);
     localStorage.setItem('bot.description',this.description);
     localStorage.setItem('bot.parts',JSON.stringify(this.parts));
-    localStorage.setItem('bot.sourceDicts',JSON.stringify(this.sourceDicts));
-    localStorage.setItem('bot.compiledDicts',JSON.stringify(this.compiledDicts));
+    for(let i in this.parts){
+      const name=this.parts[i].name;
+      localStorage.setItem(`bot.dict.${name}`,this.sourceDicts[name]);
+    }
   }
 
-  loadDictionaries(dicts){
-      // {name:[],name2:[],...}という形式で格納された辞書をthisにコピー
+  parseDictionaries(){
+    this.dicts = new Object();
+    for(let i in this.parts){
+      const name=this.parts[i].name;
+      try {
+        this.dicts[name] = JSON.parse(this.sourceDicts[name]);
+      } catch(e) {
+        if (e instanceof SyntaxError){
+          return `辞書${name}の line:${e.lineNumber} column:${e.columnNumber} に文法エラーがあります`;
+        }
+        return e.message;
+      }
     }
+    return true;
+  }
+
+  compile(){
+
+  }
 
   setup(){
     // partsの内容に従ってrun関数を生成
@@ -74,7 +96,7 @@ export default class BiomeBotCore{
           break;
         }
 
-        case 'sensor':
+        case 'sensor': 
         case 'answerer': {
           this.parts[i].replier=(message)=>{return ({
             name:this.name,
@@ -133,5 +155,6 @@ export default class BiomeBotCore{
         });
       });
     }
+
 
 }
