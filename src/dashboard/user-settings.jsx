@@ -38,6 +38,7 @@ const useStyles = makeStyles(theme => createStyles({
   },
   avatarButton: {
     margin: theme.spacing(0),
+    padding: theme.spacing(0),
   },
   avatar: {
     margin: 10,

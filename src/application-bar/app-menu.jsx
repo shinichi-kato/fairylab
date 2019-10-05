@@ -170,8 +170,8 @@ function AppMenuDialog(props){
          <Paper className={classes.root}>
           <Grid container className={classes.root} spacing={1}>
             <Grid item xs={12}>
-              <Button onClick={handleExpandClick}>
-                <AccountCircle/>
+              <Button onClick={handleExpandClick} color="primary">
+                <AccountCircle color="inherit"/>
                 {account.displayName || account.email || "未ログイン"}
                 <ExpandLess
 

@@ -40,6 +40,9 @@ export default function Dashboard(props){
         alignContent="stretch"
         alignItems="stretch"
         height="100%">
+        <Box orfer={0} >
+        ver 0.2.2
+        </Box>
         <Box order={0} flexGrow={1} >
           <IconsPanel
             userName={userName}

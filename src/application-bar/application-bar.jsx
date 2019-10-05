@@ -35,7 +35,9 @@ export default function ApplicationBar(props){
       <AppBar position="static">
         <Toolbar>
           { page !== 'Dashboard' &&
-            <IconButton edge="start" onClick={(e)=>{handleToParentPage()}}>
+            <IconButton edge="start" onClick={(e)=>{handleToParentPage()}}
+              color="inherit"
+            >
               {page === 'UserSettings' || page === 'BotSettings' ?
                 <Close />
                 :

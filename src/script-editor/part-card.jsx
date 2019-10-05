@@ -83,8 +83,7 @@ export default function PartCard(props){
   const {part} = props;
   const classes=useStyles();
   const [state,dispatch] = useReducer(reducer,initialState);
-  // collapseでeditorを開く
-  // editorの中でdialogをopenする
+
 
   const params=
     `稼働率:${part.availability} トリガーレベル:${part.triggerLevel} 維持率:${part.retention}`;
@@ -95,6 +94,17 @@ export default function PartCard(props){
     dispatch({type:'CloseEditor'})
   }
 
+  function handleUp(e){
+    props.handleChangePart(part);
+    dispatch({type:'CloseEditor'});
+    props.handleUp();
+  }
+
+  function handleDown(e){
+    props.handleChangePart(part);
+    dispatch({type:'CloseEditor'});
+    props.handleDown();
+  }
 
   return(
     <Card className={classes.card} key={part.name}>
@@ -107,11 +117,11 @@ export default function PartCard(props){
         action={
           <>
             <IconButton
-              onClick={e=>props.handleDown()}>
+              onClick={handleDown}>
               <ExpandMoreIcon />
             </IconButton>
             <IconButton
-              onClick={e=>props.handleUp()}>
+              onClick={handleUp}>
               <ExpandLessIcon />
             </IconButton>
           </>

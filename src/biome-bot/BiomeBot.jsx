@@ -21,7 +21,6 @@ export default class BiomeBotCore{
       this.compiledDicts = JSON.parse(localStorage.getItem('bot.compiledDicts')) || echoBot.compiledDict;
     }
     else{
-      this.name = data.name;
       this.id = data.id;
       this.avatarId = data.avatarId;
       this.creator = data.creator;
@@ -75,8 +74,15 @@ export default class BiomeBotCore{
           break;
         }
 
-        case 'answerer':{
-          this.parts[i].replier=(message)=>{return}
+        case 'sensor':
+        case 'answerer': {
+          this.parts[i].replier=(message)=>{return ({
+            name:this.name,
+            speakerId:this.id,
+            avatar:this.avatarId,
+            text:"--まだ利用できません--",
+            score:1
+          })}
           break;
         }
 

@@ -1,13 +1,12 @@
 
 export const echoBot={
-  name:"Greeting",
   id:"@dev/Echo",
   avatarId:"avatar/bot/crystal/blueCrystal.svg",
-  description:"テスト用：挨拶を返すボットです",
+  description:"テスト用：ユーザのセリフをそのまま返します",
   creator: 'system',
   parts: [{
-    name:'greeting',
-    type:'answerer',
+    name:'echo',
+    type:'@dev/echo',
     availability: 0.9,
     triggerLevel: 0,
     retention: 1,
@@ -22,7 +21,6 @@ export const echoBot={
 };
 
 export const internalReprBot={
-  name:"InternalRepr",
   id:"@dev/internalRepr",
   avatarId:"avatar/bot/crystal/blueCrystal.svg",
   description:"テスト用：ユーザのセリフを内部表現に変換します",

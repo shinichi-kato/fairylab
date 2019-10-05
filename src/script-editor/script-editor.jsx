@@ -1,4 +1,4 @@
-import React , {useReducer} from 'react';
+import React , {useReducer,useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -28,17 +28,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const initialState={
-  // currentPartIndex:null,  // open/closeフラグを兼ねる
+function init(){
+  return {
+    name: localStorage.getItem('bot.name') || "",
+    id : localStorage.getItem('bot.id') || "",
+    avatarId : localStorage.getItem('bot.avatarId') || "",
+    creator : localStorage.getItem('bot.creator') || "",
+    description : localStorage.getItem('bot.description') || "",
+    published: localStorage.getItem('bot.published') || false,
+    parts: JSON.parse(localStorage.getItem('bot.parts')) || [],
+  }
 
-  name: localStorage.getItem('bot.name') || "",
-  id : localStorage.getItem('bot.id') || "",
-  avatarId : localStorage.getItem('bot.avatarId') || "",
-  creator : localStorage.getItem('bot.creator') || "",
-  description : localStorage.getItem('bot.description') || "",
-  published: localStorage.getItem('bot.published') || false,
-  parts: JSON.parse(localStorage.getItem('bot.parts')) || [],
-};
+}
 
 function reducer(state,action){
   switch(action.type){
@@ -157,6 +158,10 @@ function reducer(state,action){
       });
     }
 
+    case 'Load':{
+      return init();
+    }
+
     default:
       throw new Error(`invalid action ${action.type}`);
   }
@@ -165,13 +170,17 @@ function reducer(state,action){
 export default function ScriptEditor(props){
   const classes = useStyles();
   const {account,userName,firebase} = props;
-  const [state,dispatch] = useReducer(reducer,initialState);
+  const [state,dispatch] = useReducer(reducer,init());
   const creator = account.email || userName;
 
   function handleSaveScript(){
     dispatch({type:'LocalSave'});
 
   }
+
+  useEffect(()=>{
+    dispatch({type:'Load'})
+  },[]);
 
   return(
     <div className={classes.container}>
