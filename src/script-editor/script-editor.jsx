@@ -104,6 +104,9 @@ function reducer(state,action){
     }
 
     case 'Delete':{
+      const name=state.parts[action.index].name;
+      localStorage.removeItem(`bot.dict.${name}`);
+
       const newParts=[...state.parts];
       newParts.splice(action.index,1);
       return ({
@@ -113,8 +116,18 @@ function reducer(state,action){
     }
 
     case 'Add':{
+      let number=0;
+      let name="";
+      const names = state.parts.map(p=>p.name);
+      do {
+        name="part"+number;
+        number++;
+      }while(names.indexOf(name)!==-1)
+
+      console.log(name)
+
       const newPart={
-        name: "",
+        name: name,
         type:'sensor',
         availability: 1,
         triggerLevel: 0,
@@ -184,6 +197,7 @@ export default function ScriptEditor(props){
   },[]);
 
   const fieldUnsatisfied= state.name.length == 0 || state.id.length == 0;
+  const partNames = state.parts.map(p=>p.name) || [];
 
   return(
     <div className={classes.container}>
@@ -243,6 +257,7 @@ export default function ScriptEditor(props){
           {state.parts.map((part,index) =>
             <PartCard
               part={part}
+              partNames={partNames}
               handleUp={()=>dispatch({type:'Up',index:index,creator:creator})}
               handleDown={()=>dispatch({type:'Down',index:index,creator:creator})}
               handleChangePart=

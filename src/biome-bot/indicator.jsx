@@ -29,7 +29,7 @@ export default function Indicator(props){
 
   return(
     <Tooltip title={bot.message} open={bot.state==='ParseError'}>
-      {indicatorIcons[bot.botState]}
+      {indicatorIcons[bot.state]}
     </Tooltip>
   )
 }

@@ -119,6 +119,21 @@ export default function PartEditor(props){
   //   props.handleChangePart(state);
   // }
 
+  const field_availability=parseFloat(state.availability);
+  const field_triggerLevel=parseFloat(state.triggerLevel);
+  const field_retention=parseFloat(state.retention);
+  const field_availability_bad = field_availability < 0 || 1 < field_availability;
+  const field_triggerLevel_bad = field_triggerLevel <0 || 1 < field_triggerLevel;
+  const field_retention_bad = field_retention <0 || 1 < field_retention;
+  const field_name_bad = state.name == "" || props.partNames.filter(p=>p===state.name).length>1;
+  const fieldUnsatisfied =
+    field_availability_bad ||
+    field_triggerLevel_bad ||
+    field_retention_bad ||
+    field_name_bad;
+
+
+
   return (
     <ClickAwayListener onClickAway={handleChangePart}>
     <Grid container spacing={1}>
@@ -127,8 +142,11 @@ export default function PartEditor(props){
           className={classes.textField}
           variant="filled"
           id="name"
+          required
           margin="normal"
           label="パートの名前"
+          error={field_name_bad}
+          helperText={field_name_bad && "名前が重複しています"}
           value={state.name}
           onChange={e=>dispatch({type:'ChangeName',name:e.target.value})}
         />
@@ -161,7 +179,10 @@ export default function PartEditor(props){
           variant="filled"
           id="availability"
           margin="normal"
-          label="稼働率 ()"
+          required
+          label="稼働率"
+          error={field_availability_bad}
+          helperText={field_availability_bad && "0≦稼働率≦1"}
           value={state.availability}
           onChange={e=>dispatch({type:'ChangeAvailability',availability:e.target.value})}
         />
@@ -171,8 +192,11 @@ export default function PartEditor(props){
           className={classes.textField}
           variant="filled"
           id="triggerLevel"
+          required
           margin="normal"
           label="トリガレベル"
+          error={field_triggerLevel_bad}
+          helperText={field_triggerLevel_bad && "0≦トリガレベル≦1"}
           value={state.triggerLevel}
           onChange={e=>dispatch({type:'ChangeTriggerLevel',triggerLevel:e.target.value})}
         />
@@ -183,7 +207,10 @@ export default function PartEditor(props){
           variant="filled"
           id="retention"
           margin="normal"
+          required
           label="維持率"
+          error={field_retention_bad}
+          helperText={field_retention_bad && "0≦維持率≦1"}
           value={state.retention}
           onChange={e=>dispatch({type:'ChangeRetention',retention:e.target.value})}
         />
@@ -240,8 +267,9 @@ export default function PartEditor(props){
           className={classes.partCard}
           variant="contained"
           color="primary"
+          disabled={fieldUnsatisfied}
           onClick={e=>handleChangePart()}>
-          閉じる
+          保存して閉じる
         </Button>
       </Grid>
     </Grid>

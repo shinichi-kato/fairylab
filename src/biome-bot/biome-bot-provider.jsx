@@ -9,7 +9,7 @@ const bot = new BiomeBot();
 
 
 const initialState = {
-  state: localStorage.getItem('bot.id') ? 'ready' : 'init',
+  botState: localStorage.getItem('bot.id') ? 'ready' : 'init',
   id: localStorage.getItem('bot.id') || null,
   botSettingsList : [echoBot,internalReprBot],
   message: null,
@@ -147,15 +147,15 @@ export default function BiomeBotProvider(props){
 
   function handleCompile(){
     bot.load();
-
     // localStorageから読んだ辞書のソースをパース
     const result = bot.parseDictionaries();
-    if(result !== true){
+    if(result !== "ok"){
       dispatch({type:"ParseError",message:result});
+      return;
     }
     dispatch({type:"ready"});
     // localStorageの辞書をコンパイル
-
+    console.log("result",result)
     bot.compile();
   }
 
@@ -171,7 +171,7 @@ export default function BiomeBotProvider(props){
       handleReply:m=>handleReply(m),
       handleLoadBotSettingsList:(firebase)=>handleLoadBotSettingsList(firebase),
       handleDownload:(firebase,index)=>handleDownload(firebase,index),
-      handleCompile:()=>handleCompile(),
+      handleCompile:handleCompile,
     }}>
     {props.children}
     </BiomeBotContext.Provider>

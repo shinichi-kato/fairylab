@@ -140,6 +140,7 @@ export default function PartCard(props){
         <CardContent>
           <PartEditor
             part={part}
+            partNames={props.partNames}
             handleChangePart={handleChangePart}
             handleClose={()=>dispatch({type:'CloseEditor'})}
             anchorEl={state.anchorEl}
