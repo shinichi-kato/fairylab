@@ -196,7 +196,7 @@ export default function ScriptEditor(props){
     dispatch({type:'Load'})
   },[]);
 
-  const fieldUnsatisfied= state.name.length == 0 || state.id.length == 0;
+  const fieldUnsatisfied= state.name.length === 0 || state.id.length === 0;
   const partNames = state.parts.map(p=>p.name) || [];
 
   return(

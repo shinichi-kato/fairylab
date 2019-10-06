@@ -31,7 +31,10 @@ export default class BiomeBotCore{
       this.description = data.description;
       this.parts = [...data.parts];
       this.sourceDicts= new Object();
-      // 個々でロードしてないのはどうする
+      for(let i in data.parts){
+        const name=data.parts[i].name;
+        this.sourceDicts[name]=data.sourceDicts[name]
+      }
     }
     this.setup();
   }
@@ -55,7 +58,7 @@ export default class BiomeBotCore{
       const name=this.parts[i].name;
       const source = this.sourceDicts[name];
       if(source === "") continue;
-      
+
       let d;
       try {
         d = JSON.parse(source);

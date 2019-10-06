@@ -5,7 +5,6 @@ import Dashboard from './dashboard/dashboard.jsx';
 import UserSettings from './dashboard/user-settings.jsx';
 import BotSettings from './dashboard/bot-settings.jsx';
 import ScriptEditor from './script-editor/script-editor.jsx';
-import PartEditor from './script-editor/part-editor.jsx';
 import Home from './home/home.jsx';
 import Hub from './hub/hub.jsx';
 
@@ -16,6 +15,7 @@ import "firebase/firestore";
 import {firebaseConfig} from './credentials/firebase-init.js';
 firebase.initializeApp(firebaseConfig);
 
+const version="version 0.2.5 (2019-10-06)";
 
 const initialState = {
   account: {
@@ -42,7 +42,7 @@ const reducer = (state,action) => {
         ...state,
         account: {...action.user}
       }
-    };
+    }
     case 'AuthDisconnected' : {
       return {
         ...state,
@@ -225,6 +225,7 @@ function handleWriteUserMessage(message,userName,userAvatar){
       case 'Dashboard':
         return (
         <Dashboard
+          version={version}
           account={state.account}
           userName={state.userName}
           userAvatar={state.userAvatar}

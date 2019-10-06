@@ -1,6 +1,5 @@
 import React , {useReducer,useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
@@ -90,8 +89,6 @@ export default function PartEditor(props){
 
   const classes = useStyles();
   const [state,dispatch] = useReducer(reducer,initialState(props.part));
-  const dictionaries = JSON.parse(localStorage.getItem('bot.dictionaries')) || new Object();
-  const dictionaryNames = Object.keys(dictionaries);
   const {part} = props;
   const [dict,setDict] = useState(
     localStorage.getItem(`bot.dict.${state.name}`) || "");
@@ -125,7 +122,7 @@ export default function PartEditor(props){
   const field_availability_bad = field_availability < 0 || 1 < field_availability;
   const field_triggerLevel_bad = field_triggerLevel <0 || 1 < field_triggerLevel;
   const field_retention_bad = field_retention <0 || 1 < field_retention;
-  const field_name_bad = state.name == "" || props.partNames.filter(p=>p===state.name).length>1;
+  const field_name_bad = state.name === "" || props.partNames.filter(p=>p===state.name).length>1;
   const fieldUnsatisfied =
     field_availability_bad ||
     field_triggerLevel_bad ||
@@ -223,6 +220,7 @@ export default function PartEditor(props){
         margin="normal"
         label="辞書"
         multiline
+        disabled={state.type.startsWith('@dev')}
         rows={12}
         value={dict}
         onChange={e=>setDict(e.target.value)}

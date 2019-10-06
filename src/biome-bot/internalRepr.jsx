@@ -110,7 +110,12 @@ export default class InternalRepr{
     let text = message.text;
     let nodes = this.segmenter.segment(text);
     nodes = this.parse(nodes);
-    console.log("text=",text,"response=",nodes.join(","))
+    return nodes;
+  }
+
+  from_inScript(text){
+    let nodes = this.segmenter.segment(text);
+    nodes = this.parse(nodes);
     return nodes;
   }
 
@@ -143,7 +148,7 @@ export default class InternalRepr{
           buff.length=0;
           continue
         }
-
+        default: {}
       }
 
       buff.push(node);

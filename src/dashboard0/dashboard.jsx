@@ -81,7 +81,7 @@ export default function Dashboard(props){
       <Box order={0}>
         { mode === 'Ready' &&
           <StatusView
-
+            version={props.version}
             />
         }
         { mode === 'AvatarSelect' &&

@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import NavigateBefore from '@material-ui/icons/NavigateBefore';
 import Close from '@material-ui/icons/Close';
@@ -26,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function ApplicationBar(props){
-  const {page,parentPage,handleToParentPage,handleToScriptEditor} = props;
+  const {page,handleToParentPage,handleToScriptEditor} = props;
   const classes = useStyles();
 
 

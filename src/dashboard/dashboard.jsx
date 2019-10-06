@@ -1,9 +1,8 @@
-import React, { useContext} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import IconsPanel from './icons-panel.jsx';
 import Navigation from './navigation.jsx';
-import {BiomeBotContext} from '../biome-bot/biome-bot-provider.jsx';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -41,7 +40,7 @@ export default function Dashboard(props){
         alignItems="stretch"
         height="100%">
         <Box orfer={0} >
-        ver 0.2.3
+        {props.version}
         </Box>
         <Box order={0} flexGrow={1} >
           <IconsPanel

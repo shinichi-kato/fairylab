@@ -11,9 +11,7 @@ export const echoBot={
     triggerLevel: 0,
     retention: 1,
   }],
-  sourceDicts: {greeting:[
-    [['こんにちは'],['ハロー！']]
-  ]},
+  sourceDicts: {echo:""},
   compiledDicts: {},
 
   selfEstate:0,
@@ -32,7 +30,7 @@ export const internalReprBot={
     triggerLevel: 0,
     retention: 1,
   }],
-  sourceDicts: {},
+  sourceDicts: {internalRepr:""},
   compiledDicts: {},
 
   selfEstate:0,

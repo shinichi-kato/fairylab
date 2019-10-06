@@ -1,8 +1,6 @@
 import React ,{useContext} from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import {BiomeBotContext} from '../biome-bot/biome-bot-provider.jsx';

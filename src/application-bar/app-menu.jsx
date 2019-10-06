@@ -204,9 +204,11 @@ function AppMenuDialog(props){
                   onChange={e=>dispatch({type:'ChangePassword',password:e.target.value})} />
                 <Button
                   disabled={state.authState==="run"}
+                  variant="contained"
                   color="primary"
                   className={classes.wideButton}
                   onClick={handleSignIn}>
+
                   {account.uid ?
                     (state.authState==="confirmed" ? "ok" : "ログイン")
                      : "新規登録"}

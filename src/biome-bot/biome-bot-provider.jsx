@@ -77,7 +77,7 @@ function reducer (state,action){
 
     }
     default:
-      throw new Error('invalid action ${action} in BiomeBotProvider')
+      throw new Error(`invalid action ${action} in BiomeBotProvider`)
   }
 }
 
