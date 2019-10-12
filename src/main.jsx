@@ -83,14 +83,7 @@ const reducer = (state,action) => {
         }
       }
     }
-    // case 'ChangePageToPartEditor' : {
-    //   return {
-    //     ...state,
-    //     account: {...state.account},
-    //     page: 'PartEditor',
-    //     currentPart: action.index,
-    //   }
-    // }
+
 
     case 'ToParentPage' : {
       let page = null;
