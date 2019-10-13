@@ -1,6 +1,8 @@
 // BiomeBot.jsx
 import InternalRepr from './internalRepr.jsx';
+import TextRetriever from './textRetriever.jsx';
 import {echoBot} from './PresetBots.jsx';
+
 
 export default class BiomeBotCore{
   constructor(){
@@ -104,7 +106,16 @@ export default class BiomeBotCore{
           break;
         }
 
-        case 'sensor':
+        case 'sensor':{
+
+          const d = this.dicts[name].map(line=>(
+            [
+              this.internalRepr.from_inScript(line[0]),
+              line[1]
+            ]
+          ));
+          this.dicts[name] = new TextRetriever(d);
+        }
         case 'answerer': {
           this.parts[i].replier=(message)=>{return ({
             name:this.name,
