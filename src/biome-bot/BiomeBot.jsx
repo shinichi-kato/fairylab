@@ -79,9 +79,12 @@ export default class BiomeBotCore{
 
   }
 
+
   setup(){
     // partsの内容に従ってrun関数を生成
     for(let i in this.parts){
+      const name=this.parts[i].name;
+      const source = this.sourceDicts[name];
 
       switch(this.parts[i].type){
         case '@dev/echo':{
@@ -107,14 +110,34 @@ export default class BiomeBotCore{
         }
 
         case 'sensor':{
-
-          const d = this.dicts[name].map(line=>(
-            [
-              this.internalRepr.from_inScript(line[0]),
-              line[1]
-            ]
-          ));
+          let d;
+          try {
+            d = JSON.parse(source);
+          } catch(e) {
+            if (e instanceof SyntaxError){
+              return `辞書${name}の line:${e.lineNumber} column:${e.columnNumber} に文法エラーがあります`;
+            }
+            return e.message;
+          }
+          d = d.filter(n=>Object.prototype.toString.call(n)!=='[object String]');
+              .map(line=>(
+                [
+                  this.internalRepr.from_inScript(line[0]),
+                  line[1]
+                ]
+              ));
           this.dicts[name] = new TextRetriever(d);
+
+          this.parts[i].repiler=(message)=>{
+            const name=this.part[i].name;
+            return ({
+            name:this.name,
+            speakerId:this.id,
+            avatar:this.avatarId,
+            text:this.dicts[name].retriever(message),
+            score:1
+          })}
+          break;
         }
         case 'answerer': {
           this.parts[i].replier=(message)=>{return ({
