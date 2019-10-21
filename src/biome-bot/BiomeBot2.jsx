@@ -19,6 +19,7 @@ export default class BiomeBotCore{
       this.avatarId = localStorage.getItem('bot.avatarId') || echoBot.avatarId;
       this.creator = localStorage.getItem('bot.creator') || echoBot.creator;
       this.description = localStorage.getItem('bot.description') || echoBot.description;
+      
 
       const parts = JSON.parse(localStorage.getItem('bot.parts')) || echoBot.parts;
 

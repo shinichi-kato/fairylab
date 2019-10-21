@@ -35,7 +35,7 @@ function initialState(part){
   return {
     name:part.name,
     type:part.type,
-    availability:part.availability,
+    availablity:part.availablity,
     triggerLevel:part.triggerLevel,
     retention:part.retention,
   }
@@ -56,10 +56,10 @@ function reducer(state,action){
         type:action.typeName,
       }
     }
-    case 'ChangeAvailability':{
+    case 'ChangeAavailablity':{
       return {
         ...state,
-        availability:action.availability,
+        availablity:action.availablity,
       }
     }
     case 'ChangeRetention':{
@@ -116,15 +116,15 @@ export default function PartEditor(props){
   //   props.handleChangePart(state);
   // }
 
-  const field_availability=parseFloat(state.availability);
+  const field_availablity=parseFloat(state.availablity);
   const field_triggerLevel=parseFloat(state.triggerLevel);
   const field_retention=parseFloat(state.retention);
-  const field_availability_bad = field_availability < 0 || 1 < field_availability;
+  const field_availablity_bad = field_availablity < 0 || 1 < field_availablity;
   const field_triggerLevel_bad = field_triggerLevel <0 || 1 < field_triggerLevel;
   const field_retention_bad = field_retention <0 || 1 < field_retention;
   const field_name_bad = state.name === "" || props.partNames.filter(p=>p===state.name).length>1;
   const fieldUnsatisfied =
-    field_availability_bad ||
+    field_availablity_bad ||
     field_triggerLevel_bad ||
     field_retention_bad ||
     field_name_bad;
@@ -174,14 +174,14 @@ export default function PartEditor(props){
         <TextField
           className={classes.textField}
           variant="filled"
-          id="availability"
+          id="availablity"
           margin="normal"
           required
           label="稼働率"
-          error={field_availability_bad}
-          helperText={field_availability_bad && "0≦稼働率≦1"}
-          value={state.availability}
-          onChange={e=>dispatch({type:'ChangeAvailability',availability:e.target.value})}
+          error={field_availablity_bad}
+          helperText={field_availablity_bad && "0≦稼働率≦1"}
+          value={state.availablity}
+          onChange={e=>dispatch({type:'ChangeAavailablity',availablity:e.target.value})}
         />
       </Grid>
       <Grid item xs={4}>
@@ -216,7 +216,7 @@ export default function PartEditor(props){
       <TextField
         className={classes.textField}
         variant="filled"
-        id="availability"
+        id="availablity"
         margin="normal"
         label="辞書"
         multiline

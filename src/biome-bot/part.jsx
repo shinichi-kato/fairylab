@@ -4,57 +4,64 @@ import TextRetriever from './textRetriever.jsx';
 import {echoBot} from './PresetBots.jsx';
 
 
-
 export default class Part{
-  constructor(dict){
-    if(dict === void 0){
-      this.name=null;
-      this.type=null';
-      this.availability= 0;
-      this.triggerLevel= 0;
-      this.retention= 1;
-      this.textRetriever=null;
-    }
-    else{
-      loadScript(dict)
-    }
-  }
+	constructor(dict,state){
+		this.state={...state};
+		load(dict);
 
-  loadScript(dict){
-    this.name=dict.name;
-    this.type=dict.type;
-    this.availability=dict.availability;
-    this.triggerLevel=dict.triggerLevel;
-    this.retention=dict.retention;
-  }
+	}
+	
+	load(dict){
+		this.name=dict.name;
+		this.availablity = dict.availablity;
+		this.triggerLevel=dict.triggerLevel;
+		this.retention=dict.retention;
+		this.inDict=[];
+		this.outDict=[];
+	}
 
-  dumpScript(){
-    return {
-      name:this.name,
-      type:this.type,
-      availability:this.availability,
-      triggerLevel:this.triggerLevel,
-      retention:this.retention,
-    };
-  }
+	freeze(){
+		const part={
+			name:this.name,
+			availablity:this.availablity;
+			triggerLevel:this.triggerLevel;
+			retention:this.retention;
+		};
+		localStorage.setItem(`dict.compiledDict.${this.name}`,
+			JSON.stringify({
+				inDict:this.textRetriever.freeze(),
+				outDict:this.outDict
+			});
+		);
+		return [part,this.state];
+	}
 
-  loadSourceDictionary(dict){
-    if (dict.length===0) {
-      return;
-    }
-    const d = JSON.parse(dict)
-      .filter(n=>Object.prototype.toString.call(n)!=='[object String]')
-      .map(line=>(
-        [internalRepr.from_inScript(line[0]),line[1]]
-      ));
-    this.textretriever = new TextRetriever(d);
-  }
+	setup(){
+		// compiledDictがあればそれをロード
+		let d = localStorage.getItem(`bot.compiledDict.${this.name}`);
+		if(d){
+			d = JSON.parse(d);
+			this.inDict = textRetriever(d.inDict);
+			this.outDict = d.outDict;
+			return true;
+		}
 
-
-
-
-
-  }
-
+		// なければsourceDictを読んでコンパイル
+		d = localStorage.getItem(`bot.sourceDict.${this.name}`);
+		if(d){
+			try{
+				d = JSON.parse(d)
+			}
+			catch(e) {
+				if (e instanceof SyntaxError){
+					
+				}
+			}
+		}
+	}
+	/* [reply,state] = replier(message,state)
+		replierはstateを受け取り、内部でstateの書き換えが
+		発生したらそれを戻り値で親のstateに反映させる。
+	*/
 
 }

@@ -86,7 +86,7 @@ export default function PartCard(props){
 
 
   const params=
-    `稼働率:${part.availability} トリガーレベル:${part.triggerLevel} 維持率:${part.retention}`;
+    `稼働率:${part.availablity} トリガーレベル:${part.triggerLevel} 維持率:${part.retention}`;
   const icon=partIcons[part.type];
 
   function handleChangePart(part){
