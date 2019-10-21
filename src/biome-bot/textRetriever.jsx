@@ -31,6 +31,14 @@ export default class TextRetriever{
     });
   }
 
+  freeze(){
+    return {
+      vocab:this.vocab,
+      idf:this.idf.valueOf(),
+      tfidf:this.tfidf.valueOf(),
+    };
+  }
+
   compile(dict){
     // vocabの生成
     this.vocab = new Object();
