@@ -8,7 +8,7 @@ export default class BiomeBotCore{
   constructor(){
     this.internalRepr = new InternalRepr();
     this.state = "init";
-    this.load();
+    this.load(); 
   }
 
   load(data){
