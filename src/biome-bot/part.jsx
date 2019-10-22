@@ -1,6 +1,7 @@
 // BiomeBot.jsx
 import InternalRepr from './internalRepr.jsx';
 import TextRetriever from './textRetriever.jsx';
+import {randomInt} from 'mathjs';
 import {echoBot} from './PresetBots.jsx';
 
 const internalRepr = new InternalRepr();
@@ -8,7 +9,7 @@ const internalRepr = new InternalRepr();
 export default class Part{
 	constructor(dict,state){
 		this.state={...state};
-		load(dict);
+		this.load(dict);
 
 	}
 	
@@ -50,10 +51,10 @@ export default class Part{
 		d = localStorage.getItem(`bot.sourceDict.${this.name}`);
 		if(d){
 			try {
-			  d = JSON.parse(source);
+			  d = JSON.parse(d);
 			} catch(e) {
 			  if (e instanceof SyntaxError){
-				return `辞書${name}の line:${e.lineNumber} column:${e.columnNumber} に文法エラーがあります`;
+				return `辞書${this.name}の line:${e.lineNumber} column:${e.columnNumber} に文法エラーがあります`;
 			  }
 			  return e.message;
 			}
@@ -87,11 +88,11 @@ export default class Part{
 			}
 
 			case 'sensor' :{
-				this.inDict=textRetriever(d);
+				this.inDict=new TextRetriever(d);
 				this.outDict = d.map(l=>l[1]);
 				this.replier=(message,state)=>{
-					const result = inDict.retrieve(message);
-					const cands = outDict[result.index];
+					const result = this.inDict.retrieve(message);
+					const cands = this.outDict[result.index];
 					
 					return {
 						name:this.name,

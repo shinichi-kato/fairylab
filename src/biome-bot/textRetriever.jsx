@@ -1,5 +1,5 @@
 import {zeros,get,index,divide,apply,sum,dot,dotMultiply,
-  diag,multiply,isPositive,map,norm,randomInt} from 'mathjs';
+  diag,multiply,isPositive,map,norm,randomInt,matrix} from 'mathjs';
 
 
 export default class TextRetriever{

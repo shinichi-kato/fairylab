@@ -1,6 +1,5 @@
 // BiomeBot.jsx
 import InternalRepr from './internalRepr.jsx';
-import TextRetriever from './textRetriever.jsx';
 import Part from './part.jsx';
 import {echoBot} from './PresetBots.jsx';
 
@@ -10,7 +9,7 @@ const internelRepr = new InternalRepr();
 
  */
 
-export default class BiomeBotCore{
+export default class BiomeBot{
 	constructor(dict){
 
 		this.state={};
@@ -26,7 +25,7 @@ export default class BiomeBotCore{
 			return false;
 		}
 		this.name = localStorage.getItem('bot.name');
-		this.id = localStoage.getItem('bot.id');
+		this.id = localStorage.getItem('bot.id');
 		this.avatarId = localStorage.getItem('bot.avatarId') || echoBot.avatarId;
 		this.state = JSON.parse(state);
 		const parts = JSON.parse(localStorage.getItem('bot.parts')) || echoBot.parts;
@@ -50,6 +49,9 @@ export default class BiomeBotCore{
 
 	load(dict){
 		/*dictからデータを読み込む */ 
+		if(!dict){
+			return 
+		}
 		this.name=dict.name;
 		this.id = dict.id;
 		this.avatarId = dict.avatarId;
