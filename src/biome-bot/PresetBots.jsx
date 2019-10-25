@@ -7,13 +7,11 @@ export const echoBot={
   parts: [{
     name:'echo',
     type:'@dev/echo',
-    availability: 0.9,
+    availablity: 0.9,
     triggerLevel: 0,
     retention: 1,
   }],
-  sourceDicts: {echo:""},
-  compiledDicts: {},
-
+  sourceDicts:{},
   selfEstate:0,
   memory:{dummy:'dummy'}
 };
@@ -26,13 +24,35 @@ export const internalReprBot={
   parts: [{
     name:'internalRepr',
     type:'@dev/internalRepr',
-    availability: 0.9,
+    availablity: 0.9,
     triggerLevel: 0,
     retention: 1,
   }],
-  sourceDicts: {internalRepr:""},
-  compiledDicts: {},
-
+  sourceDicts:{},
   selfEstate:0,
   memory:{dummy:'dummy'}
+}
+
+export const reflamerBot={
+  id:"reflamer",
+  avatarId:"avatar/bot/crystal/blueCrystal.svg",
+  description:"リフレーミングのテスト用",
+  creator:"skato",
+  parts:[{
+    name:'reflamer',
+    type:'sensor',
+    availablity:0.95,
+    triggerLevel:0,
+    retention: 1,
+  }],
+  sourceDicts:{
+    reflamer:[
+      "テスト",
+      [["こんにちは","今日は","今晩は","こんばんは"],
+      ["こんにちは！","今日もお疲れ様です"]],
+    ]
+  },
+  selfEstate:0,
+  memory:{dummy:'dummy'}
+  
 }

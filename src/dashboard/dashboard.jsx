@@ -40,7 +40,7 @@ export default function Dashboard(props){
         alignItems="stretch"
         height="100%">
         <Box orfer={0} >
-        {props.version}
+        {process.env.npm_package_version}
         </Box>
         <Box order={0} flexGrow={1} >
           <IconsPanel

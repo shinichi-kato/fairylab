@@ -7,21 +7,27 @@ import {echoBot} from './PresetBots.jsx';
 const internalRepr = new InternalRepr();
 
 export default class Part{
-	constructor(dict,state){
+	constructor(part,state,dict){
 		this.state={...state};
-		this.load(dict);
+		this.load(part,dict);
+		
 
 	}
 	
-	load(dict){
-		this.name=dict.name;
-		this.type=dict.type;
-		this.availablity = dict.availablity;
-		this.triggerLevel=dict.triggerLevel;
-		this.retention=dict.retention;
+	load(part,dict){
+		this.name=part.name;
+		this.type=part.type;
+		this.availablity = part.availablity;
+		this.triggerLevel=part.triggerLevel;
+		this.retention=part.retention;
 		this.inDict=[];
 		this.outDict=[];
-	}
+
+		if(dict){
+			localStorage.setItem(`dict.sourceDict.${this.name}`,
+				JSON.stringify(dict.sourceDict[this.name]));
+			}
+		}
 
 	freeze(){
 		const part={

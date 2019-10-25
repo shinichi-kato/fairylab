@@ -15,8 +15,6 @@ import "firebase/firestore";
 import {firebaseConfig} from './credentials/firebase-init.js';
 firebase.initializeApp(firebaseConfig);
 
-const version="version 0.2.5 (2019-10-06)";
-
 const initialState = {
   account: {
     displayName: null,
@@ -218,7 +216,6 @@ function handleWriteUserMessage(message,userName,userAvatar){
       case 'Dashboard':
         return (
         <Dashboard
-          version={version}
           account={state.account}
           userName={state.userName}
           userAvatar={state.userAvatar}

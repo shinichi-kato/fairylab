@@ -1,6 +1,6 @@
 import React, {useReducer,createContext } from 'react';
 import BiomeBot from './BiomeBot.jsx';
-import {echoBot,internalReprBot} from './PresetBots.jsx';
+import {echoBot,internalReprBot,reflamerBot} from './PresetBots.jsx';
 
 export const BiomeBotContext = createContext();
 
@@ -11,7 +11,7 @@ const bot = new BiomeBot();
 const initialState = {
   botState: localStorage.getItem('bot.id') ? 'ready' : 'init',
   id: localStorage.getItem('bot.id') || null,
-  botSettingsList : [echoBot,internalReprBot],
+  botSettingsList : [echoBot,internalReprBot,reflamerBot],
   message: null,
 };
 
@@ -110,21 +110,28 @@ export default function BiomeBotProvider(props){
   function handleDownload(firebase,index){
     const botSettings = state.botSettingsList[index];
 
-    bot.load(botSettings);
-    if(botSettings.id.startsWith('@dev')){
-      bot.setup();
-      bot.save();
-      dispatch({type:'ready',id:botSettings.id});
-      return;
-    }
-    if (!firebase) {
-      dispatch({type:'firebaseDisconnected'})
-      return
-    }
-    // botSettingsList[index]をbotに書き込む。
-    // partsに従って辞書をダウンロードする
     dispatch({type:'dicLoading'});
 
+    bot.load(botSettings);
+    const result = bot.setup();
+    if(result !== true){
+      dispatch({type:'ParseError',message:result.message});
+      return;
+    }
+    
+    
+    // 
+    
+
+
+    // dispatch({type:'ready',id:botSettings.id});
+
+    // if (!firebase) {
+    //   dispatch({type:'firebaseDisconnected'})
+    // }
+    // botSettingsList[index]をbotに書き込む。
+    // partsに従って辞書をダウンロードする
+    
     // ここで辞書ファイルをfetch()
 
     // bot.loadDictionaries()

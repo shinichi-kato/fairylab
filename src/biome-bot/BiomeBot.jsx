@@ -56,7 +56,8 @@ export default class BiomeBot{
 		this.id = dict.id;
 		this.avatarId = dict.avatarId;
 		this.state = {};
-		this.parts = dict.parts.map(p=>new Part(p));
+
+		this.parts = dict.parts.map(p=>new Part(p,this.state,dict));
 	}
 
 	parseDictionaries(){
@@ -68,10 +69,12 @@ export default class BiomeBot{
 
 	setup(){
 		for (let p of this.parts){
-			if(p.setup() === false){
-				return false;
+			const result = p.setup();
+			if(result !== 'ok'){
+				return result;
 			}
 		}
+		return true;
 	}
 
 	reply(message){
