@@ -33,7 +33,6 @@ const useStyles = makeStyles(theme => createStyles({
 export default function IconsPanel(props){
   const classes = useStyles();
   const bot = useContext(BiomeBotContext);
-  console.log("iconspanel:botname=",bot.name)
   return(
     <Grid
       className={classes.root}

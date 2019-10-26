@@ -2,13 +2,14 @@
 import InternalRepr from './internalRepr.jsx';
 import TextRetriever from './textRetriever.jsx';
 import {randomInt} from 'mathjs';
-import {echoBot} from './PresetBots.jsx';
+// import {echoBot} from './PresetBots.jsx';
 
 const internalRepr = new InternalRepr();
 
 export default class Part{
 	constructor(part,state,dict){
 		this.state={...state};
+		this.replier=function(){};
 		this.load(part,dict);
 
 
@@ -98,8 +99,10 @@ export default class Part{
 				this.inDict=new TextRetriever(d);
 				this.outDict = d.map(l=>l[1]);
 				this.replier=(message,state)=>{
-					const result = this.inDict.retrieve(message);
+					const ir = internalRepr.from_message(message);
+					const result = this.inDict.retrieve(ir);
 					const cands = this.outDict[result.index];
+					console.log("results=",result)
 
 					return {
 						name:this.name,

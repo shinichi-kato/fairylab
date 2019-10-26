@@ -1,4 +1,4 @@
-import {zeros,get,index,divide,apply,sum,dot,dotMultiply,
+import {zeros,divide,apply,sum,dot,dotMultiply,
   diag,multiply,isPositive,map,norm,randomInt,matrix} from 'mathjs';
 
 
@@ -107,7 +107,7 @@ export default class TextRetriever{
 
     // line[0]:in_script, line[1]:out_script
     //ここでinternalRepr
-
+    
     for(let word of text){
         let pos = this.vocab.indexOf(word);
         if(pos !== -1){

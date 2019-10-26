@@ -1,9 +1,7 @@
 // BiomeBot.jsx
-import InternalRepr from './internalRepr.jsx';
 import Part from './part.jsx';
 import {echoBot} from './PresetBots.jsx';
 
-const internelRepr = new InternalRepr();
 
 /* BiomeBotのコア
 
@@ -31,6 +29,9 @@ export default class BiomeBot{
 		const parts = JSON.parse(localStorage.getItem('bot.parts')) || echoBot.parts;
 
 		this.parts = parts.map(p=>new Part(p,state));
+
+		this.setup();
+
 		return true;
 	}
 

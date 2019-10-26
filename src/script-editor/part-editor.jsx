@@ -91,12 +91,14 @@ export default function PartEditor(props){
   const [state,dispatch] = useReducer(reducer,initialState(props.part));
   const {part} = props;
   const [dict,setDict] = useState(
-    localStorage.getItem(`bot.dict.${state.name}`) || "");
+    localStorage.getItem(`bot.sourceDict.${state.name}`) || "");
 
 
 
   function handleChangePart(){
-    localStorage.setItem(`bot.dict.${state.name}`,dict);
+    localStorage.setItem(`bot.sourceDict.${state.name}`,dict);
+    localStorage.removeItem(`bot.compiledDict.${state.name}`);
+    
     props.handleChangePart(state);
   }
 

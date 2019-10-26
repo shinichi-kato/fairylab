@@ -197,7 +197,6 @@ export default function ScriptEditor(props){
 
   const fieldUnsatisfied= state.name.length === 0 || state.id.length === 0;
   const partNames = state.parts.map(p=>p.name) || [];
-  console.log(state.parts);
 
   return(
     <div className={classes.container}>

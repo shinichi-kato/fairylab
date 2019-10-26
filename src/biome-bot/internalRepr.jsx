@@ -126,7 +126,7 @@ export default class InternalRepr{
 
     for(let node of text){
       state = next_state(state,node);
-      console.log("state=",state,"node=",node)
+
       switch(state) {
         case 0 : {
           // clear
@@ -157,7 +157,9 @@ export default class InternalRepr{
         case 6:
         case 7:{
             line.push(buff.join(""));
+            break;
         }
+        default:{}
       }
     }
     return line;
