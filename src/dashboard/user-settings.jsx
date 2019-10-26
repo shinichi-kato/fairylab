@@ -72,7 +72,6 @@ export default function UserSettings(props){
   }
 
   function handleChangeUserSettings(event){
-    console.log("changeUserSetting",userName,userAvatar)
     props.handleChangeUserSettings(userName,avatarsDir+userAvatar);
     props.handleToParentPage();
   }

@@ -21,7 +21,7 @@ export function TinySegmenter() {
 
   this.chartype_ = [];
   for (let i in patterns) {
-    let regexp = new RegExp;
+    let regexp = new RegExp();
     regexp.compile(i)
     this.chartype_.push([regexp, patterns[i]]);
   }
@@ -88,14 +88,14 @@ TinySegmenter.prototype.ts_ = function(v) {
 }
 
 TinySegmenter.prototype.segment = function(input) {
-  if (input == null || input == undefined || input == "") {
+  if (input === null || input == undefined || input === "") {
     return [];
   }
   var result = [];
   var seg = ["B3","B2","B1"];
   var ctype = ["O","O","O"];
   var o = input.split("");
-  for (i = 0; i < o.length; ++i) {
+  for (var i = 0; i < o.length; ++i) {
     seg.push(o[i]);
     ctype.push(this.ctype_(o[i]))
   }
@@ -109,7 +109,7 @@ TinySegmenter.prototype.segment = function(input) {
   var p1 = "U";
   var p2 = "U";
   var p3 = "U";
-  for (var i = 4; i < seg.length - 3; ++i) {
+  for (i = 4; i < seg.length - 3; ++i) {
     var score = this.BIAS__;
     var w1 = seg[i-3];
     var w2 = seg[i-2];

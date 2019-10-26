@@ -12,7 +12,7 @@ export default class TextRetriever{
     }else{
       this.compile(dict);
     }
-    
+
 
   }
 
@@ -31,7 +31,7 @@ export default class TextRetriever{
     });
   }
 
-  freeze(){
+  dump(){
     return {
       vocab:this.vocab,
       idf:this.idf.valueOf(),

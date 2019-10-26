@@ -34,25 +34,25 @@ export default class BiomeBot{
 		return true;
 	}
 
-	freeze(){
+	dump(){
 		// ボットの内部状態を含めてlocalStorageに保存。
 		// revive()で復旧
 		localStorage.setItem('bot.name',this.name);
 		localStorage.setItem('bot.id',this.id);
 		localStorage.setItem('bot.avatarId',this.avatarId);
 
-		const states = 
+		const states =
 		localStorage.setItem('bot.state',JSON.stringify(this.state));
-		const parts = this.parts.map(p=>p.freeze());
+		const parts = this.parts.map(p=>p.dump());
 		localStorage.setItem('bot.parts',JSON.stringify(parts));
 	}
 
 	load(dict){
-		/*dictからデータを読み込む */ 
+		/*dictからデータを読み込む */
 		if(!dict){
-			return 
+			return
 		}
-		this.name=dict.name;
+
 		this.id = dict.id;
 		this.avatarId = dict.avatarId;
 		this.state = {};
@@ -63,7 +63,7 @@ export default class BiomeBot{
 	parseDictionaries(){
 		const results = this.parts.reduce(
 			(result,p)=>result+p.parseDictionary());
-		
+
 		return results;
 	}
 
@@ -87,7 +87,7 @@ export default class BiomeBot{
 					console.log("availability skip");
 					continue;
 				}
-				
+
 				// triggerLevel check
 				const [reply,state] = p.replier(message,this.state);
 				if(reply.score< p.triggerLevel){

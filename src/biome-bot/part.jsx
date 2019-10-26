@@ -10,10 +10,10 @@ export default class Part{
 	constructor(part,state,dict){
 		this.state={...state};
 		this.load(part,dict);
-		
+
 
 	}
-	
+
 	load(part,dict){
 		this.name=part.name;
 		this.type=part.type;
@@ -24,26 +24,27 @@ export default class Part{
 		this.outDict=[];
 
 		if(dict){
-			localStorage.setItem(`dict.sourceDict.${this.name}`,
-				JSON.stringify(dict.sourceDict[this.name]));
+			localStorage.setItem(`bot.sourceDict.${this.name}`,
+				JSON.stringify(dict.sourceDicts[this.name]));
 			}
 		}
 
-	freeze(){
+	dump(){
 		const part={
 			name:this.name,
 			type:this.type,
 			availablity:this.availablity,
 			triggerLevel:this.triggerLevel,
 			retention:this.retention,
+			state:this.state,
 		};
 		localStorage.setItem(`dict.compiledDict.${this.name}`,
 			JSON.stringify({
-				inDict:this.inDict.freeze(),
+				inDict:this.inDict.dump(),
 				outDict:this.outDict
 			})
 		);
-		return [part,this.state];
+		return part;
 	}
 
 	setup(){
@@ -70,26 +71,26 @@ export default class Part{
 			case '@dev/echo':{
 				// stateは使わない
 				// 辞書は使わない
-				this.replier=(message,state)=>({
-					name:this.name,
+				this.replier=(message,state)=>{
+					return{name:this.name,
 					speakerId:this.id,
 					avatar:this.avatarId,
 					text:message.text,
 					score:1
-				});
+				}};
 				break;
 			}
 
 			case '@dev/internalRepr':{
 				// stateは使わない
 				// 辞書は使わない
-				this.replier=(message,state)=>({
-					name:this.name,
+				this.replier=(message,state)=>{
+					return {name:this.name,
 					speakerId:this.id,
 					avatar:this.avatarId,
 					text:internalRepr.from_message(message),
 					score:1
-				});
+				}};
 				break;
 			}
 
@@ -99,13 +100,13 @@ export default class Part{
 				this.replier=(message,state)=>{
 					const result = this.inDict.retrieve(message);
 					const cands = this.outDict[result.index];
-					
+
 					return {
 						name:this.name,
 						speakerId:this.id,
-						avatar:this.avatarId,	
+						avatar:this.avatarId,
 						text:cands[randomInt(cands.length)],
-						score:result.score				
+						score:result.score
 					};
 				};
 				break;

@@ -11,7 +11,7 @@ const bot = new BiomeBot();
 const initialState = {
   botState: localStorage.getItem('bot.id') ? 'ready' : 'init',
   id: localStorage.getItem('bot.id') || null,
-  botSettingsList : [echoBot,internalReprBot,reflamerBot],
+  botSettingsList : [],
   message: null,
 };
 
@@ -66,6 +66,7 @@ function reducer (state,action){
     case 'setName':{
       bot.name=action.name;
       localStorage.setItem('bot.name',bot.name);
+      console.log("setName:",bot.name)
       return state;
     }
     case 'ParseError':{
@@ -77,7 +78,7 @@ function reducer (state,action){
 
     }
     default:
-      throw new Error(`invalid action ${action} in BiomeBotProvider`)
+      throw new Error(`invalid action ${action.type} in BiomeBotProvider`)
   }
 }
 
@@ -94,7 +95,7 @@ export default function BiomeBotProvider(props){
   function handleLoadBotSettingsList(firebase){
     // firebaseからbotのリストをロードしてbotSettingsListに格納
 
-    const settings=[echoBot,internalReprBot];
+    const settings=[echoBot,internalReprBot,reflamerBot];
     if (!firebase){
       dispatch({type:'listLoaded',botSettingsList:settings})
     }
@@ -110,7 +111,6 @@ export default function BiomeBotProvider(props){
   function handleDownload(firebase,index){
     const botSettings = state.botSettingsList[index];
 
-    dispatch({type:'dicLoading'});
 
     bot.load(botSettings);
     const result = bot.setup();
@@ -118,20 +118,15 @@ export default function BiomeBotProvider(props){
       dispatch({type:'ParseError',message:result.message});
       return;
     }
-    
-    
-    // 
-    
-
-
-    // dispatch({type:'ready',id:botSettings.id});
+    bot.dump();
+    dispatch({type:'ready',id:botSettings.id});
 
     // if (!firebase) {
     //   dispatch({type:'firebaseDisconnected'})
     // }
     // botSettingsList[index]をbotに書き込む。
     // partsに従って辞書をダウンロードする
-    
+
     // ここで辞書ファイルをfetch()
 
     // bot.loadDictionaries()
@@ -163,7 +158,7 @@ export default function BiomeBotProvider(props){
     dispatch({type:"ready"});
     // localStorageの辞書をコンパイル
     console.log("result",result)
-    bot.compile();
+    bot.setup();
   }
 
 
