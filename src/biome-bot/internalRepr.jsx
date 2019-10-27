@@ -113,10 +113,14 @@ export default class InternalRepr{
     return nodes;
   }
 
-  from_inScript(text){
-    let nodes = this.segmenter.segment(text);
-    nodes = this.parse(nodes);
-    return nodes;
+  from_inDict(texts){
+    // 「文字列リスト」のリストを受け取り、
+    // 「文字列を内部表現化したリスト」を返す
+
+    return texts.map(text=>{
+      const nodes = this.segmenter.segment(text);
+      return this.parse(nodes);
+    });
   }
 
   parse(text){

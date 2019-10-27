@@ -39,7 +39,7 @@ export default class Part{
 			retention:this.retention,
 			state:this.state,
 		};
-		localStorage.setItem(`dict.compiledDict.${this.name}`,
+		localStorage.setItem(`bot.compiledDict.${this.name}`,
 			JSON.stringify({
 				inDict:this.inDict.dump(),
 				outDict:this.outDict
@@ -67,6 +67,10 @@ export default class Part{
 			  return e.message;
 			}
 		}
+
+		// コメント行(文字列だけの行)削除
+		d = d.filter(x=>typeof x !== "string");
+
 
 		switch(this.type){
 			case '@dev/echo':{
@@ -96,7 +100,13 @@ export default class Part{
 			}
 
 			case 'sensor' :{
-				this.inDict=new TextRetriever(d);
+				/* dictは
+					[ [["入力1","入力2"...] , ["出力1","出力2"...]] , ...]
+					となっている。TextRetrieverには内部表現化したリスト
+					[ [入力1を内部表現化したリスト,入力2を内部表現化したリスト...], ...]
+					を渡す
+				*/
+				this.inDict=new TextRetriever(d.map(l=>internalRepr.from_inDict(l[0])));
 				this.outDict = d.map(l=>l[1]);
 				this.replier=(message,state)=>{
 					const ir = internalRepr.from_message(message);

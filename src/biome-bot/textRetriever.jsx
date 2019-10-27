@@ -5,9 +5,10 @@ import {zeros,divide,apply,sum,dot,dotMultiply,
 export default class TextRetriever{
   constructor(dict){
     if(dict === void 0){
-      this.vocab=null;
-      this.idf=null;
-      this.tfidf=null;
+      this.vocab=null;  // 出現する全ワードのリスト
+      this.idf=null; // 各ワードのidf値
+      this.tfidf=null;  // tfidf行列
+      this.table=null;  // tfidfの各行がdictのどの行に対応するかを格納したテーブル
       return;
     }else{
       this.compile(dict);
@@ -21,6 +22,7 @@ export default class TextRetriever{
     this.vocab = [...j.vocab];
     this.idf = matrix(j.idf);
     this.tfidf = matrix(j.tfidf);
+    this.table = j.table;
   }
 
   toJson(){
@@ -28,6 +30,7 @@ export default class TextRetriever{
       vocab:this.vocab,
       idf:this.idf.valueOf(),
       tfidf:this.tfidf.valueOf(),
+      table:this.table,
     });
   }
 
@@ -36,16 +39,40 @@ export default class TextRetriever{
       vocab:this.vocab,
       idf:this.idf.valueOf(),
       tfidf:this.tfidf.valueOf(),
+      table:this.table,
     };
   }
 
   compile(dict){
+    /* dictには入力文字列を内部表現化したリスト
+    [ [入力1を内部表現化したリスト,入力2を内部表現化したリスト...], ...]
+    が渡される。これを
+    [入力1を内部表現化したリスト,入力2を内部表現化したリスト,...]
+    に展開し、各行がもとのdictのどの行に対応するかをthis.tableに格納する。
+
+    */
+    // tableの生成とdictのsqeeze
+
+    console.log("dict=",dict)
+    this.table=[];
+    let squeezedDict=[];
+    for(let i=0,l=dict.length; i<l; i++){
+      const line = dict[i];
+
+      squeezedDict = squeezedDict.concat(line);
+
+      for(let j=0,m=line.lenght; j<m; j++){
+          this.table.push(i);
+      }
+
+    }
+
     // vocabの生成
     this.vocab = new Object();
 
-    for(let i=0,l=dict.length; i<l; i++){
-      const line = dict[i];
-      for(let word of line[0]){
+    for(let i=0,l=squeezedDict.length; i<l; i++){
+      const line = squeezedDict[i];
+      for(let word of line){
         this.vocab[word] = true;
       }
     }
@@ -56,9 +83,9 @@ export default class TextRetriever{
     //     tf(t,d) = (ある単語tの行d内での出現回数)/(行d内の全ての単語の出現回数の和) """
 
     // wv
-    this.wv = zeros(dict.length,this.vocab.length);
-    for (let i=0,l=dict.length; i<l; i++){
-      const line = dict[i];
+    this.wv = zeros(squeezedDict.length,this.vocab.length);
+    for (let i=0,l=squeezedDict.length; i<l; i++){
+      const line = squeezedDict[i];
       // line[0]:in_script, line[1]:out_script
       //ここでinternalRepr
 
@@ -101,22 +128,24 @@ export default class TextRetriever{
 
   retrieve(text){
     // tfidf,df,vocabを利用してtextに一番似ているdictの行番号を返す
-
+    console.log("text=",text)
     // wv
     const wv = zeros(this.vocab.length);
 
     // line[0]:in_script, line[1]:out_script
     //ここでinternalRepr
-    
+
     for(let word of text){
         let pos = this.vocab.indexOf(word);
         if(pos !== -1){
           wv.set([pos],wv.get([pos])+1);
         }
     }
-
+    console.log("vocab=",this.vocab)
+    console.log("wv=",wv.valueOf());
+    console.log("table=",this.table);
     if(sum(wv) === 0){
-      return { score: 0 };
+      return { score: 0 ,index:null};
     }
 
     // tfidf 計算
@@ -140,7 +169,7 @@ export default class TextRetriever{
     for(let i=0,l=s.length;i<l;i++){
       let score=s[i];
       if(score === max){
-        cand.push({index:i,score:score});
+        cand.push({index:this.table[i],score:score});
       }
     }
 
