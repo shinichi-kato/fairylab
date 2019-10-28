@@ -111,9 +111,9 @@ export default class Part{
 				this.replier=(message,state)=>{
 					const ir = internalRepr.from_message(message);
 					const result = this.inDict.retrieve(ir);
+					
 					const cands = this.outDict[result.index];
-					console.log("results=",result)
-
+					console.log("cands=",cands)
 					return {
 						name:this.name,
 						speakerId:this.id,

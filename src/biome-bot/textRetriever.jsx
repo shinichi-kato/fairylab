@@ -53,19 +53,21 @@ export default class TextRetriever{
     */
     // tableの生成とdictのsqeeze
 
-    console.log("dict=",dict)
     this.table=[];
     let squeezedDict=[];
     for(let i=0,l=dict.length; i<l; i++){
-      const line = dict[i];
+      let line = dict[i];
+      console.log("line=",line,"length=",line.length);
 
       squeezedDict = squeezedDict.concat(line);
 
-      for(let j=0,m=line.lenght; j<m; j++){
+      for(let j=0,m=line.length; j<m; j++){
           this.table.push(i);
       }
 
     }
+    console.log("table=",this.table)
+    console.log("sqlist=",squeezedDict);
 
     // vocabの生成
     this.vocab = new Object();
@@ -89,7 +91,7 @@ export default class TextRetriever{
       // line[0]:in_script, line[1]:out_script
       //ここでinternalRepr
 
-      for(let word of line[0]){
+      for(let word of line){
           let pos = this.vocab.indexOf(word);
           if(pos !== -1){
             this.wv.set([i,pos],this.wv.get([i,pos])+1);
@@ -127,13 +129,14 @@ export default class TextRetriever{
 
 
   retrieve(text){
+    // 内部表現のリストとして与えられたtextを使ってテキスト検索
     // tfidf,df,vocabを利用してtextに一番似ているdictの行番号を返す
     console.log("text=",text)
     // wv
     const wv = zeros(this.vocab.length);
 
-    // line[0]:in_script, line[1]:out_script
-    //ここでinternalRepr
+    
+    
 
     for(let word of text){
         let pos = this.vocab.indexOf(word);
@@ -165,6 +168,7 @@ export default class TextRetriever{
     // 同点一位が複数あった場合はランダムに一つを選ぶ
 
     const max = Math.max(...s);
+    console.log("max=",max)
     let cand = [];
     for(let i=0,l=s.length;i<l;i++){
       let score=s[i];
