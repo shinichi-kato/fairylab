@@ -106,21 +106,26 @@ export default class Part{
 					[ [入力1を内部表現化したリスト,入力2を内部表現化したリスト...], ...]
 					を渡す
 				*/
+				
 				this.inDict=new TextRetriever(d.map(l=>internalRepr.from_inDict(l[0])));
 				this.outDict = d.map(l=>l[1]);
 				this.replier=(message,state)=>{
 					const ir = internalRepr.from_message(message);
 					const result = this.inDict.retrieve(ir);
-					
-					const cands = this.outDict[result.index];
-					console.log("cands=",cands)
-					return {
+					let cands= [];
+					let text = "not found";
+					if(result.score !== 0){
+						cands = this.outDict[result.index];
+						text = cands[randomInt(cands.length)];
+					}
+
+					return ({
 						name:this.name,
 						speakerId:this.id,
 						avatar:this.avatarId,
-						text:cands[randomInt(cands.length)],
+						text:text,
 						score:result.score
-					};
+					});
 				};
 				break;
 			}

@@ -90,14 +90,13 @@ export default class BiomeBot{
 				}
 
 				// triggerLevel check
-				const [reply,state] = p.replier(message,this.state);
+				const reply = p.replier(message,this.state);
 				if(reply.score< p.triggerLevel){
 					console.log(`triggerLevel(${reply.score}) insufficient`);
 					continue;
 				}
 
 				reply['timestamp']=ts.getTime();
-				this.state={...this.state,state};
 
 				//retention check
 				if(Math.random() < p.retention){

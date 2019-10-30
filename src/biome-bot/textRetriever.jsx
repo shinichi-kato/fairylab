@@ -144,9 +144,9 @@ export default class TextRetriever{
           wv.set([pos],wv.get([pos])+1);
         }
     }
-    console.log("vocab=",this.vocab)
-    console.log("wv=",wv.valueOf());
-    console.log("table=",this.table);
+    // console.log("vocab=",this.vocab)
+    // console.log("wv=",wv.valueOf());
+    // console.log("table=",this.table);
     if(sum(wv) === 0){
       return { score: 0 ,index:null};
     }
@@ -168,7 +168,6 @@ export default class TextRetriever{
     // 同点一位が複数あった場合はランダムに一つを選ぶ
 
     const max = Math.max(...s);
-    console.log("max=",max)
     let cand = [];
     for(let i=0,l=s.length;i<l;i++){
       let score=s[i];
