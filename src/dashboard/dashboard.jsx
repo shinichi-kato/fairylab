@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import IconsPanel from './icons-panel.jsx';
 import Navigation from './navigation.jsx';
+import {version} from '../../package.json';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -40,7 +41,7 @@ export default function Dashboard(props){
         alignItems="stretch"
         height="100%">
         <Box orfer={0} >
-        {process.env.npm_package_version}
+        {version}
         </Box>
         <Box order={0} flexGrow={1} >
           <IconsPanel

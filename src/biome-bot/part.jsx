@@ -104,7 +104,9 @@ export default class Part{
 					[ [["入力1","入力2"...] , ["出力1","出力2"...]] , ...]
 					となっている。TextRetrieverには内部表現化したリスト
 					[ [入力1を内部表現化したリスト,入力2を内部表現化したリスト...], ...]
-					を渡す
+					を渡す.
+
+					
 				*/
 				
 				this.inDict=new TextRetriever(d.map(l=>internalRepr.from_inDict(l[0])));

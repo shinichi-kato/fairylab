@@ -13,7 +13,7 @@ export default class BiomeBot{
 		this.state={};
 		/* try restore previous state if exists.
 		otherwise load a dict  */
-		this.revive() || this.load(dict);
+		this.load(dict);
 	}
 
 	revive(){
@@ -51,14 +51,26 @@ export default class BiomeBot{
 	load(dict){
 		/*dictからデータを読み込む */
 		if(!dict){
-			return
+			const state = localStorage.getItem('bot.state') ;
+			if(!state){
+				return false;
+			}
+			this.name = localStorage.getItem('bot.name');
+			this.id = localStorage.getItem('bot.id');
+			this.avatarId = localStorage.getItem('bot.avatarId') || echoBot.avatarId;
+			this.state = JSON.parse(state);
+			const parts = JSON.parse(localStorage.getItem('bot.parts')) || echoBot.parts;
+	
+			this.parts = parts.map(p=>new Part(p,state));
 		}
+		else{
+			this.id = dict.id;
+			this.avatarId = dict.avatarId;
+			this.state = {avatar:""};
+			this.parts = dict.parts.map(p=>new Part(p,this.state,dict));
+		}
+		this.setup();
 
-		this.id = dict.id;
-		this.avatarId = dict.avatarId;
-		this.state = {};
-
-		this.parts = dict.parts.map(p=>new Part(p,this.state,dict));
 	}
 
 	parseDictionaries(){
@@ -75,7 +87,7 @@ export default class BiomeBot{
 				return result;
 			}
 		}
-		return true;
+		return 'ok';
 	}
 
 	reply(message){
@@ -105,6 +117,7 @@ export default class BiomeBot{
 					this.parts.slice(i,1);
 					this.parts.push(me)
 				}
+				reply.avatar=this.avatarId+this.state.avatar;
 				resolve(reply);
 			}
 

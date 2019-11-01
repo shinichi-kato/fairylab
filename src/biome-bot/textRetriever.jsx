@@ -57,7 +57,6 @@ export default class TextRetriever{
     let squeezedDict=[];
     for(let i=0,l=dict.length; i<l; i++){
       let line = dict[i];
-      console.log("line=",line,"length=",line.length);
 
       squeezedDict = squeezedDict.concat(line);
 
@@ -66,8 +65,6 @@ export default class TextRetriever{
       }
 
     }
-    console.log("table=",this.table)
-    console.log("sqlist=",squeezedDict);
 
     // vocabの生成
     this.vocab = new Object();
@@ -131,7 +128,6 @@ export default class TextRetriever{
   retrieve(text){
     // 内部表現のリストとして与えられたtextを使ってテキスト検索
     // tfidf,df,vocabを利用してtextに一番似ているdictの行番号を返す
-    console.log("text=",text)
     // wv
     const wv = zeros(this.vocab.length);
 

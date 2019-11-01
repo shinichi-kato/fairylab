@@ -76,6 +76,14 @@ function reducer (state,action){
         message:action.message,
       }
 
+    } 
+    case 'CompileError':{
+      return {
+        ...state,
+        botState:'ParseError',
+        message:action.message,
+      }
+
     }
     default:
       throw new Error(`invalid action ${action.type} in BiomeBotProvider`)
@@ -111,14 +119,15 @@ export default function BiomeBotProvider(props){
   function handleDownload(firebase,index){
     const botSettings = state.botSettingsList[index];
 
-
     bot.load(botSettings);
     const result = bot.setup();
-    if(result !== true){
+    if(result !== 'ok'){
       dispatch({type:'ParseError',message:result.message});
       return;
     }
+    bot.setup();
     bot.dump();
+
     dispatch({type:'ready',id:botSettings.id});
 
     // if (!firebase) {
@@ -148,17 +157,23 @@ export default function BiomeBotProvider(props){
 
 
   function handleCompile(){
-    bot.load();
+    // bot.load();
     // localStorageから読んだ辞書のソースをパース
-    const result = bot.parseDictionaries();
+    let result = bot.parseDictionaries();
     if(result !== "ok"){
       dispatch({type:"ParseError",message:result});
       return;
     }
-    dispatch({type:"ready"});
+
     // localStorageの辞書をコンパイル
-    console.log("result",result)
-    bot.setup();
+    result = bot.setup();
+    console.log(result);
+    if(result !== "ok"){
+      dispatch({type:"CompileError",message:result});
+      return;
+    }
+    bot.dump();
+    dispatch({type:"ready"});
   }
 
 
