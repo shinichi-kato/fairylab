@@ -8,6 +8,8 @@ const internalRepr = new InternalRepr();
 
 export default class Part{
 	constructor(part,state,dict){
+		// dictありで生成する場合はcompiledDictを
+		// 消去する
 		this.state={...state};
 		this.replier=function(){};
 		this.load(part,dict);
@@ -27,9 +29,10 @@ export default class Part{
 		if(dict){
 			localStorage.setItem(`bot.sourceDict.${this.name}`,
 				JSON.stringify(dict.sourceDicts[this.name]));
+			localStorage.removeItem(`bot.compiledDict.${this.name}`);
 			}
 		}
-
+	
 	dump(){
 		const part={
 			name:this.name,
@@ -47,16 +50,12 @@ export default class Part{
 		);
 		return part;
 	}
-
 	setup(){
-		// compiledDictがあればそれをロード
-		let d = localStorage.getItem(`bot.compiledDict.${this.name}`);
-		if(d){
-			d = JSON.parse(d);
-		}
+		// ロードしたパラメータと辞書を利用して返答可能な状態にする。
+		// 現バージョンではpartのcompile結果を保存していないため
+		// 毎回ソースを読んで計算を実行
 
-		// なければsourceDictを読んでコンパイル
-		d = localStorage.getItem(`bot.sourceDict.${this.name}`);
+		let d = localStorage.getItem(`bot.sourceDict.${this.name}`);
 		if(d){
 			try {
 			  d = JSON.parse(d);

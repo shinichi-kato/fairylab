@@ -1,6 +1,6 @@
 {
   "name": "fairylab",
-  "version": "0.6.4+build2019-10-31",
+  "version": "0.6.6+build2019-11-04",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.5.2",

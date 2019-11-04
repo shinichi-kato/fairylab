@@ -38,7 +38,7 @@ function reducer(state,action) {
       }
     }
     default:
-     throw new Error(`invalid action ${action} in Home`);
+     throw new Error(`invalid action ${action.type} in Home`);
   }
 }
 
@@ -84,10 +84,10 @@ export default function Home(props){
 
 
   const speeches = state.homeLogSlice.map(speech =>{
-    return speech.speakerId === props.account.uid ?
-      <LeftBalloon speech={speech}/>
+    return (speech.speakerId === props.account.uid || speech.speakerId === -1 )?
+      <RightBalloon speech={speech}/>
     :
-      <RightBalloon speech={speech} />
+      <LeftBalloon speech={speech} />
   }
    );
 

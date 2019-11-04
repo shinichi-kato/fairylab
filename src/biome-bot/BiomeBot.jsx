@@ -16,24 +16,15 @@ export default class BiomeBot{
 		this.load(dict);
 	}
 
-	revive(){
-		// ボットの内部状態を含めてlocalStorageから復旧
-		const state = localStorage.getItem('bot.state') ;
-		if(!state){
-			return false;
-		}
-		this.name = localStorage.getItem('bot.name');
-		this.id = localStorage.getItem('bot.id');
-		this.avatarId = localStorage.getItem('bot.avatarId') || echoBot.avatarId;
-		this.state = JSON.parse(state);
-		const parts = JSON.parse(localStorage.getItem('bot.parts')) || echoBot.parts;
-
-		this.parts = parts.map(p=>new Part(p,state));
-
-		this.setup();
-
-		return true;
+	download(dict){
+		// 新しくdictからbiomebotのデータをロードする。
+		// 既存のcompiledDictは消去する
+		this.id = dict.id;
+		this.avatarId = dict.avatarId;
+		this.state = {avatar:""};
+		this.parts = dict.parts.map(p=>new Part(p,this.state,dict));
 	}
+	// }
 
 	dump(){
 		// ボットの内部状態を含めてlocalStorageに保存。
@@ -49,7 +40,7 @@ export default class BiomeBot{
 	}
 
 	load(dict){
-		/*dictからデータを読み込む */
+		// dictが渡されない場合はlocalstorageから読み込む
 		if(!dict){
 			const state = localStorage.getItem('bot.state') ;
 			if(!state){
@@ -117,6 +108,7 @@ export default class BiomeBot{
 					this.parts.slice(i,1);
 					this.parts.push(me)
 				}
+				reply.name=this.name
 				reply.avatar=this.avatarId+this.state.avatar;
 				resolve(reply);
 			}

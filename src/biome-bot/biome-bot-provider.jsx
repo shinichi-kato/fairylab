@@ -125,7 +125,6 @@ export default function BiomeBotProvider(props){
       dispatch({type:'ParseError',message:result.message});
       return;
     }
-    bot.setup();
     bot.dump();
 
     dispatch({type:'ready',id:botSettings.id});
@@ -158,18 +157,19 @@ export default function BiomeBotProvider(props){
 
   function handleCompile(){
     // bot.load();
-    // localStorageから読んだ辞書のソースをパース
-    let result = bot.parseDictionaries();
-    if(result !== "ok"){
-      dispatch({type:"ParseError",message:result});
-      return;
-    }
+    // let result = bot.parseDictionaries();
+    // if(result !== "ok"){
+    //   dispatch({type:"ParseError",message:result});
+    //   return;
+    // }
+
+    bot.load();
 
     // localStorageの辞書をコンパイル
-    result = bot.setup();
+    let result = bot.setup();
     console.log(result);
     if(result !== "ok"){
-      dispatch({type:"CompileError",message:result});
+      dispatch({type:"ParseError",message:result});
       return;
     }
     bot.dump();
