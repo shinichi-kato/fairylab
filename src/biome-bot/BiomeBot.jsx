@@ -10,7 +10,7 @@ import {echoBot} from './PresetBots.jsx';
 export default class BiomeBot{
 	constructor(dict){
 
-		this.state={};
+		this.state={queue:[]};
 		/* try restore previous state if exists.
 		otherwise load a dict  */
 		this.load(dict);
@@ -21,7 +21,7 @@ export default class BiomeBot{
 		// 既存のcompiledDictは消去する
 		this.id = dict.id;
 		this.avatarId = dict.avatarId;
-		this.state = {avatar:""};
+		this.state = {avatar:"",queue:[]};
 		this.parts = dict.parts.map(p=>new Part(p,this.state,dict));
 	}
 	// }
@@ -57,7 +57,7 @@ export default class BiomeBot{
 		else{
 			this.id = dict.id;
 			this.avatarId = dict.avatarId;
-			this.state = {avatar:""};
+			this.state = {avatar:"",queue:[]};
 			this.parts = dict.parts.map(p=>new Part(p,this.state,dict));
 		}
 		this.setup();
@@ -84,41 +84,60 @@ export default class BiomeBot{
 	reply(message){
 		return new Promise((resolve,reject)=>{
 			const ts = new Date();
-			for(let i in this.parts){
-				let p = this.parts[i];
-				// availability check
-				if(Math.random() > p.availability){
-					console.log("availability skip");
-					continue;
-				}
+			let text = "BiomeBot not respond";
 
-				// triggerLevel check
-				const reply = p.replier(message,this.state);
-				if(reply.score< p.triggerLevel){
-					console.log(`triggerLevel(${reply.score}) insufficient`);
-					continue;
-				}
+			// queueがあればshiftしてreplyとする
+			if(this.state.queue.length !==0){
+				text = this.state.queue.shift();	
+			}
+			else
+			{
+				for(let i in this.parts){
+					let p = this.parts[i];
+					// availability check
+					if(Math.random() > p.availability){
+						console.log("availability skip");
+						continue;
+					}
+	
+					// triggerLevel check
+					const reply = p.replier(message,this.state);
+					if(reply.score< p.triggerLevel){
+						console.log(`triggerLevel(${reply.score}) insufficient`);
+						continue;
+					}
+	
+					reply['timestamp']=ts.getTime();
+	
+					//retention check
+					if(Math.random() < p.retention){
+						//このパートを最後尾に
+						const me = {...p};
+						this.parts.slice(i,1);
+						this.parts.push(me)
+					}
+					reply.name=this.name
+					reply.avatar=this.avatarId+this.state.avatar;
+					
+					// 改行\nがあったらqueueに送る
+					if(reply.text.indexOf('\n') !== -1){
+						const replies = reply.text.split('\n');
+						reply.text = replies.shift();
+						this.state.queue.push(replies);
+					}
 
-				reply['timestamp']=ts.getTime();
-
-				//retention check
-				if(Math.random() < p.retention){
-					//このパートを最後尾に
-					const me = {...p};
-					this.parts.slice(i,1);
-					this.parts.push(me)
+					resolve(reply);
 				}
-				reply.name=this.name
-				reply.avatar=this.avatarId+this.state.avatar;
-				resolve(reply);
+	
+	
 			}
 
-			// どのpartもreply失敗
+			// どのpartもreplyしない
 			resolve({
 				name:this.name,
 				speakerId:this.id,
 				avatar:this.avatarId,
-				text:"BiomeBot not respond",
+				text:text,
 				timestamp:ts.getTime(),
 				score:1
 			});

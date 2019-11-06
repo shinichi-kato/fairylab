@@ -129,24 +129,7 @@ export default function BiomeBotProvider(props){
 
     dispatch({type:'ready',id:botSettings.id});
 
-    // if (!firebase) {
-    //   dispatch({type:'firebaseDisconnected'})
-    // }
-    // botSettingsList[index]をbotに書き込む。
-    // partsに従って辞書をダウンロードする
-
-    // ここで辞書ファイルをfetch()
-
-    // bot.loadDictionaries()
-    //   .then(res=>res.json())
-    //   .then(result=>{
-    //     dispatch({type:'dicLoaded',res:res})})
-    //   .then(()=>{
-    //     dispatch({type:'compiling'});
-    //     bot.compile()})
-    //   .then(()=>{
-    //     dispatch({type:'ready'})}
-    //   )
+    
   }
 
   function handleReply(message){
@@ -159,6 +142,7 @@ export default function BiomeBotProvider(props){
     // bot.load();
     // let result = bot.parseDictionaries();
     // if(result !== "ok"){
+      
     //   dispatch({type:"ParseError",message:result});
     //   return;
     // }
