@@ -218,7 +218,7 @@ export default function ScriptEditor(props){
             className={classes.textField}
             variant="filled"
             required
-            id="name"
+            id="id"
             margin="normal"
             label="id(型式)"
             value={state.id}

@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function ApplicationBar(props){
-  const {page,handleToParentPage,handleToScriptEditor} = props;
+  const {page,handleToParentPage} = props;
   const classes = useStyles();
 
 
@@ -52,7 +52,9 @@ export default function ApplicationBar(props){
             account={props.account}
             firebase = {props.firebase}
             handleAuth={props.handleAuth}
-            handleToScriptEditor={handleToScriptEditor}
+            handleToScriptEditor={props.handleToScriptEditor}
+            handleToUploadDialog={props.handleToUploadDialog}
+            handleToLoginDialog={props.handleToLoginDialog}
           />
         </Toolbar>
       </AppBar>

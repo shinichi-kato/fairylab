@@ -5,6 +5,8 @@ import Dashboard from './dashboard/dashboard.jsx';
 import UserSettings from './dashboard/user-settings.jsx';
 import BotSettings from './dashboard/bot-settings.jsx';
 import ScriptEditor from './script-editor/script-editor.jsx';
+import LoginDialog from './dialogs/login-dialog.jsx';
+import UploadDialog from './dialogs/upload-dialog.jsx';
 import Home from './home/home.jsx';
 import Hub from './hub/hub.jsx';
 
@@ -36,6 +38,7 @@ const initialState = {
 const reducer = (state,action) => {
   switch(action.type) {
     case 'Auth' : {
+      console.log("auth:",action.user)
       return {
         ...state,
         account: {...action.user}
@@ -141,6 +144,7 @@ export default function Main(){
   const firestoreRef = useRef(null);
   const fsMessagesRef = useRef(null);
 
+  
   useEffect(()=>{
     let didCancel = false;
 
@@ -166,27 +170,82 @@ export default function Main(){
 
 
 
-const [hubLog,setHubLog] = useState([]);
+  const [hubLog,setHubLog] = useState([]);
 
-function syncHubLog(query){
-  const messages = query.docs.map(doc => {
-    const data=doc.data();
-    const ts=new Date(data.timestamp.seconds*1000);
-    return {...data,timestamp:ts,id:doc.id}
-  });
-  setHubLog(messages.reverse());
-}
+  function syncHubLog(query){
+    const messages = query.docs.map(doc => {
+      const data=doc.data();
+      const ts=new Date(data.timestamp.seconds*1000);
+      return {...data,timestamp:ts,id:doc.id}
+    });
+    setHubLog(messages.reverse());
+  }
 
 
-function handleWriteUserMessage(message,userName,userAvatar){
-  fsMessagesRef.current.add({
-    uid:state.account.uid,
-    name:userName,
-    text:message,
-    avatar:userAvatar,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-  })
-}
+  function handleWriteUserMessage(message,userName,userAvatar){
+    fsMessagesRef.current.add({
+      uid:state.account.uid,
+      name:userName,
+      text:message,
+      avatar:userAvatar,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    })
+  }
+
+
+  //-------------------------------------------------------------
+  //  forebase - Script I/O
+
+  const [uploadState,setUploadState] = useState(false);
+
+  function isScriptExists(botId){
+    // 他のユーザがすでにidを使用している
+    if(firestoreRef.current === null) return false;
+
+    const creator =  state.account.email || state.userName;
+    const id = botId || localStorage.getItem('bot.id');
+    
+    firestoreRef.current.collection("bot")
+      .where("creator","!=", creator)
+      .where("botId","==",id)
+      .get()
+      .then(doc=>{
+        if(doc.exists) {
+          setUploadState("exists");
+        }
+        setUploadState("notExists");
+      }).catch(error=>{
+        console.log(error);
+        setUploadState("error");
+      })
+  }
+
+  function handleUploadScript(message){
+    // スクリプトのアップロード
+    // 辞書はこの関数では扱わない。
+    if (firestoreRef.current === null) {return false}
+
+    if(uploadState!=="notExists") {return false}
+    const creator =  state.account.email || state.userName;
+
+    firestoreRef.current.collection("bot")
+      .set({
+        botId:localStorage.getItem('bot.id'),
+        avatarId : localStorage.getItem('bot.avatarId'),
+        creator : creator,
+        description : localStorage.getItem('bot.description'),
+        published: localStorage.getItem('bot.published'),
+        parts: JSON.parse(localStorage.getItem('bot.parts')),
+        message: message,
+      })
+      .then(()=>{
+        setUploadState("success");
+      })
+      .catch(error=>{
+        setUploadState(error);
+      });
+
+  }
 
   //------------------------------------------------------------------
   //  body要素のバウンススクロールを無効化
@@ -249,7 +308,27 @@ function handleWriteUserMessage(message,userName,userAvatar){
             userName={state.userName}
           />
         );
-
+      case 'LoginDialog':
+        return(
+          <LoginDialog
+            account={state.account}
+            firebase={firebase}
+            userName={state.userName}
+            handleToParentPage={()=>dispatch({type:'ChangePage',page:'Dashboard'})}
+          />
+        );      
+      case 'UploadDialog':
+        return(
+          <UploadDialog
+            account={state.account}
+            firebase={firebase}
+            userName={state.userName}
+            uploadState={uploadState}
+            isScriptExists={isScriptExists}
+            handleUploadScript={handleUploadScript}
+            handleToParentPage={()=>dispatch({type:'ChangePage',page:'Dashboard'})}
+          />
+        );
       case 'Home':
         return(
           <Home
@@ -289,8 +368,12 @@ function handleWriteUserMessage(message,userName,userAvatar){
           page={state.page}
           parentPage={state.parentPage}
           account={state.account}
+          userName={state.userName}
+          uploadState={uploadState}
           handleAuth={(user) => dispatch({type:'Auth',user:user})}
           handleToScriptEditor={()=>dispatch({type:'ChangePage',page:'ScriptEditor'})}
+          handleToUploadDialog={()=>dispatch({type:'ChangePage',page:'UploadDialog'})}
+          handleToLoginDialog={()=>dispatch({type:'ChangePage',page:'LoginDialog'})}
           handleToParentPage={()=>dispatch({type:'ToParentPage'})}
           />
       </Box>
