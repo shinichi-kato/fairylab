@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
     }),
   },
   wideButton: {
-    width: "80%",
+    width: "100%",
   }
 }));
 
@@ -51,7 +51,7 @@ function AppMenuDialog(props){
   const classes = useStyles();
   const {id,anchorEl,open,handleClose,account,firebase} = props;        
 
-  const logged=account.email !== null;
+  const loggedIn=account.email !== null;
   console.log("email=",account.email)
 
   function handleToScriptEditor(e){
@@ -68,6 +68,11 @@ function AppMenuDialog(props){
     props.handleToLoginDialog();
     handleClose();
   }
+
+  function handleLogout(e){
+
+  }
+ 
 
   return (
     <Popover
@@ -86,7 +91,7 @@ function AppMenuDialog(props){
       <Paper className={classes.root} >
         <Box display="flex" flexDirection="column">
           <Box>
-            {account.email ||
+            {!loggedIn &&
               <>
                 <Typography variant="h6">
                   <Warning color="error"/>ログインしていません</Typography>
@@ -95,17 +100,26 @@ function AppMenuDialog(props){
             }
           </Box>
           <Box>
-            <Button onClick={handleToLoginDialog} 
+            <Button onClick={()=>handleToLoginDialog('login')} 
               className={classes.wideButton}
-              disabled={logged}
+              disabled={loggedIn}
               variant="contained">
               <AccountCircle/>ログイン
             </Button>
           </Box>
           <Box>
-            <Button  
+            <Button onClick={()=>handleToLoginDialog('createUser')}
+              disabled={loggedIn}
               className={classes.wideButton}
-              disabled={!logged}
+            >
+              新規ユーザ登録
+            </Button>
+          </Box>
+          <Box>
+            <Button  
+              onClick={handleLogout}
+              className={classes.wideButton}
+              disabled={!loggedIn}
               >
               ログアウト
             </Button>
@@ -119,7 +133,7 @@ function AppMenuDialog(props){
           </Box>
           <Box>
             <Button onClick={handleToUploadDialog}
-              disabled={!logged}
+              disabled={!loggedIn}
               color="inherit"
               >
               <CloudUploadIcon/>スクリプトのアップロード

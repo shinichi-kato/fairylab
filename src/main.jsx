@@ -138,6 +138,7 @@ export default function Main(){
     }
   },[]);
 
+
   // ----------------------------------------------------
   // firestore / hubLog I/O
 
@@ -206,14 +207,16 @@ export default function Main(){
     const id = botId || localStorage.getItem('bot.id');
     
     firestoreRef.current.collection("bot")
-      .where("creator","!=", creator)
       .where("botId","==",id)
       .get()
-      .then(doc=>{
-        if(doc.exists) {
-          setUploadState("exists");
-        }
-        setUploadState("notExists");
+      .then(docs=>{
+        let isExists = false;
+        docs.forEach(doc=>{
+          if(doc.creator===creator){
+            isExists = true;
+          }
+        })
+        setUploadState(isExists ? "exists" : "notExists");
       }).catch(error=>{
         console.log(error);
         setUploadState("error");
@@ -225,7 +228,7 @@ export default function Main(){
     // 辞書はこの関数では扱わない。
     if (firestoreRef.current === null) {return false}
 
-    if(uploadState!=="notExists") {return false}
+    if(uploadState!=="exists") {return false}
     const creator =  state.account.email || state.userName;
 
     firestoreRef.current.collection("bot")
@@ -311,12 +314,24 @@ export default function Main(){
       case 'LoginDialog':
         return(
           <LoginDialog
+            mode="login"
             account={state.account}
             firebase={firebase}
             userName={state.userName}
             handleToParentPage={()=>dispatch({type:'ChangePage',page:'Dashboard'})}
           />
-        );      
+        );    
+      case 'CreateUserDialog':
+        return(
+          <LoginDialog
+            mode="createUser"
+            account={state.account}
+            firebase={firebase}
+            userName={state.userName}
+            handleToParentPage={()=>dispatch({type:'ChangePage',page:'Dashboard'})}
+          />
+        );    
+          
       case 'UploadDialog':
         return(
           <UploadDialog
@@ -373,7 +388,8 @@ export default function Main(){
           handleAuth={(user) => dispatch({type:'Auth',user:user})}
           handleToScriptEditor={()=>dispatch({type:'ChangePage',page:'ScriptEditor'})}
           handleToUploadDialog={()=>dispatch({type:'ChangePage',page:'UploadDialog'})}
-          handleToLoginDialog={()=>dispatch({type:'ChangePage',page:'LoginDialog'})}
+          handleToLoginDialog={mode=>dispatch({type:'ChangePage',page:'LoginDialog'})}
+          handleToLoginDialog={mode=>dispatch({type:'ChangePage',page:'CreateUserDialog'})}
           handleToParentPage={()=>dispatch({type:'ToParentPage'})}
           />
       </Box>

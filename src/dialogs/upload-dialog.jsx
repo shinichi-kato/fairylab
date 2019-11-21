@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 
-import useLocalStorage from 'react-use-localstorage';
 
 
 
@@ -26,19 +25,25 @@ const useStyles = makeStyles(theme => ({
 export default function UploadDialog(props){
   const classes = useStyles();
   const {account,firebase,userName}=props;
-  const [botId,setBotId] = useLocalStorage('bot.id',"");
+  const [botId,setBotId] = useState(localStorage.getItem('bot.id'));
   const [message,setMessage] = useState("");
-  const [published,setPublished] = useLocalStorage('bot.published');
+  const [published,setPublished] = useState('bot.published',false);
 
   function handleCheckBotId(e){
     const id = e.target.value;
     props.isScriptExists(id);
+    localStorage.setItem('bot.id',id);
     setBotId(id)
   }
 
   useEffect(()=>{
     props.isScriptExists(botId);
   },[]);
+
+  function handleSetPublished(v){
+    localStorage.setItem('bot.published',v);
+    setPublished(v);
+  }
 
   return (
     <Box className={classes.container}
@@ -81,21 +86,25 @@ export default function UploadDialog(props){
       <Box flexGrow={1}>
         <Chip label="公開しない" 
           color={ published ? "default" : "primary" }
-          onClock={()=>setPublished(false)}
+          onClock={()=>handleSetPublished(false)}
           />
         <Chip label="公開する"
           color={ published ? "primary"  : "default" }
-          onClock={()=>setPublished(true)}
+          onClock={()=>handleSetPublished(true)}
           />
       </Box>
 
       <Box>
         <Button className={classes.wideButton}
+          size="large"
           disabled={props.uploadState!=="notExists"}
           onClick={()=>props.handleUploadScript(message)}>アップロード</Button>
       </Box>
       <Box>
-        <Button onClick={e=>props.handleToParentPage} >キャンセル</Button>
+        <Button 
+        className={classes.wideButton}
+        size="large"
+        onClick={e=>props.handleToParentPage} >キャンセル</Button>
       </Box>
     </Box>
   )

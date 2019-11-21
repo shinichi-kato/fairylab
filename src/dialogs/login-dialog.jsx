@@ -17,21 +17,22 @@ const useStyles = makeStyles(theme => ({
      width: "100%",
    },
    wideButton: {
-    width: "80%",
+    width: "100%",
+    padding: 16,
     },
 }));
 
 
 export default function LoginDialog(props){
   const classes=useStyles();
-  const {account,firebase,userName}=props;
+  const {account,firebase,userName,mode}=props;
   const [email,setEmail] = useState(account.email);
   const [password,setPassword] = useState("");
   const [authState,setAuthState] = useState(null);
   const [errorMessage,setErrorMessage] = useState("");
 
   const formFilled = (email!=="" && password !== "");
-  const readyToLogin = account.email===null || formFilled
+  const readyToLogin = mode==='login' || formFilled
   
   function handleSignIn(e){
     if(authState==='confirmed') {
@@ -41,9 +42,9 @@ export default function LoginDialog(props){
     firebase.signInWithEmailAndPassword(email,password)
     .then(()=>{
       setAuthState("confirmed");
-      props.handleToParentPage();
     })
     .catch(error=>{
+      setAuthState("error");
       const errorCode = error.code;
       switch(errorCode){
         case 'auth/user-not-found' :
@@ -62,10 +63,12 @@ export default function LoginDialog(props){
   }
 
   function handleCreateUser(){
+    setAuthState('run');
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .catch(error=>{
       setErrorMessage(error.message);
     });
+    props.handleToParentPage();
 
   }
 
@@ -74,7 +77,7 @@ export default function LoginDialog(props){
       display="flex" flexDirection="column"
     >
       <Box>
-        <Typography variant="h5">ログイン</Typography>
+        <Typography variant="h5">{mode==='login' ? "ログイン" : "新規ユーザ登録" }</Typography>
       </Box>
       <Box>
         <TextField
@@ -88,7 +91,7 @@ export default function LoginDialog(props){
           onChange={(e)=>setEmail(e.target.value)}
         />
       </Box>
-      <Box flexGrow={1}>
+      <Box >
         <TextField
           required
           id="password"
@@ -100,6 +103,12 @@ export default function LoginDialog(props){
           onChange={e=>setPassword(e.target.value)}
         />
       </Box>
+      <Box flexGrow={1}>
+        <Typography variant="h4">
+        {authState==='confirmed' && "ログイン完了！"}
+        </Typography>
+        
+      </Box>
       <Box>
       <Typography color="error">
           {errorMessage}
@@ -108,23 +117,28 @@ export default function LoginDialog(props){
           variant="contained"
           color="primary"
           size="large"
-          disabled={!readyToLogin}
+          disabled={formFilled || authState==="run"}
           className={classes.wideButton}>
-            {account.email!==null ?
-              "ログイン済み"
-              : "ログイン"}</Button>
+            {authState==="run" ? "実行中..." : "ログイン" }
+        </Button>
       </Box>
       <Box>
         <Button
+        size="large"
         disabled={!formFilled}
         className={classes.wideButton}
-        onClick={e=>handleCreateUser}
+        onClick={e=>{handleCreateUser()}}
         >
           新規登録
         </Button>
       </Box>
       <Box>
-        <Button onClick={e=>{props.handleToParentPage()}} >キャンセル</Button>
+        <Button color="default" 
+          className={classes.wideButton}
+          size="large"
+          onClick={e=>{props.handleToParentPage()}} >
+          {authState==="confirmed"? "OK" : "キャンセル"}
+        </Button>
       </Box>
     </Box>
   )
