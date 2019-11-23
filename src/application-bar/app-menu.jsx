@@ -91,7 +91,11 @@ function AppMenuDialog(props){
       <Paper className={classes.root} >
         <Box display="flex" flexDirection="column">
           <Box>
-            {!loggedIn &&
+            {loggedIn ?
+              <Typography variant="h6">
+                <AccountCircle/>{account.email}
+              </Typography>
+              :
               <>
                 <Typography variant="h6">
                   <Warning color="error"/>ログインしていません</Typography>
@@ -104,7 +108,7 @@ function AppMenuDialog(props){
               className={classes.wideButton}
               disabled={loggedIn}
               variant="contained">
-              <AccountCircle/>ログイン
+              ログイン
             </Button>
           </Box>
           <Box>

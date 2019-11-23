@@ -20,6 +20,9 @@ const useStyles = makeStyles(theme => ({
    textField: {
      width: "100%",
    },
+   wideButton: {
+     width: "100%",
+   },
 }));
 
 export default function UploadDialog(props){
@@ -66,7 +69,7 @@ export default function UploadDialog(props){
           {props.uploadState==="exists" && 
           "同じidが他のユーザにより使われています。idを変えてください。"
           }
-          {props.uploadState!=="error" &&
+          {props.uploadState=="error" &&
           "firebase読み込みエラー"
           }
         </Typography>
@@ -78,7 +81,7 @@ export default function UploadDialog(props){
             required
             id="message"
             margin="normal"
-            label="Memo"
+            label="Memo(必須)"
             value={message}
             onChange={e=>setMessage(e.target.value)}
             />
@@ -86,25 +89,30 @@ export default function UploadDialog(props){
       <Box flexGrow={1}>
         <Chip label="公開しない" 
           color={ published ? "default" : "primary" }
-          onClock={()=>handleSetPublished(false)}
+          onClick={e=>handleSetPublished(false)}
           />
         <Chip label="公開する"
           color={ published ? "primary"  : "default" }
-          onClock={()=>handleSetPublished(true)}
+          onClick={e=>handleSetPublished(true)}
           />
+      </Box>
+      <Box>
+        {props.uploadState}
       </Box>
 
       <Box>
         <Button className={classes.wideButton}
           size="large"
-          disabled={props.uploadState!=="notExists"}
-          onClick={()=>props.handleUploadScript(message)}>アップロード</Button>
+          variant="contained"
+          color="primary"
+          disabled={props.uploadState!=="notExists" || message===""}
+          onClick={e=>{props.handleUploadScript(message)}}>アップロード</Button>
       </Box>
       <Box>
         <Button 
         className={classes.wideButton}
         size="large"
-        onClick={e=>props.handleToParentPage} >キャンセル</Button>
+        onClick={e=>props.handleToParentPage} >戻る</Button>
       </Box>
     </Box>
   )

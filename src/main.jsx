@@ -15,7 +15,7 @@ import "firebase/auth";
 import "firebase/firestore";
 
 import {firebaseConfig} from './credentials/firebase-init.js';
-firebase.initializeApp(firebaseConfig);
+const app=firebase.initializeApp(firebaseConfig);
 
 const initialState = {
   account: {
@@ -150,7 +150,7 @@ export default function Main(){
     let didCancel = false;
 
     if(!didCancel && state.account.uid !== null){
-      firestoreRef.current = firebase.firestore();
+      firestoreRef.current = firebase.firestore(app);
       fsMessagesRef.current = firestoreRef.current.collection("Messages");
       fsMessagesRef.current
           .orderBy('timestamp','desc')
@@ -195,13 +195,17 @@ export default function Main(){
 
 
   //-------------------------------------------------------------
-  //  forebase - Script I/O
+  //  forebase - Uploader / Downloader
 
   const [uploadState,setUploadState] = useState(false);
 
   function isScriptExists(botId){
     // 他のユーザがすでにidを使用している
-    if(firestoreRef.current === null) return false;
+
+    if(state.account.uid === null) return false;
+    if(firestoreRef.current === null) {
+      firestoreRef.current = firebase.firestore(app);
+    }
 
     const creator =  state.account.email || state.userName;
     const id = botId || localStorage.getItem('bot.id');
@@ -226,13 +230,19 @@ export default function Main(){
   function handleUploadScript(message){
     // スクリプトのアップロード
     // 辞書はこの関数では扱わない。
-    if (firestoreRef.current === null) {return false}
+    setUploadState("UploadStarting");
+    if(state.account.uid === null) return;
+    if (firestoreRef.current === null) {
+      firestoreRef.current = firebase.firestore(app);
+    }
 
-    if(uploadState!=="exists") {return false}
+    if(uploadState==="exists") {return false}
+
     const creator =  state.account.email || state.userName;
 
+    setUploadState("run");
     firestoreRef.current.collection("bot")
-      .set({
+      .add({
         botId:localStorage.getItem('bot.id'),
         avatarId : localStorage.getItem('bot.avatarId'),
         creator : creator,
@@ -389,7 +399,6 @@ export default function Main(){
           handleToScriptEditor={()=>dispatch({type:'ChangePage',page:'ScriptEditor'})}
           handleToUploadDialog={()=>dispatch({type:'ChangePage',page:'UploadDialog'})}
           handleToLoginDialog={mode=>dispatch({type:'ChangePage',page:'LoginDialog'})}
-          handleToLoginDialog={mode=>dispatch({type:'ChangePage',page:'CreateUserDialog'})}
           handleToParentPage={()=>dispatch({type:'ToParentPage'})}
           />
       </Box>
