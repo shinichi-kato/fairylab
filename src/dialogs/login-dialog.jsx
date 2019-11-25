@@ -39,8 +39,9 @@ export default function LoginDialog(props){
       props.handleToParentPage();
     }
     setAuthState('run');
-    firebase.signInWithEmailAndPassword(email,password)
+    firebase.auth().signInWithEmailAndPassword(email,password)
     .then(()=>{
+      console.log("authok");
       setAuthState("confirmed");
     })
     .catch(error=>{
@@ -117,7 +118,7 @@ export default function LoginDialog(props){
           variant="contained"
           color="primary"
           size="large"
-          disabled={formFilled || authState==="run"}
+          disabled={!formFilled || authState==="run"}
           className={classes.wideButton}>
             {authState==="run" ? "実行中..." : "ログイン" }
         </Button>

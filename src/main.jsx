@@ -38,7 +38,6 @@ const initialState = {
 const reducer = (state,action) => {
   switch(action.type) {
     case 'Auth' : {
-      console.log("auth:",action.user)
       return {
         ...state,
         account: {...action.user}
@@ -200,7 +199,8 @@ export default function Main(){
   const [uploadState,setUploadState] = useState(false);
 
   function isScriptExists(botId){
-    // 他のユーザがすでにidを使用している
+    // 他のユーザがすでにidを使用している場合書き込みができない。
+    // 自分が同じidを使っている場合は上書きされる。
 
     if(state.account.uid === null) return false;
     if(firestoreRef.current === null) {
@@ -209,20 +209,24 @@ export default function Main(){
 
     const creator =  state.account.email || state.userName;
     const id = botId || localStorage.getItem('bot.id');
+    let isExists = false;
+    let ownedBy = "";
     
     firestoreRef.current.collection("bot")
-      .where("botId","==",id)
+      .where(firebase.firestore.FieldPath.documentId(),"==",id)
       .get()
       .then(docs=>{
-        let isExists = false;
+        ownedBy = "ownedByOther";
         docs.forEach(doc=>{
-          if(doc.creator===creator){
-            isExists = true;
+          isExists=true;
+          console.log(doc.id,doc.data().creator,creator);
+          if(doc.data().creator===creator){
+            ownedBy = "ownedByUser";
           }
         })
-        setUploadState(isExists ? "exists" : "notExists");
+
+        setUploadState(isExists ? ownedBy : "notExists");
       }).catch(error=>{
-        console.log(error);
         setUploadState("error");
       })
   }
@@ -236,29 +240,45 @@ export default function Main(){
       firestoreRef.current = firebase.firestore(app);
     }
 
-    if(uploadState==="exists") {return false}
+    setUploadState("run");
+
+    if(uploadState==="ownedByOther") {return false}
 
     const creator =  state.account.email || state.userName;
+    const botId = localStorage.getItem('bot.id');
 
-    setUploadState("run");
+    // not Exists または ownedByUserの場合上書き保存
     firestoreRef.current.collection("bot")
-      .add({
-        botId:localStorage.getItem('bot.id'),
+      .doc(botId)
+      .set({
         avatarId : localStorage.getItem('bot.avatarId'),
         creator : creator,
         description : localStorage.getItem('bot.description'),
         published: localStorage.getItem('bot.published'),
         parts: JSON.parse(localStorage.getItem('bot.parts')),
         message: message,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then(()=>{
-        setUploadState("success");
+        const parts=JSON.parse(localStorage.getItem('bot.parts')).map(p=>{
+          return p.name;
+        });
+        let batch = firestoreRef.current.batch();
+       
+        for (let part of parts){
+          let dict = localStorage.getItem(`bot.sourceDict.${part}`);
+          let ref = firestoreRef.current.collection("dict").doc(`${botId}.${part}`);
+          batch.set(ref,{dict:dict});
+
+        }
+        batch.commit().then(()=>setUploadState("success"))
+        .catch(error=>setUploadState(error))
       })
       .catch(error=>{
         setUploadState(error);
       });
-
-  }
+    }
+  
 
   //------------------------------------------------------------------
   //  body要素のバウンススクロールを無効化

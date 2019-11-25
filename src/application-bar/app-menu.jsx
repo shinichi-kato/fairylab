@@ -52,7 +52,6 @@ function AppMenuDialog(props){
   const {id,anchorEl,open,handleClose,account,firebase} = props;        
 
   const loggedIn=account.email !== null;
-  console.log("email=",account.email)
 
   function handleToScriptEditor(e){
     props.handleToScriptEditor();
@@ -137,6 +136,7 @@ function AppMenuDialog(props){
           </Box>
           <Box>
             <Button onClick={handleToUploadDialog}
+              className={classes.wideButton}
               disabled={!loggedIn}
               color="inherit"
               >

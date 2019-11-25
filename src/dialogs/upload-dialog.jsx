@@ -66,10 +66,10 @@ export default function UploadDialog(props){
           onChange={handleCheckBotId}
           />
         <Typography variant="subtext" color="error">
-          {props.uploadState==="exists" && 
+          {props.uploadState==="ownedByOther" && 
           "同じidが他のユーザにより使われています。idを変えてください。"
           }
-          {props.uploadState=="error" &&
+          {props.uploadState==="error" &&
           "firebase読み込みエラー"
           }
         </Typography>
@@ -97,6 +97,7 @@ export default function UploadDialog(props){
           />
       </Box>
       <Box>
+        {props.uploadState==='ownedByUser' && "既存データに上書きします"}
         {props.uploadState}
       </Box>
 
@@ -105,8 +106,9 @@ export default function UploadDialog(props){
           size="large"
           variant="contained"
           color="primary"
-          disabled={props.uploadState!=="notExists" || message===""}
-          onClick={e=>{props.handleUploadScript(message)}}>アップロード</Button>
+          disabled={props.uploadState==="ownedByOther" || message===""}
+          onClick={e=>{props.handleUploadScript(message)}}>
+            アップロード</Button>
       </Box>
       <Box>
         <Button 
