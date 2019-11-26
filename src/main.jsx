@@ -219,7 +219,6 @@ export default function Main(){
         ownedBy = "ownedByOther";
         docs.forEach(doc=>{
           isExists=true;
-          console.log(doc.id,doc.data().creator,creator);
           if(doc.data().creator===creator){
             ownedBy = "ownedByUser";
           }
@@ -362,11 +361,14 @@ export default function Main(){
           />
         );    
           
-      case 'UploadDialog':
+      case 'UploadDialog': {
+        if(firestoreRef.current === null) {
+          firestoreRef.current = firebase.firestore(app);
+        }
         return(
           <UploadDialog
             account={state.account}
-            firebase={firebase}
+            firestoreRef={firestoreRef}
             userName={state.userName}
             uploadState={uploadState}
             isScriptExists={isScriptExists}
@@ -374,6 +376,9 @@ export default function Main(){
             handleToParentPage={()=>dispatch({type:'ChangePage',page:'Dashboard'})}
           />
         );
+      }
+        
+        
       case 'Home':
         return(
           <Home
