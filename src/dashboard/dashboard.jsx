@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 export default function Dashboard(props){
   const classes = useStyles();
   const {userName,userAvatar,account,
-    handleToUserSettings,handleToBotSettings,
+    handleToUserSettings,handleToBotDownloader,
     handleToHome,handleToHub} = props;
 
   return(
@@ -48,7 +48,7 @@ export default function Dashboard(props){
             userName={userName}
             userAvatar={userAvatar}
             handleToUserSettings={handleToUserSettings}
-            handleToBotSettings={handleToBotSettings}
+            handleToBotDownloader={handleToBotDownloader}
           />
         </Box>
         <Box order={0} >

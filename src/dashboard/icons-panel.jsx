@@ -57,7 +57,7 @@ export default function IconsPanel(props){
       </Grid>
       <Grid container item xs={6}>
         <Grid item xs={12} className={classes.char}>
-          <Button onClick={props.handleToBotSettings}>
+          <Button onClick={props.handleToBotDownloader}>
           <Avatar
             className={classes.avatar}
             src={bot.avatarId || blankBotAvatar} />

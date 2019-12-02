@@ -1,14 +1,18 @@
-import React, {useReducer,useEffect,useRef,useState } from 'react';
+import React, {useReducer,useEffect,useRef,useState,useContext } from 'react';
 import Box from '@material-ui/core/Box';
 import ApplicationBar from './application-bar/application-bar.jsx';
 import Dashboard from './dashboard/dashboard.jsx';
 import UserSettings from './dashboard/user-settings.jsx';
+import BotDownloader from './dashboard/bot-downloader.jsx';
 import BotSettings from './dashboard/bot-settings.jsx';
 import ScriptEditor from './script-editor/script-editor.jsx';
 import LoginDialog from './dialogs/login-dialog.jsx';
 import UploadDialog from './dialogs/upload-dialog.jsx';
 import Home from './home/home.jsx';
 import Hub from './hub/hub.jsx';
+
+import {BiomeBotContext} from './biome-bot/biome-bot-provider.jsx';
+
 
 import * as firebase from 'firebase/app';
 import "firebase/auth";
@@ -115,6 +119,7 @@ const reducer = (state,action) => {
 };
 
 export default function Main(){
+  const bot = useContext(BiomeBotContext);
   const [state,dispatch] = useReducer(reducer,initialState);
 
   //----------------------------------------------------
@@ -196,7 +201,7 @@ export default function Main(){
   //-------------------------------------------------------------
   //  forebase - Uploader / Downloader
 
-  const [uploadState,setUploadState] = useState(false);
+  const [loadingState,setLoadingState] = useState(false);
 
   function isScriptExists(botId){
     // 他のユーザがすでにidを使用している場合書き込みができない。
@@ -224,24 +229,23 @@ export default function Main(){
           }
         })
 
-        setUploadState(isExists ? ownedBy : "notExists");
+        setLoadingState(isExists ? ownedBy : "notExists");
       }).catch(error=>{
-        setUploadState("error");
+        setLoadingState("error");
       })
   }
 
   function handleUploadScript(message){
     // スクリプトのアップロード
-    // 辞書はこの関数では扱わない。
-    setUploadState("UploadStarting");
+    setLoadingState("UploadStarting");
     if(state.account.uid === null) return;
     if (firestoreRef.current === null) {
       firestoreRef.current = firebase.firestore(app);
     }
 
-    setUploadState("run");
+    setLoadingState("run");
 
-    if(uploadState==="ownedByOther") {return false}
+    if(loadingState==="ownedByOther") {return false}
 
     const creator =  state.account.email || state.userName;
     const botId = localStorage.getItem('bot.id');
@@ -267,17 +271,52 @@ export default function Main(){
         for (let part of parts){
           let dict = localStorage.getItem(`bot.sourceDict.${part}`);
           let ref = firestoreRef.current.collection("dict").doc(`${botId}.${part}`);
-          batch.set(ref,{dict:dict});
+          batch.set(ref,{dict:dict,botId:botId});
 
         }
-        batch.commit().then(()=>setUploadState("success"))
-        .catch(error=>setUploadState(error))
+        batch.commit().then(()=>setLoadingState("success"))
+        .catch(error=>setLoadingState(error))
       })
       .catch(error=>{
-        setUploadState(error);
+        setLoadingState(error);
       });
     }
   
+  function handleDownloadScript(botId){
+    if(botId===null){ return }
+    if(state.account.uid === null) return;
+    if (firestoreRef.current === null) {
+      firestoreRef.current = firebase.firestore(app);
+    }
+
+    setLoadingState("startDownload");
+    
+    firestoreRef.current.collection("bot")
+      .doc(botId).get().then(doc=>{
+        const data=doc.data();
+        localStorage.setItem('bot.id',doc.id);
+        localStorage.setItem('bot.avatarId',data.avatarId);
+        localStorage.setItem('bot.description',data.description);
+        localStorage.setItem('bot.published',data.published);
+        localStorage.setItem('bot.parts',JSON.stringify(data.parts));
+        return data.parts
+      })
+      .then(data_parts=>{
+        firestoreRef.current.collection("bot")
+        .where("botId","==",botId)
+        .get()
+        .then(parts=>{
+          parts.forEach(part=>{
+            const data = part.data();
+            localStorage.setItem(`bot.sourceDict.${data.name}`,data.dict);
+          })
+  
+        }) 
+        bot.handleLoad();
+        setLoadingState("downloadSuccess");       
+
+      })
+  }
 
   //------------------------------------------------------------------
   //  body要素のバウンススクロールを無効化
@@ -311,7 +350,7 @@ export default function Main(){
           userName={state.userName}
           userAvatar={state.userAvatar}
           handleToUserSettings={()=>dispatch({type:'ChangePage',page:'UserSettings'})}
-          handleToBotSettings={()=>dispatch({type:'ChangePage',page:'BotSettings'})}
+          handleToBotDownloader={()=>dispatch({type:'ChangePage',page:'BotDownloader'})}
           handleToHome={()=>dispatch({type:'ChangePage',page:'Home'})}
           handleToHub={()=>dispatch({type:'ChangePage',page:'Hub'})}
         />);
@@ -324,14 +363,30 @@ export default function Main(){
             handleChangeUserSettings={(name,avatar)=>
               dispatch({type:'ChangeUserSettings',userName:name,userAvatar:avatar})}/>
         )
-      case 'BotSettings':
+      case 'BotDownloader':{
+        if(firestoreRef.current === null) {
+          firestoreRef.current = firebase.firestore(app);
+        }
         return(
-          <BotSettings
+          <BotDownloader
+            loadingState={loadingState}
             account={state.account}
-            firebase ={firebase}
+            firebase={firebase}
+            firestoreRef ={firestoreRef}
+            handleDownloadScript={handleDownloadScript}
+            handleToBotSettings={()=>dispatch({type:'ChangePage',page:'BotSettings'})}
             handleToParentPage={()=>dispatch({type:'ChangePage',page:'Dashboard'})}
           />
         );
+      }
+      case 'BotSettings':{
+        return (
+          <BotSettings
+            handleToParentPage={()=>dispatch({type:'ChangePage',page:'Dashboard'})}
+          />
+        )
+      }
+
       case 'ScriptEditor':
         return(
           <ScriptEditor
@@ -370,7 +425,7 @@ export default function Main(){
             account={state.account}
             firestoreRef={firestoreRef}
             userName={state.userName}
-            uploadState={uploadState}
+            loadingState={loadingState}
             isScriptExists={isScriptExists}
             handleUploadScript={handleUploadScript}
             handleToParentPage={()=>dispatch({type:'ChangePage',page:'Dashboard'})}
@@ -419,7 +474,7 @@ export default function Main(){
           parentPage={state.parentPage}
           account={state.account}
           userName={state.userName}
-          uploadState={uploadState}
+          loadingState={loadingState}
           handleAuth={(user) => dispatch({type:'Auth',user:user})}
           handleToScriptEditor={()=>dispatch({type:'ChangePage',page:'ScriptEditor'})}
           handleToUploadDialog={()=>dispatch({type:'ChangePage',page:'UploadDialog'})}

@@ -4,12 +4,15 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Chip from '@material-ui/core/Chip';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Avatar from '@material-ui/core/Avatar';
+
 import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles(theme => ({
@@ -88,6 +91,11 @@ export default function UploadDialog(props){
         <Avatar src={b.avatarId} />
       </ListItemAvatar>
       <ListItemText primary={b.id} secondary={b.message}/>
+      <ListItemSecondaryAction>
+        <IconButton edge="end" aria-label="delete">
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
     </ListItem>
 
   );
@@ -111,14 +119,14 @@ export default function UploadDialog(props){
           id="id"
           margin="normal"
           label="id(型式)"
-          value={botId}
           onChange={handleCheckBotId}
+          value={botId}
           />
         <Typography variant="subtext" color="error">
-          {props.uploadState==="ownedByOther" && 
+          {props.loadingState==="ownedByOther" && 
           "同じidが他のユーザにより使われています。idを変えてください。"
           }
-          {props.uploadState==="error" &&
+          {props.loadingState==="error" &&
           "firebase読み込みエラー"
           }
         </Typography>
@@ -146,8 +154,8 @@ export default function UploadDialog(props){
           />
       </Box>
       <Box>
-        {props.uploadState==='ownedByUser' && "既存データに上書きします"}
-        {props.uploadState}
+        {props.loadingState==='ownedByUser' && "既存データに上書きします"}
+        {props.loadingState}
       </Box>
 
       <Box>
@@ -155,7 +163,7 @@ export default function UploadDialog(props){
           size="large"
           variant="contained"
           color="primary"
-          disabled={props.uploadState==="ownedByOther" || message===""}
+          disabled={props.loadingState==="ownedByOther" || message===""}
           onClick={e=>{props.handleUploadScript(message)}}>
             アップロード</Button>
       </Box>
@@ -163,7 +171,7 @@ export default function UploadDialog(props){
         <Button 
         className={classes.wideButton}
         size="large"
-        onClick={e=>props.handleToParentPage} >戻る</Button>
+        onClick={e=>{props.handleToParentPage()}} >戻る</Button>
       </Box>
     </Box>
   )

@@ -44,14 +44,14 @@ export default class BiomeBot{
 		if(!dict){
 			const state = localStorage.getItem('bot.state') ;
 			if(!state){
+				//なぜ!state判定？
 				return false;
 			}
 			this.name = localStorage.getItem('bot.name');
 			this.id = localStorage.getItem('bot.id');
 			this.avatarId = localStorage.getItem('bot.avatarId') || echoBot.avatarId;
 			this.state = JSON.parse(state);
-			const parts = JSON.parse(localStorage.getItem('bot.parts')) || echoBot.parts;
-	
+			const parts = JSON.parse(localStorage.getItem('bot.parts'));
 			this.parts = parts.map(p=>new Part(p,state));
 		}
 		else{

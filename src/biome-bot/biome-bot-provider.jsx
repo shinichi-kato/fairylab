@@ -116,6 +116,18 @@ export default function BiomeBotProvider(props){
     }
   }
 
+  function loadFromLocalStorage(){
+    bot.load();
+    const result = bot.setup();
+    if(result !== 'ok'){
+      dispatch({type:'ParseError',message:result.message});
+      return;
+    }
+    bot.dump();
+
+    dispatch({type:'ready',id:bot.id});
+  }
+
   function handleDownload(firebase,index){
     const botSettings = state.botSettingsList[index];
 
@@ -172,6 +184,7 @@ export default function BiomeBotProvider(props){
       handleReply:m=>handleReply(m),
       handleLoadBotSettingsList:(firebase)=>handleLoadBotSettingsList(firebase),
       handleDownload:(firebase,index)=>handleDownload(firebase,index),
+      handleLoad:loadFromLocalStorage,
       handleCompile:handleCompile,
     }}>
     {props.children}
