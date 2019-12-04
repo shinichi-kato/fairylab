@@ -18,13 +18,16 @@ const useStyles = makeStyles(theme => createStyles({
 	},
 	
 	avatar: {
+		padding: theme.spacing(2),
 		width: 100,
 		height: 100,
 	},
 	textinput: {
 		size: 40,
 	},
-
+	wideButton: {
+		width: "100%",
+	},
 
   }));
 
@@ -38,11 +41,13 @@ export default function BotSettings(props){
 		props.handleToParentPage();
 	}
 	return(
-	<Box display="flex" flexDirection="column" alignItems="stretch">
+	<Box display="flex" flexDirection="column" alignItems="stretch"
+		className={classes.root}
+	>
 		<Box alignSelf="center">
 			<Avatar 
 			className={classes.avatar}
-			src={bot.avatar}
+			src={bot.avatarId}
 			/>
 
 		</Box>
@@ -50,21 +55,25 @@ export default function BotSettings(props){
 
 			<TextField
 				className={classes.textinput}
+				variant="filled"
+				id="name"
+				required
 				value={name}
+				label="チャットボットの名前"
 				onChange={e=>setName(e.target.value)}
 				margin="normal"
 			/>
 		</Box>
 		<Box>
-				<Button className={classes.wideButton}
-				size="large"
-				variant="contained"
-				color="primary"
-				disabled={name===""}
-				onClick={e=>handleSetName()}>
-				OK
-				</Button>
-			</Box>
+			<Button className={classes.wideButton}
+			size="large"
+			variant="contained"
+			color="primary"
+			disabled={name===""}
+			onClick={e=>handleSetName()}>
+			OK
+			</Button>
+		</Box>
 			
 
 	</Box>	

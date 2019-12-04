@@ -129,6 +129,16 @@ export default function BotDownloader(props){
 		}		
 	}
 
+	function handleClickEngage(e){
+		if(loadingState==='downloadSuccess'){
+			props.handleToBotSettings();
+		}
+		else{
+			props.handleDownloadScript(botId);
+		}
+		
+	}
+
 	const botListItems=botList.map(b=>
     <ListItem button key={b.id} onClick={e=>setBotId(b.id)}>
       <ListItemAvatar>
@@ -144,6 +154,8 @@ export default function BotDownloader(props){
 
 	);
 	
+
+
 	let currentDescription="";
 	let currentAvatar="/avatar/bot/blank.svg";
 	for(let b of botList){
@@ -184,7 +196,7 @@ export default function BotDownloader(props){
 					<Typography>{currentDescription}</Typography>
 				</Box>
 			</Box>
-			<Box>
+			<Box flexGrow={1}>
 				{loadingState}
 			</Box>
 			<Box>
@@ -192,11 +204,11 @@ export default function BotDownloader(props){
 				size="large"
 				variant="contained"
 				color="primary"
-				disabled={botId===null}
-				onClick={e=>{props.handleDownloadScript(botId)}}>
-				{loadingState==='startDownload' ?
-					"ダウンロード中"
-				:
+				disabled={botId===null || loadingState==='startDownload'}
+				onClick={handleClickEngage}>
+				{loadingState==='downloadSuccess' ?
+					"OK"
+				:	
 					<><GetAppIcon/>ダウンロード</>
 				}
 				</Button>
